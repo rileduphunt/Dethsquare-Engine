@@ -1,25 +1,62 @@
 package com.ezardlabs.dethsquare.util;
 
-import com.ezardlabs.dethsquare.util.audio.OggMusic;
+import com.ezardlabs.dethsquare.util.Utils.ResourceNotFoundError;
 
 import org.apache.commons.io.IOUtils;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.HashMap;
 
 import static com.ezardlabs.dethsquare.util.Utils.IO;
+import static org.lwjgl.openal.AL10.AL_BUFFER;
+import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
+import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;
+import static org.lwjgl.openal.AL10.AL_LOOPING;
+import static org.lwjgl.openal.AL10.AL_SIZE;
+import static org.lwjgl.openal.AL10.alBufferData;
+import static org.lwjgl.openal.AL10.alGenBuffers;
+import static org.lwjgl.openal.AL10.alGenSources;
+import static org.lwjgl.openal.AL10.alGetBufferi;
+import static org.lwjgl.openal.AL10.alSourcePlay;
+import static org.lwjgl.openal.AL10.alSourcei;
+import static org.lwjgl.openal.ALC10.ALC_DEFAULT_DEVICE_SPECIFIER;
+import static org.lwjgl.openal.ALC10.alcCreateContext;
+import static org.lwjgl.openal.ALC10.alcGetString;
+import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
+import static org.lwjgl.openal.ALC10.alcOpenDevice;
+import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_memory;
+import static org.lwjgl.system.MemoryStack.stackMallocInt;
+import static org.lwjgl.system.MemoryStack.stackPop;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.libc.Stdlib.free;
+
 public class DesktopAudioUtils implements AudioUtils {
 	private static HashMap<Integer, AudioThread> playingAudio = new HashMap<>();
+	private static long device;
+
+	public DesktopAudioUtils() {
+		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
+		device = alcOpenDevice(defaultDeviceName);
+
+		int[] attributes = {0};
+		long context = alcCreateContext(device, attributes);
+		alcMakeContextCurrent(context);
+
+		AL.createCapabilities(ALC.createCapabilities(device));
+	}
 
 	private static class AudioThread extends Thread {
 		private final String path;
 		private boolean loop = false;
 		private int volume = 100;
-		private byte[] data;
-		private OggMusic ogg;
+		private int pointer;
+		private final Object monitor = new Object();
 
 		private AudioThread(String path) {
 			this.path = path;
@@ -27,28 +64,64 @@ public class DesktopAudioUtils implements AudioUtils {
 
 		private void setLoop(boolean loop) {
 			this.loop = loop;
+			alSourcei(pointer, AL_LOOPING, loop ? 1 : 0);
 		}
 
 		private void setVolume(int volume) {
 			this.volume = volume;
-			if (ogg != null) ogg.setVolume(volume);
 		}
 
 		@Override
 		public void run() {
-			ogg = new OggMusic(Thread.currentThread());
-			ogg.setVolume(volume);
-			ogg.setMute(false);
+			// Allocate space to store return information from the function
+			stackPush();
+			IntBuffer channelsBuffer = stackMallocInt(1);
+			stackPush();
+			IntBuffer sampleRateBuffer = stackMallocInt(1);
+
+			ByteBuffer data;
 			try {
-				data = IOUtils.toByteArray(
-						Thread.currentThread().getContextClassLoader().getResourceAsStream(path));
+				data = loadAudio(path);
 			} catch (IOException e) {
 				e.printStackTrace();
-				return;
+				throw new ResourceNotFoundError(path);
 			}
-			do {
-				ogg.playOgg(new ByteArrayInputStream(data));
-			} while (loop);
+
+			ShortBuffer rawAudioBuffer = stb_vorbis_decode_memory(data, channelsBuffer, sampleRateBuffer);
+
+			// Retrieve the extra information that was stored in the buffers by the function
+			int channels = channelsBuffer.get();
+			int sampleRate = sampleRateBuffer.get();
+			//Free the space we allocated earlier
+			stackPop();
+			stackPop();
+
+			// Find the correct OpenAL format
+			int format = -1;
+			if (channels == 1) {
+				format = AL_FORMAT_MONO16;
+			} else if (channels == 2) {
+				format = AL_FORMAT_STEREO16;
+			}
+
+			// Request space for the buffer
+			int bufferPointer = alGenBuffers();
+
+			// Send the data to OpenAL
+			alBufferData(bufferPointer, format, rawAudioBuffer, sampleRate);
+
+			// Free the memory allocated by STB
+			free(rawAudioBuffer);
+
+			alGetBufferi(bufferPointer, AL_SIZE);
+
+			pointer = alGenSources();
+
+			// Assign our buffer to the source
+			alSourcei(pointer, AL_BUFFER, bufferPointer);
+
+			// Start playback
+			alSourcePlay(pointer);
 		}
 	}
 
