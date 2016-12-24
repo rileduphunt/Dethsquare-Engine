@@ -9,14 +9,11 @@ import java.util.ArrayList;
 public class DesktopIOUtils implements IOUtils {
 
 	public BufferedReader getReader(String path) {
-		return new BufferedReader(new InputStreamReader(
-				Thread.currentThread().getContextClassLoader().getResourceAsStream(path)));
+		return new BufferedReader(new InputStreamReader(getInputStream(path)));
 	}
 
 	public String[] listFileNames(String dirPath) {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-				Thread.currentThread().getContextClassLoader()
-					  .getResourceAsStream(dirPath + "/files.lsd")))) {
+		try (BufferedReader reader = getReader(dirPath + "/files.lsd")) {
 			ArrayList<String> list = new ArrayList<>();
 			String temp;
 			while ((temp = reader.readLine()) != null) {
