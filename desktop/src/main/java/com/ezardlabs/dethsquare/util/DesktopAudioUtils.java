@@ -4,6 +4,7 @@ import com.ezardlabs.dethsquare.util.Utils.ResourceNotFoundError;
 
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.ALC;
 
 import java.io.IOException;
@@ -19,13 +20,10 @@ import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
 import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;
 import static org.lwjgl.openal.AL10.AL_GAIN;
 import static org.lwjgl.openal.AL10.AL_LOOPING;
-import static org.lwjgl.openal.AL10.AL_SIZE;
 import static org.lwjgl.openal.AL10.alBufferData;
-import static org.lwjgl.openal.AL10.alDeleteBuffers;
 import static org.lwjgl.openal.AL10.alDeleteSources;
 import static org.lwjgl.openal.AL10.alGenBuffers;
 import static org.lwjgl.openal.AL10.alGenSources;
-import static org.lwjgl.openal.AL10.alGetBufferi;
 import static org.lwjgl.openal.AL10.alSourcePause;
 import static org.lwjgl.openal.AL10.alSourcePlay;
 import static org.lwjgl.openal.AL10.alSourceStop;
@@ -43,7 +41,8 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.libc.Stdlib.free;
 
 public class DesktopAudioUtils implements AudioUtils {
-	private static HashMap<Integer, int[]> audio = new HashMap<>();
+	private static HashMap<Integer, Integer> audio = new HashMap<>();
+	private static HashMap<String, Integer> mapping = new HashMap<>();
 
 	public DesktopAudioUtils() {
 		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
@@ -57,6 +56,23 @@ public class DesktopAudioUtils implements AudioUtils {
 	}
 
 	public void create(int id, String path) {
+		int bufferPointer;
+		if (mapping.containsKey(path)) {
+			bufferPointer = mapping.get(path);
+		} else {
+			bufferPointer = createBuffer(path);
+		}
+
+		int sourcePointer = alGenSources();
+
+		// Assign our buffer to the source
+		alSourcei(sourcePointer, AL_BUFFER, bufferPointer);
+
+		audio.put(id, sourcePointer);
+		mapping.put(path, bufferPointer);
+	}
+
+	private int createBuffer(String path) {
 		// Allocate space to store return information from the function
 		stackPush();
 		IntBuffer channelsBuffer = stackMallocInt(1);
@@ -97,45 +113,38 @@ public class DesktopAudioUtils implements AudioUtils {
 		// Free the memory allocated by STB
 		free(rawAudioBuffer);
 
-		alGetBufferi(bufferPointer, AL_SIZE);
-
-		int sourcePointer = alGenSources();
-
-		// Assign our buffer to the source
-		alSourcei(sourcePointer, AL_BUFFER, bufferPointer);
-
-		audio.put(id, new int[]{sourcePointer, bufferPointer});
+		return bufferPointer;
 	}
 
 	public void play(int id) {
-		alSourcePlay(audio.get(id)[0]);
+		alSourcePlay(audio.get(id));
 	}
 
 	public void pause(int id) {
-		alSourcePause(audio.get(id)[0]);
+		alSourcePause(audio.get(id));
 	}
 
 	public void stop(int id) {
-		alSourceStop(audio.get(id)[0]);
+		alSourceStop(audio.get(id));
 	}
 
 	public void setLoop(int id, boolean loop) {
-		alSourcei(audio.get(id)[0], AL_LOOPING, loop ? 1 : 0);
+		alSourcei(audio.get(id), AL_LOOPING, loop ? 1 : 0);
 	}
 
 	public void setVolume(int id, int volume) {
-		alSourcef(audio.get(id)[0], AL_GAIN, volume / 100f);
+		alSourcef(audio.get(id), AL_GAIN, volume / 100f);
 	}
 
 	public void destroy(int id) {
-		int[] data = audio.remove(id);
-		alDeleteSources(data[0]);
-		alDeleteBuffers(data[1]);
+		alDeleteSources(audio.remove(id));
 	}
 
 	public void destroyAll() {
-		audio.keySet().forEach(this::destroy);
+		audio.values().forEach(AL10::alDeleteSources);
 		audio.clear();
+		mapping.values().forEach(AL10::alDeleteBuffers);
+		mapping.clear();
 	}
 
 	private static ByteBuffer loadAudio(String path) throws IOException {
