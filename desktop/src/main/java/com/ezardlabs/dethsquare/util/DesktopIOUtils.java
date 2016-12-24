@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class IOUtils {
+public class DesktopIOUtils implements IOUtils {
 
-	public static BufferedReader getReader(String path) throws IOException {
+	public BufferedReader getReader(String path) {
 		return new BufferedReader(new InputStreamReader(
 				Thread.currentThread().getContextClassLoader().getResourceAsStream(path)));
 	}
 
-	public static String[] listFileNames(String dirPath) {
+	public String[] listFileNames(String dirPath) {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(
 				Thread.currentThread().getContextClassLoader()
 					  .getResourceAsStream(dirPath + "/files.lsd")))) {

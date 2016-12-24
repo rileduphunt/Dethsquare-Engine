@@ -8,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class AudioUtils {
+public class DesktopAudioUtils implements AudioUtils {
 	private static HashMap<Integer, AudioThread> playingAudio = new HashMap<>();
 
 	private static class AudioThread extends Thread {
@@ -49,27 +49,27 @@ public class AudioUtils {
 		}
 	}
 
-	public static void playAudio(final int id, final String path) {
+	public void playAudio(final int id, final String path) {
 		AudioThread at = new AudioThread(path);
 		playingAudio.put(id, at);
 		at.start();
 	}
 
-	public static void setAudioLoop(int id, boolean loop) {
+	public void setAudioLoop(int id, boolean loop) {
 		playingAudio.get(id).setLoop(loop);
 	}
 
-	public static void setAudioVolume(int id, int volume) {
+	public void setAudioVolume(int id, int volume) {
 		playingAudio.get(id).setVolume(volume);
 	}
 
-	public static void stopAudio(int id) {
+	public void stopAudio(int id) {
 		if (playingAudio.containsKey(id)) {
 			playingAudio.remove(id).stop();
 		}
 	}
 
-	public static void stopAllAudio() {
+	public void stopAllAudio() {
 		playingAudio.values().forEach(Thread::stop);
 	}
 }

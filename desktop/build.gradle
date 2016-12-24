@@ -1,3 +1,4 @@
 dependencies {
+    compile project(':base')
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
 }

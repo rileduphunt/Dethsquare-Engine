@@ -2,37 +2,39 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.util.Utils;
 
+import static com.ezardlabs.dethsquare.util.Utils.PREFS;
+
 public final class PlayerPrefs {
 
 	public static void setBoolean(String key, boolean value) {
-		Utils.setBoolean(key, value);
+		PREFS.setBoolean(key, value);
 	}
 
 	public static void setInt(String key, int value) {
-		Utils.setInt(key, value);
+		PREFS.setInt(key, value);
 	}
 
 	public static void setFloat(String key, float value) {
-		Utils.setFloat(key, value);
+		PREFS.setFloat(key, value);
 	}
 
 	public static void setString(String key, String value) {
-		Utils.setString(key, value);
+		PREFS.setString(key, value);
 	}
 
 	public static boolean getBoolean(String key, boolean defaultValue) {
-		return Utils.getBoolean(key, defaultValue);
+		return PREFS.getBoolean(key, defaultValue);
 	}
 
 	public static int getInt(String key, int defaultValue) {
-		return Utils.getInt(key, defaultValue);
+		return PREFS.getInt(key, defaultValue);
 	}
 
 	public static float getFloat(String key, float defaultValue) {
-		return Utils.getFloat(key, defaultValue);
+		return PREFS.getFloat(key, defaultValue);
 	}
 
 	public static String getString(String key, String defaultValue) {
-		return Utils.getString(key, defaultValue);
+		return PREFS.getString(key, defaultValue);
 	}
 }

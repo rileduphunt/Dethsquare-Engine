@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare;
 
-import com.ezardlabs.dethsquare.util.AudioUtils;
+import static com.ezardlabs.dethsquare.util.Utils.AUDIO;
 
 public final class AudioSource extends Component {
 	private final AudioClip initial;
@@ -40,18 +40,18 @@ public final class AudioSource extends Component {
 	}
 
 	public void play(AudioClip audioClip) {
-		if (current != -1) AudioUtils.stopAudio(audioClip.id);
-		AudioUtils.playAudio(current = audioClip.id, audioClip.path);
+		if (current != -1) AUDIO.stopAudio(audioClip.id);
+		AUDIO.playAudio(current = audioClip.id, audioClip.path);
 	}
 
 	public void setLoop(boolean loop) {
 		this.loop = loop;
-		AudioUtils.setAudioLoop(current, loop);
+		AUDIO.setAudioLoop(current, loop);
 	}
 
 	public void setVolume(int volume) {
 		this.volume = volume;
-		AudioUtils.setAudioVolume(current, volume);
+		AUDIO.setAudioVolume(current, volume);
 	}
 
 	public static final class AudioClip {

@@ -1,7 +1,6 @@
 package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.Collider.Collision;
-import com.ezardlabs.dethsquare.util.AudioUtils;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.io.Serializable;
@@ -10,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static com.ezardlabs.dethsquare.util.Utils.AUDIO;
 
 /**
  * Base class for all entities in the game world
@@ -375,7 +376,7 @@ public final class GameObject implements Serializable {
 		Renderer.clearQuadTree();
 		Renderer.destroyAllTextures();
 		Collider.clearAll();
-		AudioUtils.stopAllAudio();
+		AUDIO.stopAllAudio();
 	}
 
 	/**

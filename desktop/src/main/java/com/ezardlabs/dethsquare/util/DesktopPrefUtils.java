@@ -3,39 +3,46 @@ package com.ezardlabs.dethsquare.util;
 import java.nio.charset.Charset;
 import java.util.prefs.Preferences;
 
-public class PrefUtils {
+public class DesktopPrefUtils implements PrefUtils {
 	private static final Preferences prefs = Preferences.userRoot().node("8-Bit Warframe/Lost Sector");
 
-	public static void setBoolean(String key, boolean value) {
+	@Override
+	public void setBoolean(String key, boolean value) {
 		prefs.putBoolean(key, value);
 	}
 
-	public static void setInt(String key, int value) {
+	@Override
+	public void setInt(String key, int value) {
 		prefs.putInt(key, value);
 	}
 
-	public static void setFloat(String key, float value) {
+	@Override
+	public void setFloat(String key, float value) {
 		prefs.putFloat(key, value);
 	}
 
-	public static void setString(String key, String value) {
+	@Override
+	public void setString(String key, String value) {
 		prefs.putByteArray(key, value.getBytes(Charset.forName("UTF-8")));
 	}
 
-	public static boolean getBoolean(String key, boolean defaultValue) {
+	@Override
+	public boolean getBoolean(String key, boolean defaultValue) {
 		return prefs.getBoolean(key, defaultValue);
 	}
 
-	public static int getInt(String key, int defaultValue) {
+	@Override
+	public int getInt(String key, int defaultValue) {
 		return prefs.getInt(key, defaultValue);
 	}
 
-	public static float getFloat(String key, float defaultValue) {
+	@Override
+	public float getFloat(String key, float defaultValue) {
 		return prefs.getFloat(key, defaultValue);
 	}
 
-	public static String getString(String key, String defaultValue) {
+	@Override
+	public String getString(String key, String defaultValue) {
 		return new String(prefs.getByteArray(key, defaultValue.getBytes(Charset.forName("UTF-8"))), Charset.forName("UTF-8"));
 	}
-
 }

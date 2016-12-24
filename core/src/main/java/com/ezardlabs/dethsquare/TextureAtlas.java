@@ -1,11 +1,11 @@
 package com.ezardlabs.dethsquare;
 
-import com.ezardlabs.dethsquare.util.IOUtils;
-import com.ezardlabs.dethsquare.util.RenderUtils;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
+
+import static com.ezardlabs.dethsquare.util.Utils.IO;
+import static com.ezardlabs.dethsquare.util.Utils.RENDER;
 
 public final class TextureAtlas {
 	final String imagePath;
@@ -23,7 +23,7 @@ public final class TextureAtlas {
 		if (Renderer.textures.containsKey(imagePath)) {
 			data = Renderer.textures.get(imagePath);
 		} else {
-			data = RenderUtils.loadImage(imagePath);
+			data = RENDER.loadImage(imagePath);
 			Renderer.textures.put(imagePath, data);
 		}
 
@@ -48,7 +48,7 @@ public final class TextureAtlas {
 		} else {
 			try {
 				String temp;
-				BufferedReader reader = IOUtils.getReader(mapPath);
+				BufferedReader reader = IO.getReader(mapPath);
 				while ((temp = reader.readLine()) != null) {
 					String[] split = temp.split(" = ");
 					String[] split2 = split[1].split(" ");

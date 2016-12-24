@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare.util;
 
+import com.ezardlabs.dethsquare.util.DesktopLauncher.GameJFrame;
+
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -12,17 +14,10 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
-public class RenderUtils {
+public class DesktopRenderUtils implements RenderUtils {
 	private static final ArrayList<BufferedImage> images = new ArrayList<>();
 
-	private static class ImageNotFoundError extends Error {
-
-		ImageNotFoundError(String path) {
-			super("Image at " + path + " could not be found");
-		}
-	}
-
-	public static int[] loadImage(String path) {
+	public int[] loadImage(String path) {
 		String normalisedPath;
 		try {
 			normalisedPath = new URI(path).normalize().getPath();
@@ -48,7 +43,7 @@ public class RenderUtils {
 				temp.getHeight()};
 	}
 
-	public static void render(int textureName, FloatBuffer vertexBuffer, FloatBuffer uvBuffer,
+	public void render(int textureName, FloatBuffer vertexBuffer, FloatBuffer uvBuffer,
 			int numIndices, ShortBuffer indexBuffer, float cameraPosX, float cameraPosY,
 			float scale) {
 		BufferedImage temp = images.get(textureName);
@@ -59,18 +54,18 @@ public class RenderUtils {
 		uvBuffer.position(0);
 		uvBuffer.get(uvs);
 		for (int i = 0; i < numIndices / 6; i++) {
-			BaseGame.graphics.drawImage(temp, (int) (vertices[i * 12] - (cameraPosX * scale)),
+			GameJFrame.graphics.drawImage(temp, (int) (vertices[i * 12] - (cameraPosX * scale)),
 					(int) (vertices[(i * 12) + 4] - (cameraPosY * scale)),
 					(int) (vertices[(i * 12) + 6] - (cameraPosX * scale)),
 					(int) (vertices[(i * 12) + 10] - (cameraPosY * scale)),
 					(int) (uvs[i * 8] * temp.getWidth()),
 					(int) (uvs[(i * 8) + 5] * temp.getHeight()),
 					(int) (uvs[(i * 8) + 4] * temp.getWidth()),
-					(int) (uvs[(i * 8) + 1] * temp.getHeight()), BaseGame.imageObserver);
+					(int) (uvs[(i * 8) + 1] * temp.getHeight()), GameJFrame.imageObserver);
 		}
 	}
 
-	public static void destroyAllTextures(HashMap<String, int[]> textures) {
+	public void destroyAllTextures(HashMap<String, int[]> textures) {
 		images.clear();
 	}
 }

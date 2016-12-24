@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare.util;
 
+import com.ezardlabs.dethsquare.util.Utils.Platform;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,17 +15,42 @@ import java.awt.image.VolatileImage;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-public abstract class BaseGame extends JFrame implements GameListeners {
-	private VolatileImage vBuffer;
-	public static Graphics2D graphics;
-	public static ImageObserver imageObserver;
+public class DesktopLauncher extends Launcher {
+	private GameJFrame frame;
 
-	public BaseGame() {
-		setTitle("Lost Sector");
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
-		setUndecorated(true);
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		addKeyListener(new java.awt.event.KeyListener() {
+	@Override
+	protected Platform getPlatform() {
+		return Platform.DESKTOP;
+	}
+
+	@Override
+	protected AudioUtils getAudio() {
+		return new DesktopAudioUtils();
+	}
+
+	@Override
+	protected IOUtils getIO() {
+		return new DesktopIOUtils();
+	}
+
+	@Override
+	protected PrefUtils getPrefs() {
+		return new DesktopPrefUtils();
+	}
+
+	@Override
+	protected RenderUtils getRender() {
+		return new DesktopRenderUtils();
+	}
+
+	@Override
+	public void launch(BaseGame game) {
+		frame = new GameJFrame(this);
+		frame.setTitle("Lost Sector");
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		frame.setUndecorated(true);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		frame.addKeyListener(new java.awt.event.KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 			}
@@ -362,7 +389,7 @@ public abstract class BaseGame extends JFrame implements GameListeners {
 				}
 			}
 		});
-		addMouseListener(new java.awt.event.MouseListener() {
+		frame.addMouseListener(new java.awt.event.MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
@@ -373,17 +400,6 @@ public abstract class BaseGame extends JFrame implements GameListeners {
 				for (MouseListener mouseListener : mouseListeners) {
 					mouseListener.onButtonDown(e.getButton());
 				}
-//				switch(e.getButton()) {
-//					case MouseEvent.BUTTON1:
-//						Input.setKeyDown(KeyCode.MOUSE_LEFT);
-//						break;
-//					case MouseEvent.BUTTON2:
-//						Input.setKeyDown(KeyCode.MOUSE_MIDDLE);
-//						break;
-//					case MouseEvent.BUTTON3:
-//						Input.setKeyDown(KeyCode.MOUSE_RIGHT);
-//						break;
-//				}
 			}
 
 			@Override
@@ -391,17 +407,6 @@ public abstract class BaseGame extends JFrame implements GameListeners {
 				for (MouseListener mouseListener : mouseListeners) {
 					mouseListener.onButtonUp(e.getButton());
 				}
-//				switch(e.getButton()) {
-//					case MouseEvent.BUTTON1:
-//						Input.setKeyUp(KeyCode.MOUSE_LEFT);
-//						break;
-//					case MouseEvent.BUTTON2:
-//						Input.setKeyUp(KeyCode.MOUSE_MIDDLE);
-//						break;
-//					case MouseEvent.BUTTON3:
-//						Input.setKeyUp(KeyCode.MOUSE_RIGHT);
-//						break;
-//				}
 			}
 
 			@Override
@@ -414,13 +419,12 @@ public abstract class BaseGame extends JFrame implements GameListeners {
 
 			}
 		});
-		addMouseMotionListener(new MouseMotionListener() {
+		frame.addMouseMotionListener(new MouseMotionListener() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				for (MouseListener mouseListener : mouseListeners) {
 					mouseListener.onMove(e.getX(), e.getY());
 				}
-//				Input.mousePosition.set(e.getX(), e.getY());
 			}
 
 			@Override
@@ -428,70 +432,56 @@ public abstract class BaseGame extends JFrame implements GameListeners {
 				for (MouseListener mouseListener : mouseListeners) {
 					mouseListener.onMove(e.getX(), e.getY());
 				}
-//				Input.mousePosition.set(e.getX(), e.getY());
 			}
 		});
-		setFocusable(true);
+		frame.setFocusable(true);
 		onResize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-		create();
-		setVisible(true);
-		vBuffer = createVolatileImage(getWidth(), getHeight());
+		game.create();
+		frame.setVisible(true);
+		frame.vBuffer = frame.createVolatileImage(frame.getWidth(), frame.getHeight());
 	}
 
-	@Override
-	public void paint(Graphics g) {
-		long start = System.currentTimeMillis();
-		if (vBuffer == null) {
+	static class GameJFrame extends JFrame {
+		private final DesktopLauncher launcher;
+		private VolatileImage vBuffer;
+		public static Graphics2D graphics;
+		public static ImageObserver imageObserver;
+
+		private GameJFrame(DesktopLauncher launcher) {
+			this.launcher = launcher;
+			GameListeners.addResizeListener((width, height) -> {
+				vBuffer = createVolatileImage(width, height);
+				imageObserver = this;
+			});
+		}
+
+		@Override
+		public void paint(Graphics g) {
+			long start = System.currentTimeMillis();
+			if (vBuffer == null) {
+				repaint();
+				return;
+			}
+			launcher.update();
+			do {
+				if (vBuffer.validate(getGraphicsConfiguration()) == VolatileImage.IMAGE_INCOMPATIBLE) {
+					vBuffer = createVolatileImage(getWidth(), getHeight());
+				}
+				graphics = vBuffer.createGraphics();
+				graphics.setColor(Color.BLACK);
+				graphics.fillRect(0, 0, getWidth(), getHeight());
+				launcher.render();
+				graphics.dispose();
+			} while (vBuffer.contentsLost());
+			g.drawImage(vBuffer, 0, 0, this);
+			if (System.currentTimeMillis() - start < 16) {
+				try {
+					Thread.sleep(16 - (System.currentTimeMillis() - start));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 			repaint();
-			return;
 		}
-		update();
-		do {
-			if (vBuffer.validate(getGraphicsConfiguration()) == VolatileImage.IMAGE_INCOMPATIBLE) {
-				vBuffer = createVolatileImage(getWidth(), getHeight());
-			}
-			graphics = vBuffer.createGraphics();
-			graphics.setColor(Color.BLACK);
-			graphics.fillRect(0, 0, getWidth(), getHeight());
-			render();
-			graphics.dispose();
-		} while (vBuffer.contentsLost());
-		g.drawImage(vBuffer, 0, 0, this);
-		if (System.currentTimeMillis() - start < 16) {
-			try {
-				Thread.sleep(16 - (System.currentTimeMillis() - start));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		repaint();
-	}
-
-	public abstract void create();
-
-	private void update() {
-		for (int i = 0; i < updateListeners.size(); i++) {
-			updateListeners.get(i).onUpdate();
-		}
-//		Input.update();
-//		GameObject.updateAll();
-	}
-
-	private void render() {
-		renderListeners.forEach(RenderListener::onRender);
-//		Renderer.renderAll();
-	}
-
-	private void onResize(int width, int height) {
-		screenSize.width = width;
-		screenSize.height = height;
-		for (ResizeListener resizeListener : resizeListeners) {
-			resizeListener.onResize(width, height);
-		}
-//		Screen.scale = (float) width / 1920f;
-//		Screen.width = width;
-//		Screen.height = height;
-		vBuffer = createVolatileImage(width, height);
-		imageObserver = this;
 	}
 }
