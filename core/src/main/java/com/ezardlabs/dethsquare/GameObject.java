@@ -376,7 +376,7 @@ public final class GameObject implements Serializable {
 		Renderer.clearQuadTree();
 		Renderer.destroyAllTextures();
 		Collider.clearAll();
-		AUDIO.stopAllAudio();
+		AUDIO.destroyAll();
 	}
 
 	/**

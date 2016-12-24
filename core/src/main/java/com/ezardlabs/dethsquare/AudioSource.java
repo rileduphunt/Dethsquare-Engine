@@ -33,35 +33,46 @@ public final class AudioSource extends Component {
 	@Override
 	public void start() {
 		if (initial != null) {
-			play(initial);
+			current = initial.id;
+			play();
 			setLoop(loop);
 			setVolume(volume);
 		}
 	}
 
-	public void play(AudioClip audioClip) {
-		if (current != -1) AUDIO.stopAudio(audioClip.id);
-		AUDIO.playAudio(current = audioClip.id, audioClip.path);
+	public void play() {
+		AUDIO.play(current);
+	}
+
+	public void pause() {
+		AUDIO.pause(current);
+	}
+
+	public void stop() {
+		AUDIO.stop(current);
 	}
 
 	public void setLoop(boolean loop) {
 		this.loop = loop;
-		AUDIO.setAudioLoop(current, loop);
+		AUDIO.setLoop(current, loop);
 	}
 
 	public void setVolume(int volume) {
 		this.volume = volume;
-		AUDIO.setAudioVolume(current, volume);
+		AUDIO.setVolume(current, volume);
+	}
+
+	public void setAudioClip(AudioClip audioClip) {
+		current = audioClip.id;
 	}
 
 	public static final class AudioClip {
 		private static int idCount = 0;
 		private int id;
-		private final String path;
 
 		public AudioClip(String path) {
-			this.path = path;
 			id = idCount++;
+			AUDIO.create(id, path);
 		}
 
 		@Override
