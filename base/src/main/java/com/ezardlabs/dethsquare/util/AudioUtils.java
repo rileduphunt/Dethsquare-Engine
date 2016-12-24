@@ -1,13 +1,20 @@
 package com.ezardlabs.dethsquare.util;
 
 public interface AudioUtils {
-	void playAudio(final int id, final String path);
 
-	void setAudioLoop(int id, boolean loop);
+	void create(int id, String path);
 
-	void setAudioVolume(int id, int volume);
+	void play(int id);
 
-	void stopAudio(int id);
+	void pause(int id);
 
-	void stopAllAudio();
+	void stop(int id);
+
+	void setLoop(int id, boolean loop);
+
+	void setVolume(int id, int volume);
+
+	void destroy(int id);
+
+	void destroyAll();
 }

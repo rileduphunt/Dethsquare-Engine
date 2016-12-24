@@ -17,13 +17,19 @@ import static com.ezardlabs.dethsquare.util.Utils.IO;
 import static org.lwjgl.openal.AL10.AL_BUFFER;
 import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
 import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;
+import static org.lwjgl.openal.AL10.AL_GAIN;
 import static org.lwjgl.openal.AL10.AL_LOOPING;
 import static org.lwjgl.openal.AL10.AL_SIZE;
 import static org.lwjgl.openal.AL10.alBufferData;
+import static org.lwjgl.openal.AL10.alDeleteBuffers;
+import static org.lwjgl.openal.AL10.alDeleteSources;
 import static org.lwjgl.openal.AL10.alGenBuffers;
 import static org.lwjgl.openal.AL10.alGenSources;
 import static org.lwjgl.openal.AL10.alGetBufferi;
+import static org.lwjgl.openal.AL10.alSourcePause;
 import static org.lwjgl.openal.AL10.alSourcePlay;
+import static org.lwjgl.openal.AL10.alSourceStop;
+import static org.lwjgl.openal.AL10.alSourcef;
 import static org.lwjgl.openal.AL10.alSourcei;
 import static org.lwjgl.openal.ALC10.ALC_DEFAULT_DEVICE_SPECIFIER;
 import static org.lwjgl.openal.ALC10.alcCreateContext;
@@ -37,12 +43,11 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.libc.Stdlib.free;
 
 public class DesktopAudioUtils implements AudioUtils {
-	private static HashMap<Integer, AudioThread> playingAudio = new HashMap<>();
-	private static long device;
+	private static HashMap<Integer, int[]> audio = new HashMap<>();
 
 	public DesktopAudioUtils() {
 		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
-		device = alcOpenDevice(defaultDeviceName);
+		long device = alcOpenDevice(defaultDeviceName);
 
 		int[] attributes = {0};
 		long context = alcCreateContext(device, attributes);
@@ -51,102 +56,86 @@ public class DesktopAudioUtils implements AudioUtils {
 		AL.createCapabilities(ALC.createCapabilities(device));
 	}
 
-	private static class AudioThread extends Thread {
-		private final String path;
-		private boolean loop = false;
-		private int volume = 100;
-		private int pointer;
-		private final Object monitor = new Object();
+	public void create(int id, String path) {
+		// Allocate space to store return information from the function
+		stackPush();
+		IntBuffer channelsBuffer = stackMallocInt(1);
+		stackPush();
+		IntBuffer sampleRateBuffer = stackMallocInt(1);
 
-		private AudioThread(String path) {
-			this.path = path;
+		ByteBuffer data;
+		try {
+			data = loadAudio(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new ResourceNotFoundError(path);
 		}
 
-		private void setLoop(boolean loop) {
-			this.loop = loop;
-			alSourcei(pointer, AL_LOOPING, loop ? 1 : 0);
+		ShortBuffer rawAudioBuffer = stb_vorbis_decode_memory(data, channelsBuffer, sampleRateBuffer);
+
+		// Retrieve the extra information that was stored in the buffers by the function
+		int channels = channelsBuffer.get();
+		int sampleRate = sampleRateBuffer.get();
+		//Free the space we allocated earlier
+		stackPop();
+		stackPop();
+
+		// Find the correct OpenAL format
+		int format = -1;
+		if (channels == 1) {
+			format = AL_FORMAT_MONO16;
+		} else if (channels == 2) {
+			format = AL_FORMAT_STEREO16;
 		}
 
-		private void setVolume(int volume) {
-			this.volume = volume;
-		}
+		// Request space for the buffer
+		int bufferPointer = alGenBuffers();
 
-		@Override
-		public void run() {
-			// Allocate space to store return information from the function
-			stackPush();
-			IntBuffer channelsBuffer = stackMallocInt(1);
-			stackPush();
-			IntBuffer sampleRateBuffer = stackMallocInt(1);
+		// Send the data to OpenAL
+		alBufferData(bufferPointer, format, rawAudioBuffer, sampleRate);
 
-			ByteBuffer data;
-			try {
-				data = loadAudio(path);
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new ResourceNotFoundError(path);
-			}
+		// Free the memory allocated by STB
+		free(rawAudioBuffer);
 
-			ShortBuffer rawAudioBuffer = stb_vorbis_decode_memory(data, channelsBuffer, sampleRateBuffer);
+		alGetBufferi(bufferPointer, AL_SIZE);
 
-			// Retrieve the extra information that was stored in the buffers by the function
-			int channels = channelsBuffer.get();
-			int sampleRate = sampleRateBuffer.get();
-			//Free the space we allocated earlier
-			stackPop();
-			stackPop();
+		int sourcePointer = alGenSources();
 
-			// Find the correct OpenAL format
-			int format = -1;
-			if (channels == 1) {
-				format = AL_FORMAT_MONO16;
-			} else if (channels == 2) {
-				format = AL_FORMAT_STEREO16;
-			}
+		// Assign our buffer to the source
+		alSourcei(sourcePointer, AL_BUFFER, bufferPointer);
 
-			// Request space for the buffer
-			int bufferPointer = alGenBuffers();
-
-			// Send the data to OpenAL
-			alBufferData(bufferPointer, format, rawAudioBuffer, sampleRate);
-
-			// Free the memory allocated by STB
-			free(rawAudioBuffer);
-
-			alGetBufferi(bufferPointer, AL_SIZE);
-
-			pointer = alGenSources();
-
-			// Assign our buffer to the source
-			alSourcei(pointer, AL_BUFFER, bufferPointer);
-
-			// Start playback
-			alSourcePlay(pointer);
-		}
+		audio.put(id, new int[]{sourcePointer, bufferPointer});
 	}
 
-	public void playAudio(final int id, final String path) {
-		AudioThread at = new AudioThread(path);
-		playingAudio.put(id, at);
-		at.start();
+	public void play(int id) {
+		alSourcePlay(audio.get(id)[0]);
 	}
 
-	public void setAudioLoop(int id, boolean loop) {
-		playingAudio.get(id).setLoop(loop);
+	public void pause(int id) {
+		alSourcePause(audio.get(id)[0]);
 	}
 
-	public void setAudioVolume(int id, int volume) {
-		playingAudio.get(id).setVolume(volume);
+	public void stop(int id) {
+		alSourceStop(audio.get(id)[0]);
 	}
 
-	public void stopAudio(int id) {
-		if (playingAudio.containsKey(id)) {
-			playingAudio.remove(id).stop();
-		}
+	public void setLoop(int id, boolean loop) {
+		alSourcei(audio.get(id)[0], AL_LOOPING, loop ? 1 : 0);
 	}
 
-	public void stopAllAudio() {
-		playingAudio.values().forEach(Thread::stop);
+	public void setVolume(int id, int volume) {
+		alSourcef(audio.get(id)[0], AL_GAIN, volume / 100f);
+	}
+
+	public void destroy(int id) {
+		int[] data = audio.remove(id);
+		alDeleteSources(data[0]);
+		alDeleteBuffers(data[1]);
+	}
+
+	public void destroyAll() {
+		audio.keySet().forEach(this::destroy);
+		audio.clear();
 	}
 
 	private static ByteBuffer loadAudio(String path) throws IOException {
