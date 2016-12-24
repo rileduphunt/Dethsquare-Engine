@@ -1,0 +1,19 @@
+/*
+Requires the following to be specified either in the root gradle.properties file, or via the commandline:
+
+gradle.properties version   |   commandline version
+platform=<desktop|android>  |   -PplatformText=<desktop|android>
+*/
+
+def platform = project.hasProperty('platformText') ? project.platformText : project.platform
+
+dependencies {
+    compile project(':core')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+project(':core') {
+    dependencies {
+        compile project(":$platform")
+    }
+}

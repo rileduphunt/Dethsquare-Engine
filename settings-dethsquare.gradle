@@ -1,0 +1,8 @@
+include ':core'
+include ':desktop'
+include ':android'
+
+rootProject.children.each { project ->
+    String relativeProjectPath = project.projectDir.path.replace(settingsDir.path, "")
+    project.projectDir = new File("dethsquare/$relativeProjectPath")
+}
