@@ -6,8 +6,11 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 
+import static com.ezardlabs.dethsquare.util.Utils.IO;
 public class DesktopAudioUtils implements AudioUtils {
 	private static HashMap<Integer, AudioThread> playingAudio = new HashMap<>();
 
@@ -71,5 +74,13 @@ public class DesktopAudioUtils implements AudioUtils {
 
 	public void stopAllAudio() {
 		playingAudio.values().forEach(Thread::stop);
+	}
+
+	private static ByteBuffer loadAudio(String path) throws IOException {
+		byte[] bytes = IOUtils.toByteArray(IO.getInputStream(path));
+		ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder());
+		buffer.put(bytes);
+		buffer.flip();
+		return buffer;
 	}
 }
