@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 import java.util.prefs.Preferences;
 
 public class PrefUtils {
-	private static final Preferences prefs = Preferences.userRoot().node("com/ezardlabs/lostsector");
+	private static final Preferences prefs = Preferences.userRoot().node("8-Bit Warframe/Lost Sector");
 
 	public static void setBoolean(String key, boolean value) {
 		prefs.putBoolean(key, value);
