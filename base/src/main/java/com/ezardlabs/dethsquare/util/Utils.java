@@ -20,7 +20,7 @@ public final class Utils {
 		RENDER = render;
 	}
 
-	class ResourceNotFoundError extends Error {
+	static class ResourceNotFoundError extends Error {
 
 		ResourceNotFoundError(String path) {
 			super("Resource at '" + path + "' was not found");
