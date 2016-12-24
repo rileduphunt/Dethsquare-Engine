@@ -5,7 +5,7 @@ gradle.properties version   |   commandline version
 platform=<desktop|android>  |   -PplatformText=<desktop|android>
 */
 
-def platform = project.hasProperty('platformText') ? project.platformText : project.platform
+def platform = project.hasProperty('platformText') ? project.platformText : (project.hasProperty('platform') ? project.platform : System.getenv('platform'))
 
 dependencies {
     compile project(':core')
