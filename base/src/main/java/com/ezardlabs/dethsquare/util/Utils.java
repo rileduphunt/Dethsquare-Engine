@@ -19,4 +19,11 @@ public final class Utils {
 		PREFS = prefs;
 		RENDER = render;
 	}
+
+	class ResourceNotFoundError extends Error {
+
+		ResourceNotFoundError(String path) {
+			super("Resource at '" + path + "' was not found");
+		}
+	}
 }
