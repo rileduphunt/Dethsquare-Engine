@@ -2,6 +2,7 @@ package com.ezardlabs.dethsquare.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
@@ -27,5 +28,10 @@ public class DesktopIOUtils implements IOUtils {
 			e.printStackTrace();
 			return new String[0];
 		}
+	}
+
+	@Override
+	public InputStream getInputStream(String path) {
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
 	}
 }
