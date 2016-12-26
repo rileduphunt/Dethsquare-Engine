@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare;
 
+import java.util.HashSet;
+
 public class Physics {
 
 	public static RaycastHit raycast(Vector2 origin, Vector2 direction, float distance) {
@@ -7,7 +9,13 @@ public class Physics {
 		Vector2 end = new Vector2(origin.x + direction.x * distance,
 				origin.y + direction.y * distance);
 		RaycastHit raycastHit = null;
-		for (Collider c : Collider.staticColliders) {
+		HashSet<Collider> temp = new HashSet<>(Collider.staticColliders.size() +
+				Collider.normalColliders.size() +
+				Collider.triggerColliders.size());
+		temp.addAll(Collider.staticColliders);
+		temp.addAll(Collider.normalColliders);
+		temp.addAll(Collider.triggerColliders);
+		for (Collider c : temp) {
 			Vector2 hit = c.bounds.intersect(origin, end);
 			if (hit != null) {
 				if (raycastHit == null) {
