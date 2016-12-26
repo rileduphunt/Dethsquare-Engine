@@ -450,7 +450,7 @@ public class DesktopLauncher extends Launcher {
 			this.launcher = launcher;
 			GameListeners.addResizeListener((width, height) -> {
 				vBuffer = createVolatileImage(width, height);
-				imageObserver = this;
+				GameJFrame.imageObserver = this;
 			});
 		}
 
