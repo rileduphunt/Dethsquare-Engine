@@ -7,13 +7,78 @@ platform=<desktop|android>  |   -PplatformText=<desktop|android>
 
 def platform = project.hasProperty('platformText') ? project.platformText : (project.hasProperty('platform') ? project.platform : System.getenv('platform'))
 
+def lwjglVersion = "3.1.0"
+
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile project(':core')
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
 project(':core') {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {
         compile project(":$platform")
+        compile group: 'org.json', name: 'json', version: '20160810'
+    }
+}
+
+project(':base') {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.8
+}
+
+project(':desktop') {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile project(':base')
+        compile group: 'commons-io', name: 'commons-io', version: '2.5'
+        compile "org.lwjgl:lwjgl:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-openal:${lwjglVersion}"
+        compile "org.lwjgl:lwjgl-stb:${lwjglVersion}"
+        runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-windows"
+        runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-linux"
+        runtime "org.lwjgl:lwjgl:${lwjglVersion}:natives-macos"
+        runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-windows"
+        runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-linux"
+        runtime "org.lwjgl:lwjgl-openal:${lwjglVersion}:natives-macos"
+        runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-windows"
+        runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-linux"
+        runtime "org.lwjgl:lwjgl-stb:${lwjglVersion}:natives-macos"
+    }
+}
+
+project(':android') {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.8
+
+    dependencies {
+        compile project(':base')
+        compileOnly fileTree(dir: 'libs', include: ['*.jar'])
     }
 }
