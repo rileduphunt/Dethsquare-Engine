@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 public class DesktopLauncher extends Launcher {
-	private GameJFrame frame;
 
 	@Override
 	protected Platform getPlatform() {
@@ -45,7 +44,7 @@ public class DesktopLauncher extends Launcher {
 
 	@Override
 	public void launch(BaseGame game) {
-		frame = new GameJFrame(this);
+		GameJFrame frame = new GameJFrame(this);
 		frame.setTitle("Lost Sector");
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setUndecorated(true);
@@ -444,8 +443,8 @@ public class DesktopLauncher extends Launcher {
 	static class GameJFrame extends JFrame {
 		private final DesktopLauncher launcher;
 		private VolatileImage vBuffer;
-		public static Graphics2D graphics;
-		public static ImageObserver imageObserver;
+		static Graphics2D graphics;
+		static ImageObserver imageObserver;
 
 		private GameJFrame(DesktopLauncher launcher) {
 			this.launcher = launcher;
