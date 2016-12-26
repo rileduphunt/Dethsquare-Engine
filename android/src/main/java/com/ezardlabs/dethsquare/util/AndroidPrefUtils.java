@@ -1,36 +1,34 @@
 package com.ezardlabs.dethsquare.util;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class AndroidPrefUtils implements PrefUtils {
-	private SharedPreferences prefs;
+	private final SharedPreferences prefs;
 
-	private SharedPreferences getPrefs() {
-		if (prefs == null) {
-			prefs = PreferenceManager.getDefaultSharedPreferences(null);
-		}
-		return prefs;
+	public AndroidPrefUtils(Context context) {
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
 	@Override
 	public void setBoolean(String key, boolean value) {
-		getPrefs().edit().putBoolean(key, value).commit();
+		prefs.edit().putBoolean(key, value).commit();
 	}
 
 	@Override
 	public void setInt(String key, int value) {
-		getPrefs().edit().putInt(key, value).commit();
+		prefs.edit().putInt(key, value).commit();
 	}
 
 	@Override
 	public void setFloat(String key, float value) {
-		getPrefs().edit().putFloat(key, value).commit();
+		prefs.edit().putFloat(key, value).commit();
 	}
 
 	@Override
 	public void setString(String key, String value) {
-		getPrefs().edit().putString(key, value).commit();
+		prefs.edit().putString(key, value).commit();
 	}
 
 	@Override
