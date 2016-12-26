@@ -44,7 +44,7 @@ public class DesktopAudioUtils implements AudioUtils {
 	private static HashMap<Integer, Integer> audio = new HashMap<>();
 	private static HashMap<String, Integer> mapping = new HashMap<>();
 
-	public DesktopAudioUtils() {
+	DesktopAudioUtils() {
 		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
 		long device = alcOpenDevice(defaultDeviceName);
 
