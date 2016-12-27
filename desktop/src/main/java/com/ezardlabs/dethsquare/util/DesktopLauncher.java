@@ -242,6 +242,8 @@ public class DesktopLauncher extends Launcher {
 					case KeyEvent.VK_F12:
 						keyListener.onKeyDown("F12");
 						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -408,6 +410,8 @@ public class DesktopLauncher extends Launcher {
 						break;
 					case KeyEvent.VK_F12:
 						keyListener.onKeyUp("F12");
+						break;
+					default:
 						break;
 				}
 			}
