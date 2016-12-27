@@ -39,8 +39,6 @@ public class Renderer extends BoundedComponent {
 	public float width;
 	public float height;
 	private int zIndex = 0;
-	public boolean hFlipped = false;
-	public boolean vFlipped = false;
 
 	public int textureName = -1;
 	public Mode mode = Mode.NONE;
@@ -63,12 +61,6 @@ public class Renderer extends BoundedComponent {
 	public Renderer(TextureAtlas textureAtlas, Sprite sprite, float width, float height) {
 		setTextureAtlas(textureAtlas, width, height);
 		this.sprite = sprite;
-	}
-
-	public Renderer setFlipped(boolean hFlipped, boolean vFlipped) {
-		this.hFlipped = hFlipped;
-		this.vFlipped = vFlipped;
-		return this;
 	}
 
 	public void setImage(String imagePath, float width, float height) {
@@ -274,7 +266,7 @@ public class Renderer extends BoundedComponent {
 				u = v = w = h = 0;
 				break;
 		}
-		if (r.hFlipped && r.vFlipped) {
+		if (r.transform.scale.x < 0 && r.transform.scale.y < 0) {
 			uvs[(i * 8) + 6] = u;
 			uvs[(i * 8) + 7] = v;
 			uvs[(i * 8) + 4] = u;
@@ -283,7 +275,7 @@ public class Renderer extends BoundedComponent {
 			uvs[(i * 8) + 3] = v + h;
 			uvs[(i * 8)] = u + w;
 			uvs[(i * 8) + 1] = v;
-		} else if (r.hFlipped) {
+		} else if (r.transform.scale.x < 0) {
 			uvs[(i * 8) + 4] = u;
 			uvs[(i * 8) + 5] = v;
 			uvs[(i * 8) + 6] = u;
@@ -292,7 +284,7 @@ public class Renderer extends BoundedComponent {
 			uvs[(i * 8) + 1] = v + h;
 			uvs[(i * 8) + 2] = u + w;
 			uvs[(i * 8) + 3] = v;
-		} else if (r.vFlipped) {
+		} else if (r.transform.scale.y < 0) {
 			uvs[(i * 8)] = u;
 			uvs[(i * 8) + 1] = v;
 			uvs[(i * 8) + 2] = u;

@@ -9,6 +9,8 @@ public class NetworkTransform extends NetworkBehaviour {
 		data.position(0);
 		data.putFloat(0, transform.position.x); // 0 - 3
 		data.putFloat(4, transform.position.y); // 4 - 7
+		data.putFloat(8, transform.scale.x); // 8 - 11
+		data.putFloat(12, transform.scale.y); // 12 - 15
 		return data;
 	}
 
@@ -19,10 +21,12 @@ public class NetworkTransform extends NetworkBehaviour {
 			gameObject.collider.recalculateBounds();
 			gameObject.collider.triggerCheck();
 		}
+		transform.scale
+				.set(data.getFloat(index + 8), data.getFloat(index + 12));
 	}
 
 	@Override
 	public short getSize() {
-		return 8;
+		return 16;
 	}
 }

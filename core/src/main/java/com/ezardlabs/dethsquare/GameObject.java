@@ -311,7 +311,13 @@ public final class GameObject implements Serializable {
      * @return The {@link GameObject} that was passed into this method as a parameter
      */
 	public static GameObject instantiate(GameObject gameObject, Vector2 position) {
-		gameObject.transform.position.set(position.x, position.y);
+		return instantiate(gameObject, position, new Vector2(1, 1));
+	}
+
+	public static GameObject instantiate(GameObject gameObject,
+			Vector2 position, Vector2 scale) {
+		gameObject.transform.position.set(position);
+		gameObject.transform.scale.set(scale);
 		GameObject go = gameObject.copy();
 		newObjects.add(go);
 		objectsWithChangedComponents.add(go);

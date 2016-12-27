@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 public final class Transform extends Component {
 	public Vector2 position = new Vector2();
+	public Vector2 scale = new Vector2(1, 1);
 
 	private Transform parent;
 	private ArrayList<Transform> children = new ArrayList<>();
