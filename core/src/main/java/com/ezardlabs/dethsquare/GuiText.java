@@ -71,11 +71,13 @@ public class GuiText extends BoundedComponent {
 		if (totalWidth != -1) return totalWidth;
 		float width = 0;
 		for (int i = 0; i < text.length(); i++) {
-			Sprite s;
+			Sprite s = null;
+			boolean shouldContinue = false;
 			switch (text.charAt(i)) {
 				case ' ':
 					width += spaceWidth;
-					continue;
+					shouldContinue = true;
+					break;
 				case '!':
 					s = font.getSprite("exclamation-mark");
 					break;
@@ -92,7 +94,7 @@ public class GuiText extends BoundedComponent {
 					s = font.getSprite(String.valueOf(text.charAt(i)));
 					break;
 			}
-			if (s == null) continue;
+			if (shouldContinue || s == null) continue;
 
 			width += (s.w / s.h) * fontSize + Screen.scale * 6.25f;
 		}
