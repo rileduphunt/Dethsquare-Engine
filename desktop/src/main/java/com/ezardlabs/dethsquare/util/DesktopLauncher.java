@@ -448,12 +448,12 @@ public class DesktopLauncher extends Launcher {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-
+			// unused
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-
+			// unused
 		}
 
 		@Override
