@@ -405,7 +405,7 @@ public final class GameObject implements Serializable {
 		}
 	}
 
-	private static void handleCreationDestruction() {
+	private static void handleDestruction() {
 		for (GameObject gameObject : destroyedObjects) {
 			if (gameObject != null) {
 				for (Component c : gameObject.components) {
@@ -420,53 +420,68 @@ public final class GameObject implements Serializable {
 		newObjects.removeAll(destroyedObjects);
 		objectsWithChangedComponents.removeAll(destroyedObjects);
 		destroyedObjects.clear();
+	}
+
+	private static void handleRemovedComponents(GameObject go) {
+		for (Class clazz : go.removedComponents) {
+			for (Component c : go.components.toArray(new Component[go.components.size()])) {
+				if (c.getClass().equals(clazz)) {
+					if (c instanceof Script) {
+						scripts.remove(c);
+					}
+					if (c instanceof Renderer) {
+						go.renderer = null;
+					} else if (c instanceof Animator) {
+						go.animator = null;
+					} else if (c instanceof Collider) {
+						go.collider = null;
+					} else if (c instanceof Rigidbody) {
+						go.rigidbody = null;
+					}
+					go.components.remove(c);
+				}
+			}
+		}
+		go.removedComponents.clear();
+	}
+
+	private static ArrayList<Component> handleNewComponents(GameObject go) {
+		ArrayList<Component> temp = new ArrayList<>();
+		for (Component component : go.newComponents) {
+			if (component instanceof Script) {
+				scripts.add((Script) component);
+			}
+			if (component instanceof Transform) {
+				go.transform = (Transform) component;
+			} else if (component instanceof Renderer) {
+				go.renderer = (Renderer) component;
+			} else if (component instanceof Animator) {
+				go.animator = (Animator) component;
+			} else if (component instanceof Collider) {
+				go.collider = (Collider) component;
+			} else if (component instanceof Rigidbody) {
+				go.rigidbody = (Rigidbody) component;
+			}
+			component.gameObject = go;
+			component.transform = go.transform;
+			go.components.add(component);
+			temp.add(component);
+		}
+		go.newComponents.clear();
+		return temp;
+	}
+
+	private static void handleCreationDestruction() {
+		handleDestruction();
+
 		objects.addAll(newObjects);
 
 		ArrayList<Component> temp = new ArrayList<>();
 
 		for (GameObject go : objectsWithChangedComponents) {
-			for (Class clazz : go.removedComponents) {
-				for (Component c : go.components.toArray(new Component[go.components.size()])) {
-					if (c.getClass().equals(clazz)) {
-						if (c instanceof Script) {
-							scripts.remove(c);
-						}
-						if (c instanceof Renderer) {
-							go.renderer = null;
-						} else if (c instanceof Animator) {
-							go.animator = null;
-						} else if (c instanceof Collider) {
-							go.collider = null;
-						} else if (c instanceof Rigidbody) {
-							go.rigidbody = null;
-						}
-						go.components.remove(c);
-					}
-				}
-			}
-			go.removedComponents.clear();
+			handleRemovedComponents(go);
 
-			for (Component component : go.newComponents) {
-				if (component instanceof Script) {
-					scripts.add((Script) component);
-				}
-				if (component instanceof Transform) {
-					go.transform = (Transform) component;
-				} else if (component instanceof Renderer) {
-					go.renderer = (Renderer) component;
-				} else if (component instanceof Animator) {
-					go.animator = (Animator) component;
-				} else if (component instanceof Collider) {
-					go.collider = (Collider) component;
-				} else if (component instanceof Rigidbody) {
-					go.rigidbody = (Rigidbody) component;
-				}
-				component.gameObject = go;
-				component.transform = go.transform;
-				go.components.add(component);
-				temp.add(component);
-			}
-			go.newComponents.clear();
+			temp.addAll(handleNewComponents(go));
 		}
 
 		objectsWithChangedComponents.clear();
