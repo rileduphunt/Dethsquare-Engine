@@ -42,6 +42,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 					animations[index].listener.onAnimationFinished(this);
 					finished = true;
 				}
+				frame = tempFrame;
 				return;
 			} else {
 				finished = false;
@@ -65,6 +66,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 			if (i != index && animations[i].name.equals(animationName)) {
 				index = i;
 				frame = 0;
+				finished = false;
 				nextFrameTime = System.currentTimeMillis() + animations[index].frameDuration;
 				gameObject.renderer.sprite = animations[index].frames[frame];
 				if (animations[index].listener != null) animations[index].listener.onAnimatedStarted(this);
