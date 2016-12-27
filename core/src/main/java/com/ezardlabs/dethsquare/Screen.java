@@ -15,9 +15,8 @@ public final class Screen {
 	 * The current scaling to apply to objects
 	 */
 	public static float scale = 1;
-	/**
-	 * Add hook into game loop
-	 */
+
+	// Add hook into game loop
 	static {
 		GameListeners.addResizeListener((width, height) -> {
 			Screen.scale = (float) width / 1920f;
