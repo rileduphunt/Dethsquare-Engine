@@ -314,6 +314,13 @@ public final class GameObject implements Serializable {
 		return instantiate(gameObject, position, new Vector2(1, 1));
 	}
 
+	/**
+	 * Create the given {@link GameObject} within the game world
+	 * @param gameObject The {@link GameObject} to create
+	 * @param position The coordinates to create the given {@link GameObject} at
+	 * @param scale The scale to create the {@link GameObject} at
+	 * @return The {@link GameObject} that was passed into this method as a parameter
+	 */
 	public static GameObject instantiate(GameObject gameObject,
 			Vector2 position, Vector2 scale) {
 		gameObject.transform.position.set(position);
