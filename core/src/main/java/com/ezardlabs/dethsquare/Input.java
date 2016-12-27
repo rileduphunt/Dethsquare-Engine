@@ -234,6 +234,14 @@ public final class Input {
 		}
 	}
 
+	static void clearAll() {
+		keys.clear();
+		keyChanges.clear();
+		changesToMake.clear();
+		touches = new Touch[0];
+		touchesToRemove.clear();
+	}
+
 	private static void setKeyDown(KeyCode keyCode) {
 		if (!keys.containsKey(keyCode)) keyChanges.put(keyCode, 0);
 	}
