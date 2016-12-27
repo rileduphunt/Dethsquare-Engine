@@ -27,6 +27,8 @@ public class LevelManager {
 		Renderer.init();
 		Collider.init();
 		loadingLevel = false;
+
+		Input.clearAll();
 	}
 
 	public static Level getCurrentLevel() {
