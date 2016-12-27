@@ -1,0 +1,1 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/59e1c9e9b1b04406a4bcdf81515488fc)](https://www.codacy.com/app/8-Bit-Warframe/Dethsquare-Engine)
