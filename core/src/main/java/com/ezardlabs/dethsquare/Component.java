@@ -72,7 +72,7 @@ public class Component {
 
 	@Target(ElementType.TYPE)
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface RequiredComponents {
+	public @interface RequiredComponents {
 		Class<? extends Component>[] value();
 	}
 
