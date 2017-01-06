@@ -1,7 +1,10 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.Component.RequiredComponents;
+
 import java.util.Iterator;
 
+@RequiredComponents(Renderer.class)
 public final class Animator extends Script implements Iterable<Animation> {
 	private Animation[] animations;
 	private int index = -1;
