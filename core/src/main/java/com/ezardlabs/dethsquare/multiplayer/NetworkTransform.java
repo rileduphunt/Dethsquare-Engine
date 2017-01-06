@@ -1,7 +1,11 @@
 package com.ezardlabs.dethsquare.multiplayer;
 
+import com.ezardlabs.dethsquare.Component.RequiredComponents;
+import com.ezardlabs.dethsquare.Transform;
+
 import java.nio.ByteBuffer;
 
+@RequiredComponents(Transform.class)
 public class NetworkTransform extends NetworkBehaviour {
 
 	@Override

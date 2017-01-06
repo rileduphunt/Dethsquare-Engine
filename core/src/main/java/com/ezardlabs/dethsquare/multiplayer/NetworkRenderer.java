@@ -1,7 +1,11 @@
 package com.ezardlabs.dethsquare.multiplayer;
 
+import com.ezardlabs.dethsquare.Component.RequiredComponents;
+import com.ezardlabs.dethsquare.Renderer;
+
 import java.nio.ByteBuffer;
 
+@RequiredComponents(Renderer.class)
 public class NetworkRenderer extends NetworkBehaviour {
 
 	@Override

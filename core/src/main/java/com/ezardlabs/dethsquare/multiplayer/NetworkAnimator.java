@@ -1,7 +1,11 @@
 package com.ezardlabs.dethsquare.multiplayer;
 
+import com.ezardlabs.dethsquare.Animator;
+import com.ezardlabs.dethsquare.Component.RequiredComponents;
+
 import java.nio.ByteBuffer;
 
+@RequiredComponents(Animator.class)
 public class NetworkAnimator extends NetworkBehaviour {
 
 	@Override
