@@ -244,7 +244,7 @@ class UPnPManager {
 				break;
 			case "service":
 				children = element.getChildNodes();
-				outer:
+				boolean breakOuterLoop = false;
 				for (int i = 0; i < children.getLength(); i++) {
 					Node child = children.item(i);
 					if ("serviceType".equals(child.getNodeName()) &&
@@ -254,10 +254,12 @@ class UPnPManager {
 							if ("controlURL".equals(child2.getNodeName())) {
 								services.add(new String[]{child.getTextContent(),
 										child2.getTextContent()});
-								break outer;
+								breakOuterLoop = true;
+								break;
 							}
 						}
 					}
+					if (breakOuterLoop) break;
 				}
 				break;
 			default:
