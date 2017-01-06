@@ -70,15 +70,6 @@ public final class RectF {
 		return left == r.left && top == r.top && right == r.right && bottom == r.bottom;
 	}
 
-	@Override
-	public int hashCode() {
-		int result = (left != +0.0f ? Float.floatToIntBits(left) : 0);
-		result = 31 * result + (top != +0.0f ? Float.floatToIntBits(top) : 0);
-		result = 31 * result + (right != +0.0f ? Float.floatToIntBits(right) : 0);
-		result = 31 * result + (bottom != +0.0f ? Float.floatToIntBits(bottom) : 0);
-		return result;
-	}
-
 	public String toString() {
 		return "RectF(" + left + ", " + top + ", " + right + ", " + bottom + ")";
 	}
