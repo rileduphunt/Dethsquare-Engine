@@ -7,7 +7,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.Arrays;
 
 /**
  * Base class for everything attached to {@link GameObject GameObjects}
@@ -25,10 +24,7 @@ public class Component {
 	public Transform transform;
 
 	void internalStart() {
-		System.out.println(getClass());
-		System.out.println(Arrays.toString(Animator.class.getAnnotations()));
 		for (Annotation a : getClass().getAnnotations()) {
-			System.out.println(a);
 			if (a instanceof RequiredComponents) {
 				for (Class<? extends Component> c : ((RequiredComponents) a)
 						.value()) {
