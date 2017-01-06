@@ -160,6 +160,8 @@ public final class Input {
 			case DESKTOP:
 				updateKeys();
 				break;
+			default:
+				break;
 		}
 	}
 
