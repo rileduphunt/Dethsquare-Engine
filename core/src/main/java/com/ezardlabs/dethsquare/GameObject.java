@@ -171,6 +171,48 @@ public final class GameObject implements Serializable {
 	}
 
 	/**
+	 * Checks whether a {@link Component} of the given type is attached to
+	 * this {@link GameObject}
+	 *
+	 * @param type The type of the {@link Component}
+	 * @return True if the {@link Component} is attached; false otherwise
+	 */
+	public boolean hasComponent(Class<? extends Component> type) {
+		for (Component c : components) {
+			if (c.getClass().equals(type)) {
+				return true;
+			}
+		}
+		for (Component c : newComponents) {
+			if (c.getClass().equals(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether a {@link Component} of the given type or any subclass
+	 * of that type is attached to this {@link GameObject}
+	 *
+	 * @param type The type of the {@link Component}
+	 * @return True if the {@link Component} is attached; false otherwise
+	 */
+	public boolean hasComponentOfType(Class<? extends Component> type) {
+		for (Component c : components) {
+			if (type.isAssignableFrom(c.getClass())) {
+				return true;
+			}
+		}
+		for (Component c : newComponents) {
+			if (type.isAssignableFrom(c.getClass())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Returns the {@link Component} of the given type if the {@link GameObject} has one
 	 * attached, null if it doesn't
 	 *
