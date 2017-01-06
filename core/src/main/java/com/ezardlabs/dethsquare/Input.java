@@ -4,6 +4,7 @@ import com.ezardlabs.dethsquare.Touch.TouchPhase;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.KeyListener;
 import com.ezardlabs.dethsquare.util.GameListeners.MouseListener;
+import com.ezardlabs.dethsquare.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,13 +153,25 @@ public final class Input {
 	}
 
 	public static void update() {
+		switch (Utils.PLATFORM) {
+			case ANDROID:
+				updateTouches();
+				break;
+			case DESKTOP:
+				updateKeys();
+				break;
+		}
+	}
+
+	private static void updateTouches() {
 		Holder holder;
 		for (int i = 0; i < changesToMake.size(); i++) {
-			switch((holder = changesToMake.get(i)).phase) {
+			switch ((holder = changesToMake.get(i)).phase) {
 				case BEGAN:
 					Touch[] temp = new Touch[touches.length + 1];
 					System.arraycopy(touches, 0, temp, 0, touches.length);
-					temp[touches.length] = new Touch(holder.id, new Vector2(holder.x, holder.y));
+					temp[touches.length] = new Touch(holder.id,
+							new Vector2(holder.x, holder.y));
 					touches = temp;
 					break;
 				case MOVED:
@@ -196,7 +209,9 @@ public final class Input {
 		}
 
 		changesToMake.clear();
+	}
 
+	private static void updateKeys() {
 		for (KeyCode keyCode : keys.keySet().toArray(new KeyCode[keys.size()])) {
 			switch (keys.get(keyCode)) {
 				case 0:
