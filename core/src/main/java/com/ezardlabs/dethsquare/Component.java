@@ -2,6 +2,13 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.Collider.Collision;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Arrays;
+
 /**
  * Base class for everything attached to {@link GameObject GameObjects}
  */
@@ -16,6 +23,25 @@ public class Component {
 	 * attached to (null if there is none attached)
 	 */
 	public Transform transform;
+
+	void internalStart() {
+		System.out.println(getClass());
+		System.out.println(Arrays.toString(Animator.class.getAnnotations()));
+		for (Annotation a : getClass().getAnnotations()) {
+			System.out.println(a);
+			if (a instanceof RequiredComponents) {
+				for (Class<? extends Component> c : ((RequiredComponents) a)
+						.value()) {
+					if (!gameObject.hasComponentOfType(c)) {
+						throw new RequiredComponentNotPresentError(
+								gameObject.name, getClass(), c);
+					}
+				}
+				break;
+			}
+		}
+		start();
+	}
 
     /**
      * Called when this {@link Component} is first created
@@ -46,5 +72,41 @@ public class Component {
 	 */
 	public void onCollision(Collision collision) {
 		// Only used in subclasses
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@interface RequiredComponents {
+		Class<? extends Component>[] value();
+	}
+
+	private static class RequiredComponentNotPresentError extends Error {
+
+		private RequiredComponentNotPresentError(String gameObjectName,
+				Class component, Class requiredComponent) {
+			super(gameObjectName + ": Could not create " +
+					addIndefiniteArticle(component.getSimpleName()) +
+					" because it requires " +
+					addIndefiniteArticle(requiredComponent.getSimpleName()) +
+					", which was missing");
+		}
+
+		private static String addIndefiniteArticle(String str) {
+			switch(str.charAt(0)) {
+				case 'a':
+				case 'e':
+				case 'i':
+				case 'o':
+				case 'u':
+				case 'A':
+				case 'E':
+				case 'I':
+				case 'O':
+				case 'U':
+					return "an '" + str + "'";
+				default:
+					return "a '" + str + "'";
+			}
+		}
 	}
 }

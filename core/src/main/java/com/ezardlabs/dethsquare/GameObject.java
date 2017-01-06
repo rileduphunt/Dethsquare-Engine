@@ -529,7 +529,7 @@ public final class GameObject implements Serializable {
 		objectsWithChangedComponents.clear();
 
 		for (Component component : temp) {
-			component.start();
+			component.internalStart();
 		}
 
 		newObjects.clear();
