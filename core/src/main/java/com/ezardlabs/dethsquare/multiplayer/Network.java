@@ -41,7 +41,7 @@ public class Network {
 	private static UDPReader udpIn;
 	private static TCPWriter[] tcpOut;
 
-	private static int myPort = 2828;
+	static int myPort = 2828;
 
 	private static int playerId = 0;
 	private static boolean host = true;
