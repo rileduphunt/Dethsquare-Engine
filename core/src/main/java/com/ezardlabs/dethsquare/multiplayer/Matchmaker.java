@@ -52,7 +52,7 @@ public class Matchmaker implements NetworkConstants {
 									players[i] = NetworkPlayer
 											.fromJson(jsonPlayers.getJSONObject(i));
 								}
-								listener.onGameFound(players);
+								listener.onGameFound(json.getInt("playerId"), players);
 								break;
 							default:
 								listener.onError("Unknown error");
@@ -70,7 +70,7 @@ public class Matchmaker implements NetworkConstants {
 	public interface MatchmakingListener {
 		void onCreateGame();
 
-		void onGameFound(NetworkPlayer[] players);
+		void onGameFound(int playerId, NetworkPlayer[] players);
 
 		void onError(String error);
 	}
