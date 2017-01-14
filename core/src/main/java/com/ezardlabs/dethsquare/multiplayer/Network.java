@@ -39,7 +39,7 @@ public class Network {
 	private static int[] ports;
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
-	private static TCPWriter[] tcpOut;
+	private static final TCPWriter[] tcpOut = new TCPWriter[3];
 
 	static int myPort = 2828;
 
@@ -98,7 +98,6 @@ public class Network {
 
 			addresses = new InetAddress[peers.length()];
 			ports = new int[peers.length()];
-			tcpOut = new TCPWriter[peers.length()];
 
 			listener.onNetworkStateChanged(State.GAME_CONNECTING);
 
@@ -355,10 +354,19 @@ public class Network {
 		}
 	}
 
+	private static boolean isSolo() {
+		for (TCPWriter writer : tcpOut) {
+			if (writer != null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public static GameObject instantiate(String prefabName, Vector2 position) {
 		GameObject gameObject = PrefabManager.loadPrefab(prefabName);
 		gameObject.networkId = getNewNetworkId();
-		if (tcpOut != null) {
+		if (!isSolo()) {
 			List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
 			HashMap<String, Integer> networkIds = new HashMap<>();
 			for (NetworkBehaviour nb : networkBehaviours) {
@@ -380,7 +388,9 @@ public class Network {
 			String message = sb.toString();
 			message = message.substring(0, message.length() - 1);
 			for (TCPWriter writer : tcpOut) {
-				writer.sendMessage(INSTANTIATE, message);
+				if (writer != null) {
+					writer.sendMessage(INSTANTIATE, message);
+				}
 			}
 		}
 
@@ -436,9 +446,11 @@ public class Network {
 
 	public static void destroy(GameObject gameObject) {
 		GameObject.destroy(gameObject);
-		if (tcpOut != null) {
+		if (!isSolo()) {
 			for (TCPWriter writer : tcpOut) {
-				writer.sendMessage(DESTROY, String.valueOf(gameObject.networkId));
+				if (writer != null) {
+					writer.sendMessage(DESTROY, String.valueOf(gameObject.networkId));
+				}
 			}
 		}
 	}
