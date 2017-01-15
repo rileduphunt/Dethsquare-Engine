@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -50,14 +52,14 @@ public class DesktopLauncher extends Launcher {
 		frame.setUndecorated(true);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setFocusable(true);
-		onResize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+		onResize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
+				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight());
 		game.create();
 		frame.setVisible(true);
 		frame.vBuffer = frame.createVolatileImage(frame.getWidth(), frame.getHeight());
 	}
 
-	static class GameJFrame extends JFrame implements java.awt.event
-			.KeyListener, java.awt.event.MouseListener, MouseMotionListener{
+	static class GameJFrame extends JFrame implements java.awt.event.KeyListener, java.awt.event.MouseListener, MouseMotionListener, ComponentListener {
 		private final DesktopLauncher launcher;
 		private VolatileImage vBuffer;
 		static Graphics2D graphics;
@@ -68,10 +70,32 @@ public class DesktopLauncher extends Launcher {
 			addKeyListener(this);
 			addMouseListener(this);
 			addMouseMotionListener(this);
+			addComponentListener(this);
 			GameListeners.addResizeListener((width, height) -> {
 				vBuffer = createVolatileImage(width, height);
 				GameJFrame.imageObserver = this;
 			});
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			resizeListeners
+					.forEach(resizeListener -> resizeListener.onResize(getWidth(), getHeight()));
+		}
+
+		@Override
+		public void componentMoved(ComponentEvent e) {
+
+		}
+
+		@Override
+		public void componentShown(ComponentEvent e) {
+
+		}
+
+		@Override
+		public void componentHidden(ComponentEvent e) {
+
 		}
 
 		@Override
