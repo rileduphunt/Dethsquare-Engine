@@ -99,6 +99,14 @@ public final class AudioSource extends Component {
 		current = audioClip.id;
 	}
 
+	public boolean getLoop() {
+		return loop;
+	}
+
+	public float getVolume() {
+		return volume;
+	}
+
 	private static void volumeRangeCheck(float volume) {
 		if (volume < 0 || volume > 1) {
 			throw new IllegalArgumentException("Volume must be between 0 and 1 inclusive");
