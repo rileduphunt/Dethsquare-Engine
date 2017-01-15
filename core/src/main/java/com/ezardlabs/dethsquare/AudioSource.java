@@ -22,6 +22,10 @@ public final class AudioSource extends Component {
 		this(audioClip, LOOP_DEFAULT, VOLUME_DEFAULT, GROUP_DEFAULT);
 	}
 
+	public AudioSource(AudioGroup audioGroup) {
+		this(null, LOOP_DEFAULT, VOLUME_DEFAULT, audioGroup);
+	}
+
 	public AudioSource(AudioClip audioClip, boolean loop) {
 		this(audioClip, loop, VOLUME_DEFAULT, GROUP_DEFAULT);
 	}
