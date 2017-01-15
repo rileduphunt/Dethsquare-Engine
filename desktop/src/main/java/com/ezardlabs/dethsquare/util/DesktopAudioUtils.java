@@ -132,8 +132,8 @@ public class DesktopAudioUtils implements AudioUtils {
 		alSourcei(audio.get(id), AL_LOOPING, loop ? 1 : 0);
 	}
 
-	public void setVolume(int id, int volume) {
-		alSourcef(audio.get(id), AL_GAIN, volume / 100f);
+	public void setVolume(int id, float volume) {
+		alSourcef(audio.get(id), AL_GAIN, volume);
 	}
 
 	public void destroy(int id) {
