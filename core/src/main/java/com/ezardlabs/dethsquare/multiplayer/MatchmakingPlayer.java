@@ -2,7 +2,7 @@ package com.ezardlabs.dethsquare.multiplayer;
 
 import org.json.JSONObject;
 
-public class MatchmakingPlayer {
+class MatchmakingPlayer {
 	private String ip;
 	private int port;
 
@@ -11,11 +11,11 @@ public class MatchmakingPlayer {
 		this.port = port;
 	}
 
-	public String getIp() {
+	String getIp() {
 		return ip;
 	}
 
-	public int getPort() {
+	int getPort() {
 		return port;
 	}
 
