@@ -13,38 +13,38 @@ public final class AudioSource extends Component {
 	private AudioGroup audioGroup;
 
 	public AudioSource() {
-		this(null, false, 50, NONE);
+		this(null, false, 0.5f, NONE);
 	}
 
 	public AudioSource(AudioClip audioClip) {
-		this(audioClip, false, 50, NONE);
+		this(audioClip, false, 0.5f, NONE);
 	}
 
 	public AudioSource(AudioClip audioClip, boolean loop) {
-		this(audioClip, loop, 50, NONE);
+		this(audioClip, loop, 0.5f, NONE);
 	}
 
-	public AudioSource(AudioClip audioClip, int volume) {
+	public AudioSource(AudioClip audioClip, float volume) {
 		this(audioClip, false, volume, NONE);
 	}
 
 	public AudioSource(AudioClip audioClip, AudioGroup audioGroup) {
-		this(audioClip, false, 50, audioGroup);
+		this(audioClip, false, 0.5f, audioGroup);
 	}
 
 	public AudioSource(AudioClip audioClip, boolean loop, AudioGroup audioGroup) {
-		this(audioClip, loop, 50, audioGroup);
+		this(audioClip, loop, 0.5f, audioGroup);
 	}
 
-	public AudioSource(AudioClip audioClip, int volume, AudioGroup audioGroup) {
+	public AudioSource(AudioClip audioClip, float volume, AudioGroup audioGroup) {
 		this(audioClip, false, volume, audioGroup);
 	}
 
-	public AudioSource(AudioClip audioClip, boolean loop, int volume) {
+	public AudioSource(AudioClip audioClip, boolean loop, float volume) {
 		this(audioClip, loop, volume, NONE);
 	}
 
-	public AudioSource(AudioClip audioClip, boolean loop, int volume, AudioGroup audioGroup) {
+	public AudioSource(AudioClip audioClip, boolean loop, float volume, AudioGroup audioGroup) {
 		initial = audioClip;
 		this.loop = loop;
 		this.volume = volume;
