@@ -19,8 +19,9 @@ public final class Transform extends Component {
 			@Override
 			public void onVector2Changed(float xDiff, float yDiff) {
 				for (int i = 0; i < children.size(); i++) {
-					children.get(i).position.x += xDiff;
-					children.get(i).position.y += yDiff;
+					Transform child = children.get(i);
+					child.transform.position.set(child.transform.position.x + xDiff,
+							child.transform.position.y + yDiff);
 				}
 			}
 		});
