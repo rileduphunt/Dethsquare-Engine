@@ -107,6 +107,10 @@ public final class AudioSource extends Component {
 		return volume;
 	}
 
+	public AudioGroup getAudioGroup() {
+		return audioGroup;
+	}
+
 	private static void volumeRangeCheck(float volume) {
 		if (volume < 0 || volume > 1) {
 			throw new IllegalArgumentException("Volume must be between 0 and 1 inclusive");
