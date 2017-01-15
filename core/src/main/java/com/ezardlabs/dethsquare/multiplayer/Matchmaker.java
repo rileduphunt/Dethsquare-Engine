@@ -3,7 +3,6 @@ package com.ezardlabs.dethsquare.multiplayer;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -40,13 +39,9 @@ public class Matchmaker implements NetworkConstants {
 								}
 								break;
 							case GAME_JOIN:
-								JSONArray jsonPlayers = json.getJSONArray("players");
-								MatchmakingPlayer[] players = new MatchmakingPlayer[jsonPlayers.length()];
-								for (int i = 0; i < players.length; i++) {
-									players[i] = MatchmakingPlayer
-											.fromJson(jsonPlayers.getJSONObject(i));
-								}
-								listener.onGameFound(json.getInt("playerId"), players);
+								MatchmakingGame game = MatchmakingGame
+										.fromJson(json.getJSONObject("game"));
+								listener.onGameFound(json.getInt("playerId"), game);
 								break;
 							default:
 								listener.onError("Unknown error");
@@ -113,7 +108,7 @@ public class Matchmaker implements NetworkConstants {
 	public interface MatchmakingListener {
 		boolean onCreateGame();
 
-		void onGameFound(int playerId, MatchmakingPlayer[] players);
+		void onGameFound(int playerId, MatchmakingGame game);
 
 		void onError(String error);
 	}
