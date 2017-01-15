@@ -35,8 +35,9 @@ public class Matchmaker implements NetworkConstants {
 						String message = json.getString("message");
 						switch (message) {
 							case GAME_CREATE:
-								listener.onCreateGame();
-								Matchmaker.this.registerNewGame();
+								if (listener.onCreateGame()) {
+									registerNewGame();
+								}
 								break;
 							case GAME_JOIN:
 								JSONArray jsonPlayers = json.getJSONArray("players");
@@ -110,7 +111,7 @@ public class Matchmaker implements NetworkConstants {
 	}
 
 	public interface MatchmakingListener {
-		void onCreateGame();
+		boolean onCreateGame();
 
 		void onGameFound(int playerId, NetworkPlayer[] players);
 
