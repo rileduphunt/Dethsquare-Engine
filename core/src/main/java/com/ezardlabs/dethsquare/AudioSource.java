@@ -2,10 +2,12 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.AudioManager.AudioGroup;
 
-import static com.ezardlabs.dethsquare.AudioManager.AudioGroup.NONE;
 import static com.ezardlabs.dethsquare.util.Utils.AUDIO;
 
 public final class AudioSource extends Component {
+	private static final boolean LOOP_DEFAULT = false;
+	private static final float VOLUME_DEFAULT = 1;
+	private static final AudioGroup GROUP_DEFAULT = AudioGroup.NONE;
 	private final AudioClip initial;
 	private int current = -1;
 	private boolean loop;
@@ -13,35 +15,35 @@ public final class AudioSource extends Component {
 	private AudioGroup audioGroup;
 
 	public AudioSource() {
-		this(null, false, 0.5f, NONE);
+		this(null, LOOP_DEFAULT, VOLUME_DEFAULT, GROUP_DEFAULT);
 	}
 
 	public AudioSource(AudioClip audioClip) {
-		this(audioClip, false, 0.5f, NONE);
+		this(audioClip, LOOP_DEFAULT, VOLUME_DEFAULT, GROUP_DEFAULT);
 	}
 
 	public AudioSource(AudioClip audioClip, boolean loop) {
-		this(audioClip, loop, 0.5f, NONE);
+		this(audioClip, loop, VOLUME_DEFAULT, GROUP_DEFAULT);
 	}
 
 	public AudioSource(AudioClip audioClip, float volume) {
-		this(audioClip, false, volume, NONE);
+		this(audioClip, LOOP_DEFAULT, volume, GROUP_DEFAULT);
 	}
 
 	public AudioSource(AudioClip audioClip, AudioGroup audioGroup) {
-		this(audioClip, false, 0.5f, audioGroup);
+		this(audioClip, false, VOLUME_DEFAULT, audioGroup);
 	}
 
 	public AudioSource(AudioClip audioClip, boolean loop, AudioGroup audioGroup) {
-		this(audioClip, loop, 0.5f, audioGroup);
+		this(audioClip, loop, VOLUME_DEFAULT, audioGroup);
 	}
 
 	public AudioSource(AudioClip audioClip, float volume, AudioGroup audioGroup) {
-		this(audioClip, false, volume, audioGroup);
+		this(audioClip, LOOP_DEFAULT, volume, audioGroup);
 	}
 
 	public AudioSource(AudioClip audioClip, boolean loop, float volume) {
-		this(audioClip, loop, volume, NONE);
+		this(audioClip, loop, volume, GROUP_DEFAULT);
 	}
 
 	public AudioSource(AudioClip audioClip, boolean loop, float volume, AudioGroup audioGroup) {
