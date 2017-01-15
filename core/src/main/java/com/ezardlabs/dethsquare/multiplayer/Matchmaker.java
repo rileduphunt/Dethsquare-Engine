@@ -1,6 +1,7 @@
 package com.ezardlabs.dethsquare.multiplayer;
 
 import com.ezardlabs.dethsquare.util.GameListeners;
+import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,37 +33,42 @@ public class Matchmaker implements NetworkConstants {
 			}
 			return null;
 		});
-		GameListeners.addUpdateListener(() -> {
-			if (task.isDone()) {
-				try {
-					String data = task.get();
-					if (data == null) {
-						listener.onError("Server error");
-					} else {
-						JSONObject json = new JSONObject(data);
-						String message = json.getString("message");
-						switch (message) {
-							case GAME_CREATE:
-								listener.onCreateGame();
-								registerNewGame();
-								break;
-							case GAME_JOIN:
-								JSONArray jsonPlayers = json.getJSONArray("players");
-								NetworkPlayer[] players = new NetworkPlayer[jsonPlayers.length()];
-								for (int i = 0; i < players.length; i++) {
-									players[i] = NetworkPlayer
-											.fromJson(jsonPlayers.getJSONObject(i));
-								}
-								listener.onGameFound(json.getInt("playerId"), players);
-								break;
-							default:
-								listener.onError("Unknown error");
-								break;
+		GameListeners.addUpdateListener(new UpdateListener() {
+			@Override
+			public void onUpdate() {
+				if (task.isDone()) {
+					GameListeners.removeUpdateListener(this);
+					try {
+						String data = task.get();
+						if (data == null) {
+							listener.onError("Server error");
+						} else {
+							JSONObject json = new JSONObject(data);
+							String message = json.getString("message");
+							switch (message) {
+								case GAME_CREATE:
+									listener.onCreateGame();
+									Matchmaker.this.registerNewGame();
+									break;
+								case GAME_JOIN:
+									JSONArray jsonPlayers = json.getJSONArray("players");
+									NetworkPlayer[] players = new NetworkPlayer[jsonPlayers
+											.length()];
+									for (int i = 0; i < players.length; i++) {
+										players[i] = NetworkPlayer
+												.fromJson(jsonPlayers.getJSONObject(i));
+									}
+									listener.onGameFound(json.getInt("playerId"), players);
+									break;
+								default:
+									listener.onError("Unknown error");
+									break;
+							}
 						}
+					} catch (InterruptedException | ExecutionException e) {
+						e.printStackTrace();
+						listener.onError("Internal error");
 					}
-				} catch (InterruptedException | ExecutionException e) {
-					e.printStackTrace();
-					listener.onError("Internal error");
 				}
 			}
 		});
