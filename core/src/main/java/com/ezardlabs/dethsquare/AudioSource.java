@@ -67,6 +67,11 @@ public final class AudioSource extends Component {
 		}
 	}
 
+	@Override
+	protected void destroy() {
+		stop();
+	}
+
 	public void play() {
 		AUDIO.play(current);
 	}
