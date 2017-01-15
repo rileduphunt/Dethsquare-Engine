@@ -65,11 +65,13 @@ public final class AudioSource extends Component {
 			setLoop(loop);
 			setVolume(volume);
 		}
+		AudioManager.addAudioSource(this);
 	}
 
 	@Override
 	protected void destroy() {
 		stop();
+		AudioManager.removeAudioSource(this);
 	}
 
 	public void play() {
