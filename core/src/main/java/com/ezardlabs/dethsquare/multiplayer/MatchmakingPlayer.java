@@ -2,11 +2,11 @@ package com.ezardlabs.dethsquare.multiplayer;
 
 import org.json.JSONObject;
 
-public class NetworkPlayer {
+public class MatchmakingPlayer {
 	private String ip;
 	private int port;
 
-	private NetworkPlayer(String ip, int port) {
+	private MatchmakingPlayer(String ip, int port) {
 		this.ip = ip;
 		this.port = port;
 	}
@@ -19,7 +19,7 @@ public class NetworkPlayer {
 		return port;
 	}
 
-	static NetworkPlayer fromJson(JSONObject object) {
-		return new NetworkPlayer(object.getString("ip"), object.getInt("port"));
+	static MatchmakingPlayer fromJson(JSONObject object) {
+		return new MatchmakingPlayer(object.getString("ip"), object.getInt("port"));
 	}
 }

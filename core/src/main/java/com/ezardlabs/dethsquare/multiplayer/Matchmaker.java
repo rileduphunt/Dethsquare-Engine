@@ -41,9 +41,9 @@ public class Matchmaker implements NetworkConstants {
 								break;
 							case GAME_JOIN:
 								JSONArray jsonPlayers = json.getJSONArray("players");
-								NetworkPlayer[] players = new NetworkPlayer[jsonPlayers.length()];
+								MatchmakingPlayer[] players = new MatchmakingPlayer[jsonPlayers.length()];
 								for (int i = 0; i < players.length; i++) {
-									players[i] = NetworkPlayer
+									players[i] = MatchmakingPlayer
 											.fromJson(jsonPlayers.getJSONObject(i));
 								}
 								listener.onGameFound(json.getInt("playerId"), players);
@@ -113,7 +113,7 @@ public class Matchmaker implements NetworkConstants {
 	public interface MatchmakingListener {
 		boolean onCreateGame();
 
-		void onGameFound(int playerId, NetworkPlayer[] players);
+		void onGameFound(int playerId, MatchmakingPlayer[] players);
 
 		void onError(String error);
 	}
