@@ -44,6 +44,7 @@ public class Matchmaker implements NetworkConstants {
 						switch (message) {
 							case GAME_CREATE:
 								listener.onCreateGame();
+								registerNewGame();
 								break;
 							case GAME_JOIN:
 								JSONArray jsonPlayers = json.getJSONArray("players");
@@ -65,6 +66,17 @@ public class Matchmaker implements NetworkConstants {
 				}
 			}
 		});
+	}
+
+	private void registerNewGame() {
+		new Thread(() -> {
+			byte[] bytes = GAME_CREATE.getBytes();
+			try (DatagramSocket socket = new DatagramSocket(Network.myPort)) {
+				socket.send(new DatagramPacket(bytes, bytes.length, server));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 
 	public interface MatchmakingListener {
