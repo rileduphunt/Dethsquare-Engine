@@ -85,17 +85,17 @@ public class DesktopLauncher extends Launcher {
 
 		@Override
 		public void componentMoved(ComponentEvent e) {
-
+			// unused
 		}
 
 		@Override
 		public void componentShown(ComponentEvent e) {
-
+			// unused
 		}
 
 		@Override
 		public void componentHidden(ComponentEvent e) {
-
+			// unused
 		}
 
 		@Override
@@ -443,7 +443,7 @@ public class DesktopLauncher extends Launcher {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-
+			// unused
 		}
 
 		@Override
