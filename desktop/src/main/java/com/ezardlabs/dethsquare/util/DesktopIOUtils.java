@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class DesktopIOUtils implements IOUtils {
 
 	public BufferedReader getReader(String path) {
-		System.out.println(path + ", " + getInputStream(path));
 		return new BufferedReader(new InputStreamReader(getInputStream(path)));
 	}
 
