@@ -20,8 +20,7 @@ public final class Transform extends Component {
 			public void onVector2Changed(float xDiff, float yDiff) {
 				for (int i = 0; i < children.size(); i++) {
 					Transform child = children.get(i);
-					child.transform.position.set(child.transform.position.x + xDiff,
-							child.transform.position.y + yDiff);
+					child.position.set(child.position.x + xDiff, child.position.y + yDiff);
 				}
 			}
 		});
