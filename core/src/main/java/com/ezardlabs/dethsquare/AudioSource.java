@@ -1,33 +1,60 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.AudioManager.AudioGroup;
+
 import static com.ezardlabs.dethsquare.util.Utils.AUDIO;
 
 public final class AudioSource extends Component {
+	private static final boolean LOOP_DEFAULT = false;
+	private static final float VOLUME_DEFAULT = 1;
+	private static final AudioGroup GROUP_DEFAULT = AudioGroup.NONE;
 	private final AudioClip initial;
 	private int current = -1;
 	private boolean loop;
-	private int volume;
+	private float volume;
+	private AudioGroup audioGroup;
 
 	public AudioSource() {
-		this(null, false, 50);
+		this(null, LOOP_DEFAULT, VOLUME_DEFAULT, GROUP_DEFAULT);
 	}
 
 	public AudioSource(AudioClip audioClip) {
-		this(audioClip, false, 50);
+		this(audioClip, LOOP_DEFAULT, VOLUME_DEFAULT, GROUP_DEFAULT);
+	}
+
+	public AudioSource(AudioGroup audioGroup) {
+		this(null, LOOP_DEFAULT, VOLUME_DEFAULT, audioGroup);
 	}
 
 	public AudioSource(AudioClip audioClip, boolean loop) {
-		this(audioClip, loop, 50);
+		this(audioClip, loop, VOLUME_DEFAULT, GROUP_DEFAULT);
 	}
 
-	public AudioSource(AudioClip audioClip, int volume) {
-		this(audioClip, false, volume);
+	public AudioSource(AudioClip audioClip, float volume) {
+		this(audioClip, LOOP_DEFAULT, volume, GROUP_DEFAULT);
 	}
 
-	public AudioSource(AudioClip audioClip, boolean loop, int volume) {
+	public AudioSource(AudioClip audioClip, AudioGroup audioGroup) {
+		this(audioClip, false, VOLUME_DEFAULT, audioGroup);
+	}
+
+	public AudioSource(AudioClip audioClip, boolean loop, AudioGroup audioGroup) {
+		this(audioClip, loop, VOLUME_DEFAULT, audioGroup);
+	}
+
+	public AudioSource(AudioClip audioClip, float volume, AudioGroup audioGroup) {
+		this(audioClip, LOOP_DEFAULT, volume, audioGroup);
+	}
+
+	public AudioSource(AudioClip audioClip, boolean loop, float volume) {
+		this(audioClip, loop, volume, GROUP_DEFAULT);
+	}
+
+	public AudioSource(AudioClip audioClip, boolean loop, float volume, AudioGroup audioGroup) {
 		initial = audioClip;
 		this.loop = loop;
 		this.volume = volume;
+		this.audioGroup = audioGroup;
 	}
 
 	@Override
@@ -38,6 +65,13 @@ public final class AudioSource extends Component {
 			setLoop(loop);
 			setVolume(volume);
 		}
+		AudioManager.addAudioSource(this);
+	}
+
+	@Override
+	protected void destroy() {
+		stop();
+		AudioManager.removeAudioSource(this);
 	}
 
 	public void play() {
@@ -57,13 +91,32 @@ public final class AudioSource extends Component {
 		AUDIO.setLoop(current, loop);
 	}
 
-	public void setVolume(int volume) {
+	public void setVolume(float volume) {
+		volumeRangeCheck(volume);
 		this.volume = volume;
-		AUDIO.setVolume(current, volume);
+		AUDIO.setVolume(current, AudioManager.getVolume(volume, audioGroup));
 	}
 
 	public void setAudioClip(AudioClip audioClip) {
 		current = audioClip.id;
+	}
+
+	public boolean getLoop() {
+		return loop;
+	}
+
+	public float getVolume() {
+		return volume;
+	}
+
+	public AudioGroup getAudioGroup() {
+		return audioGroup;
+	}
+
+	private static void volumeRangeCheck(float volume) {
+		if (volume < 0 || volume > 1) {
+			throw new IllegalArgumentException("Volume must be between 0 and 1 inclusive");
+		}
 	}
 
 	public static final class AudioClip {

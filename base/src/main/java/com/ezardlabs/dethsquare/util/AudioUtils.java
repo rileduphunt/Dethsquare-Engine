@@ -47,7 +47,7 @@ public interface AudioUtils {
 	 * @param id     The ID of the audio clip
 	 * @param volume The volume to set
 	 */
-	void setVolume(int id, int volume);
+	void setVolume(int id, float volume);
 
 	/**
 	 * Destroy the audio file associated with the given audio clip ID
