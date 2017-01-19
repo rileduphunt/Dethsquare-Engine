@@ -76,7 +76,7 @@ public class Matchmaker implements NetworkConstants {
 		public void run() {
 			while (true) {
 				try {
-					if (message == null) {
+					while (message == null) {
 						synchronized (this) {
 							wait();
 						}
