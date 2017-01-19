@@ -3,7 +3,7 @@ package com.ezardlabs.dethsquare.multiplayer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-class MatchmakingGame {
+public class MatchmakingGame {
 	private final int id;
 	private final MatchmakingPlayer[] players;
 
