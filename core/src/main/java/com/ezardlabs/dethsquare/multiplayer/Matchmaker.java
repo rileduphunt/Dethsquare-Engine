@@ -35,13 +35,14 @@ public class Matchmaker implements NetworkConstants {
 						switch (message) {
 							case GAME_CREATE:
 								if (listener.onCreateGame()) {
-									registerNewGame();
+									matchmakingThread.send(GAME_CREATE);
 								}
 								break;
 							case GAME_JOIN:
 								MatchmakingGame game = MatchmakingGame
 										.fromJson(json.getJSONObject("game"));
 								listener.onGameFound(json.getInt("playerId"), game);
+								matchmakingThread.send(GAME_JOIN);
 								break;
 							default:
 								listener.onError("Unknown error");
@@ -51,10 +52,6 @@ public class Matchmaker implements NetworkConstants {
 				}
 			}
 		});
-	}
-
-	private void registerNewGame() {
-		matchmakingThread.send(GAME_CREATE);
 	}
 
 	private class MatchmakingThread extends Thread {
@@ -79,10 +76,13 @@ public class Matchmaker implements NetworkConstants {
 		public void run() {
 			while (true) {
 				try {
-					synchronized (this) {
-						wait();
+					if (message == null) {
+						synchronized (this) {
+							wait();
+						}
 					}
 					byte[] bytes = message.getBytes();
+					message = null;
 					socket.send(new DatagramPacket(bytes, bytes.length, ip, port));
 					DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
 					socket.receive(packet);
@@ -94,7 +94,7 @@ public class Matchmaker implements NetworkConstants {
 		}
 
 		private void send(String data) {
-			message = data;
+			message = "{\"message\":\"" + data + "\"}";
 			synchronized (this) {
 				notify();
 			}
