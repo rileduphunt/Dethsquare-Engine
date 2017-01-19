@@ -8,14 +8,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 public class Matchmaker implements NetworkConstants {
 	private final MatchmakingThread matchmakingThread;
 
-	public Matchmaker(String serverIp, int serverPort) {
-		matchmakingThread = new MatchmakingThread(new InetSocketAddress(serverIp, serverPort));
+	public Matchmaker(InetAddress ip, int serverPort) {
+		matchmakingThread = new MatchmakingThread(ip, serverPort);
 		matchmakingThread.start();
 	}
 
@@ -58,13 +58,15 @@ public class Matchmaker implements NetworkConstants {
 	}
 
 	private class MatchmakingThread extends Thread {
-		private final InetSocketAddress server;
+		private final InetAddress ip;
+		private final int port;
 		private final DatagramSocket socket;
 		private volatile String message;
 		private volatile String response;
 
-		private MatchmakingThread(InetSocketAddress server) {
-			this.server = server;
+		private MatchmakingThread(InetAddress ip, int port) {
+			this.ip = ip;
+			this.port = port;
 			try {
 				socket = new DatagramSocket();
 			} catch (SocketException e) {
@@ -81,7 +83,7 @@ public class Matchmaker implements NetworkConstants {
 						wait();
 					}
 					byte[] bytes = message.getBytes();
-					socket.send(new DatagramPacket(bytes, bytes.length, server));
+					socket.send(new DatagramPacket(bytes, bytes.length, ip, port));
 					DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
 					socket.receive(packet);
 					response = new String(packet.getData());
