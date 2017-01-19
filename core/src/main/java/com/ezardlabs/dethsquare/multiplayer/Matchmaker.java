@@ -77,7 +77,9 @@ public class Matchmaker implements NetworkConstants {
 		public void run() {
 			while (true) {
 				try {
-					wait();
+					synchronized (this) {
+						wait();
+					}
 					byte[] bytes = message.getBytes();
 					socket.send(new DatagramPacket(bytes, bytes.length, server));
 					DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
@@ -91,7 +93,9 @@ public class Matchmaker implements NetworkConstants {
 
 		private void send(String data) {
 			message = data;
-			notify();
+			synchronized (this) {
+				notify();
+			}
 		}
 
 		private boolean isDone() {
