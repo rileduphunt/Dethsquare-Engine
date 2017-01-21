@@ -250,7 +250,7 @@ public class Network {
 		}
 	}
 
-	private static class UDPReader extends Thread {
+	static class UDPReader extends Thread {
 		private final DatagramSocket socket;
 		final ArrayList<byte[]> udpMessages = new ArrayList<>();
 
@@ -275,7 +275,7 @@ public class Network {
 		}
 	}
 
-	private static class UDPWriter extends Thread {
+	static class UDPWriter extends Thread {
 		private final DatagramSocket socket;
 		private final ArrayList<byte[]> messages = new ArrayList<>();
 		private final DatagramPacket[] packets = new DatagramPacket[addresses.length];
