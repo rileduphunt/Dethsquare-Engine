@@ -239,6 +239,12 @@ public class Network {
 				messages.notify();
 			}
 		}
+
+		void setAddresses(SocketAddress[] addresses) {
+			for (int i = 0; i < packets.length; i++) {
+				packets[i] = new DatagramPacket(new byte[0], 0, addresses[i]);
+			}
+		}
 	}
 
 	private static class TCPServer extends Thread {
