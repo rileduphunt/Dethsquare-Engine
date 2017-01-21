@@ -62,6 +62,11 @@ public class Network {
 		TCP
 	}
 
+	public static void init() {
+		udpPort = getAvailablePort(Protocol.UDP);
+		tcpPort = getAvailablePort(Protocol.UDP);
+	}
+
 	public static int getAvailablePort(Protocol protocol) {
 		int port = 2828;
 		loop:
