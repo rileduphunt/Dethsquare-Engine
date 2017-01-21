@@ -18,6 +18,7 @@ public class Matchmaker implements NetworkConstants {
 	public Matchmaker(InetAddress ip, int serverPort) {
 		matchmakingThread = new MatchmakingThread(ip, serverPort);
 		matchmakingThread.start();
+		Network.init();
 	}
 
 	public void findGame(MatchmakingListener listener) {

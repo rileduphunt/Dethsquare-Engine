@@ -41,11 +41,10 @@ public class Network {
 	private static final TCPWriter[] tcpOut = new TCPWriter[3];
 
 	private static final int START_PORT = 2828;
-	private static DatagramSocket datagramSocket = getNewDatagramSocket();
-	private static ServerSocket serverSocket = getNewServerSocket(
-			datagramSocket.getLocalPort() + 1);
-	private static int udpPort = datagramSocket.getLocalPort();
-	private static int tcpPort = serverSocket.getLocalPort();
+	private static DatagramSocket datagramSocket;
+	private static ServerSocket serverSocket;
+	private static int udpPort = -1;
+	private static int tcpPort = -1;
 
 	private static int playerId = 0;
 	private static boolean host = true;
@@ -63,6 +62,17 @@ public class Network {
 	public enum Protocol {
 		UDP,
 		TCP
+	}
+
+	static void init() {
+		datagramSocket = getNewDatagramSocket();
+		udpPort = datagramSocket.getLocalPort();
+		serverSocket = getNewServerSocket(udpPort + 1);
+		tcpPort = serverSocket.getLocalPort();
+
+		UPnPManager.discover();
+		UPnPManager.addPortMapping(udpPort, Protocol.UDP, "Lost Sector UDP " + udpPort);
+		UPnPManager.addPortMapping(tcpPort, Protocol.TCP, "Lost Sector TCP " + tcpPort);
 	}
 
 	static DatagramSocket getNewDatagramSocket() {
