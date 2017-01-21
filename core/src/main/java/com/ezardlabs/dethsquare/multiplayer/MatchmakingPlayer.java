@@ -4,12 +4,14 @@ import org.json.JSONObject;
 
 class MatchmakingPlayer {
 	private String ip;
-	private int port;
+	private int udpPort;
+	private int tcpPort;
 	private boolean host = false;
 
-	private MatchmakingPlayer(String ip, int port, boolean host) {
+	private MatchmakingPlayer(String ip, int udpPort, int tcpPort, boolean host) {
 		this.ip = ip;
-		this.port = port;
+		this.udpPort = udpPort;
+		this.tcpPort = tcpPort;
 		this.host = host;
 	}
 
@@ -17,12 +19,16 @@ class MatchmakingPlayer {
 		return ip;
 	}
 
-	int getPort() {
-		return port;
+	public int getUdpPort() {
+		return udpPort;
+	}
+
+	public int getTcpPort() {
+		return tcpPort;
 	}
 
 	static MatchmakingPlayer fromJson(JSONObject object) {
-		return new MatchmakingPlayer(object.getString("ip"), object.getInt("port"),
-				object.has("host") && object.getBoolean("host"));
+		return new MatchmakingPlayer(object.getString("ip"), object.getInt("udpPort"),
+				object.getInt("tcpPort"), object.has("host") && object.getBoolean("host"));
 	}
 }
