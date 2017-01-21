@@ -73,6 +73,8 @@ public class Network {
 		UPnPManager.discover();
 		UPnPManager.addPortMapping(udpPort, Protocol.UDP, "Lost Sector UDP " + udpPort);
 		UPnPManager.addPortMapping(tcpPort, Protocol.TCP, "Lost Sector TCP " + tcpPort);
+
+		new TCPServer(serverSocket).start();
 	}
 
 	static DatagramSocket getNewDatagramSocket() {
@@ -140,7 +142,7 @@ public class Network {
 		UPnPManager.addPortMapping(tcpPort, Protocol.TCP, "Lost Sector TCP " + tcpPort);
 		System.out.println("Port mappings done");
 		Network.listener = listener;
-		new TCPServer().start();
+		new TCPServer(serverSocket).start();
 		MatchmakingThread mt = new MatchmakingThread();
 		updateListener = () -> checkIfGameFound(mt);
 		GameListeners.addUpdateListener(updateListener);
@@ -315,9 +317,11 @@ public class Network {
 	}
 
 	private static class TCPServer extends Thread {
+		private final ServerSocket serverSocket;
 
-		TCPServer() {
+		TCPServer(ServerSocket serverSocket) {
 			super("TCPServer");
+			this.serverSocket = serverSocket;
 		}
 
 		@Override
