@@ -25,7 +25,7 @@ public class Matchmaker implements NetworkConstants {
 			e.printStackTrace();
 		}
 		if (socket == null) {
-
+			throw new IllegalStateException("Failed to create matchmaking socket");
 		} else {
 			udpReader = new UDPReader(socket);
 			udpWriter = new UDPWriter(socket,
