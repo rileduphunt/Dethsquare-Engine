@@ -2,13 +2,8 @@ package com.ezardlabs.dethsquare.multiplayer;
 
 import com.ezardlabs.dethsquare.GameObject;
 import com.ezardlabs.dethsquare.Vector2;
-import com.ezardlabs.dethsquare.multiplayer.Network.NetworkStateChangeListener.State;
 import com.ezardlabs.dethsquare.prefabs.PrefabManager;
-import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,13 +12,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,73 +128,6 @@ public class Network {
 		return host;
 	}
 
-	public static void findGame(NetworkStateChangeListener listener) {
-		System.out.println("Doing UPnP discovery stuff");
-		UPnPManager.discover();
-		System.out.println("Discovery stuff done");
-		System.out.println("Adding UDP port mapping");
-		UPnPManager.addPortMapping(udpPort, Protocol.UDP, "Lost Sector UDP " + udpPort);
-		System.out.println("Adding TCP port mapping");
-		UPnPManager.addPortMapping(tcpPort, Protocol.TCP, "Lost Sector TCP " + tcpPort);
-		System.out.println("Port mappings done");
-		Network.listener = listener;
-		new TCPServer(serverSocket).start();
-		MatchmakingThread mt = new MatchmakingThread();
-		updateListener = () -> checkIfGameFound(mt);
-		GameListeners.addUpdateListener(updateListener);
-		mt.start();
-		listener.onNetworkStateChanged(State.MATCHMAKING_SEARCHING);
-	}
-
-	private static void checkIfGameFound(MatchmakingThread mt) {
-		if (mt.data != null) {
-			listener.onNetworkStateChanged(State.MATCHMAKING_FOUND);
-			JSONObject data = new JSONObject(mt.data);
-			mt.data = null;
-			playerId = data.getInt("id");
-			host = data.getBoolean("host");
-
-			JSONArray peers = data.getJSONArray("peers");
-
-			InetAddress[] addresses = new InetAddress[peers.length()];
-			int[] ports = new int[peers.length()];
-			InetSocketAddress[] socketAddresses = new InetSocketAddress[peers.length()];
-
-			listener.onNetworkStateChanged(State.GAME_CONNECTING);
-
-			for (int i = 0; i < peers.length(); i++) {
-				JSONObject player = peers.getJSONObject(i);
-				try {
-					addresses[i] = InetAddress.getByName(player.getString("address"));
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
-				ports[i] = player.getInt("port");
-
-				socketAddresses[i] = new InetSocketAddress(addresses[i], ports[i]);
-
-				try {
-					tcpOut[i] = new TCPWriter(new Socket(addresses[i], ports[i] + 1));
-					tcpOut[i].start();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			udpOut = new UDPWriter(datagramSocket, socketAddresses);
-			udpOut.start();
-			udpIn = new UDPReader(datagramSocket);
-			udpIn.start();
-
-			networkIdCounter = playerId * (Integer.MAX_VALUE / 4) + 1;
-
-			listener.onNetworkStateChanged(State.GAME_CONNECTED);
-
-			GameListeners.removeUpdateListener(updateListener);
-			GameListeners.addUpdateListener(Network::update);
-		}
-	}
-
 	private static void update() {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
@@ -231,28 +156,6 @@ public class Network {
 					}
 					count += size + 6;
 				}
-			}
-		}
-	}
-
-	private static class MatchmakingThread extends Thread {
-		private String data;
-
-		MatchmakingThread() {
-			super("MatchmakingThread");
-		}
-
-		@Override
-		public void run() {
-			byte[] buffer = String.valueOf(udpPort).getBytes();
-			try (DatagramSocket s = new DatagramSocket(udpPort)) {
-				s.send(new DatagramPacket(buffer, buffer.length,
-						InetAddress.getByName("8bitwarframe.com"), 3000));
-				DatagramPacket p = new DatagramPacket(new byte[1024], 1024);
-				s.receive(p);
-				data = new String(p.getData());
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}
