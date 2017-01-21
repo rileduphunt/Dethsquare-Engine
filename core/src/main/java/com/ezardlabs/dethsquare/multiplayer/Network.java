@@ -65,11 +65,11 @@ public class Network {
 		TCP
 	}
 
-	public static DatagramSocket getNewDatagramSocket() {
+	static DatagramSocket getNewDatagramSocket() {
 		return getNewDatagramSocket(START_PORT);
 	}
 
-	public static DatagramSocket getNewDatagramSocket(int startPort) {
+	static DatagramSocket getNewDatagramSocket(int startPort) {
 		int port = startPort;
 		DatagramSocket ds;
 		while (true) {
@@ -83,11 +83,11 @@ public class Network {
 		return ds;
 	}
 
-	public static ServerSocket getNewServerSocket() {
+	static ServerSocket getNewServerSocket() {
 		return getNewServerSocket(START_PORT);
 	}
 
-	public static ServerSocket getNewServerSocket(int startPort) {
+	static ServerSocket getNewServerSocket(int startPort) {
 		int port = startPort;
 		ServerSocket ss;
 		while (true) {
@@ -100,11 +100,11 @@ public class Network {
 		return ss;
 	}
 
-	public static int getUdpPort() {
+	static int getUdpPort() {
 		return udpPort;
 	}
 
-	public static int getTcpPort() {
+	static int getTcpPort() {
 		return tcpPort;
 	}
 
