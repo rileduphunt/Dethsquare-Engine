@@ -3,7 +3,6 @@ package com.ezardlabs.dethsquare.multiplayer;
 import com.ezardlabs.dethsquare.GameObject;
 import com.ezardlabs.dethsquare.Vector2;
 import com.ezardlabs.dethsquare.multiplayer.Network.NetworkStateChangeListener.State;
-import com.ezardlabs.dethsquare.multiplayer.UPnPManager.Protocol;
 import com.ezardlabs.dethsquare.prefabs.PrefabManager;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
@@ -41,7 +40,9 @@ public class Network {
 	private static UDPReader udpIn;
 	private static final TCPWriter[] tcpOut = new TCPWriter[3];
 
-	static int myPort = 2828;
+	private static int myPort = 2828;
+	private static int udpPort = -1;
+	private static int tcpPort = -1;
 
 	private static int playerId = 0;
 	private static boolean host = true;
@@ -55,6 +56,37 @@ public class Network {
 	private static final String SPLIT_DIVIDER = Pattern.quote(DIVIDER);
 	private static final String INSTANTIATE = "instantiate";
 	private static final String DESTROY = "destroy";
+
+	public enum Protocol {
+		UDP,
+		TCP
+	}
+
+	public static int getAvailablePort(Protocol protocol) {
+		int port = 2828;
+		loop:
+		while (true) {
+			switch (protocol) {
+				case UDP:
+					try {
+						new DatagramSocket(port);
+						break loop;
+					} catch (SocketException ignored) {
+					}
+					break;
+				case TCP:
+					try {
+						new ServerSocket(port);
+					} catch (IOException ignored) {
+					}
+					break;
+				default:
+					break;
+			}
+			port++;
+		}
+		return port;
+	}
 
 	public static int getPlayerId() {
 		return playerId;
