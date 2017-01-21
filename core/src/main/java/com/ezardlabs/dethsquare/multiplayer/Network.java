@@ -38,7 +38,7 @@ public class Network {
 
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
-	private static final TCPWriter[] tcpOut = new TCPWriter[3];
+	private static final TCPWriter[] tcpOut = new TCPWriter[4];
 
 	private static final int START_PORT = 2828;
 	private static DatagramSocket datagramSocket;
