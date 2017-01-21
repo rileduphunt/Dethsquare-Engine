@@ -16,6 +16,7 @@ public class Matchmaker implements NetworkConstants {
 	private UDPReader udpReader;
 	private UDPWriter udpWriter;
 	private MatchmakingGame game;
+	private long lastGamePing = 0;
 
 	public Matchmaker(InetAddress ip, int serverPort) {
 		DatagramSocket socket = null;
@@ -41,6 +42,10 @@ public class Matchmaker implements NetworkConstants {
 		GameListeners.addUpdateListener(new UpdateListener() {
 			@Override
 			public void onUpdate() {
+				if (game != null && System.currentTimeMillis() - lastGamePing > PING_INTERVAL) {
+					udpWriter.sendMessage(getJsonMessage(GAME_PING, true).toString().getBytes());
+					lastGamePing = System.currentTimeMillis();
+				}
 				synchronized (udpReader.udpMessages) {
 					while (!udpReader.udpMessages.isEmpty()) {
 						JSONObject json = new JSONObject(
