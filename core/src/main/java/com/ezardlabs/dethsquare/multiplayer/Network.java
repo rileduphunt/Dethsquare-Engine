@@ -40,7 +40,6 @@ public class Network {
 	private static UDPReader udpIn;
 	private static final TCPWriter[] tcpOut = new TCPWriter[3];
 
-	private static int myPort = 2828;
 	public static DatagramSocket datagramSocket = getDatagramSocket();
 	private static ServerSocket serverSocket = getServerSocket();
 	private static int udpPort = datagramSocket.getLocalPort();
@@ -108,9 +107,9 @@ public class Network {
 		UPnPManager.discover();
 		System.out.println("Discovery stuff done");
 		System.out.println("Adding UDP port mapping");
-		UPnPManager.addPortMapping(myPort, Protocol.UDP, "Lost Sector UDP " + myPort);
+		UPnPManager.addPortMapping(udpPort, Protocol.UDP, "Lost Sector UDP " + udpPort);
 		System.out.println("Adding TCP port mapping");
-		UPnPManager.addPortMapping(myPort + 1, Protocol.TCP, "Lost Sector TCP " + (myPort + 1));
+		UPnPManager.addPortMapping(tcpPort, Protocol.TCP, "Lost Sector TCP " + tcpPort);
 		System.out.println("Port mappings done");
 		Network.listener = listener;
 		new TCPServer().start();
@@ -153,15 +152,10 @@ public class Network {
 				}
 			}
 
-			try {
-				DatagramSocket socket = new DatagramSocket(myPort);
-				udpOut = new UDPWriter(socket);
-				udpOut.start();
-				udpIn = new UDPReader(socket);
-				udpIn.start();
-			} catch (SocketException e) {
-				e.printStackTrace();
-			}
+			udpOut = new UDPWriter(datagramSocket);
+			udpOut.start();
+			udpIn = new UDPReader(datagramSocket);
+			udpIn.start();
 
 			networkIdCounter = playerId * (Integer.MAX_VALUE / 4) + 1;
 
@@ -213,8 +207,8 @@ public class Network {
 
 		@Override
 		public void run() {
-			byte[] buffer = String.valueOf(myPort).getBytes();
-			try (DatagramSocket s = new DatagramSocket(myPort)) {
+			byte[] buffer = String.valueOf(udpPort).getBytes();
+			try (DatagramSocket s = new DatagramSocket(udpPort)) {
 				s.send(new DatagramPacket(buffer, buffer.length,
 						InetAddress.getByName("8bitwarframe.com"), 3000));
 				DatagramPacket p = new DatagramPacket(new byte[1024], 1024);
@@ -300,9 +294,9 @@ public class Network {
 
 		@Override
 		public void run() {
-			try (ServerSocket ss = new ServerSocket(myPort + 1)) {
+			try {
 				while (true) {
-					new TCPReader(ss.accept()).start();
+					new TCPReader(serverSocket.accept()).start();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
