@@ -104,6 +104,14 @@ public class Matchmaker implements NetworkConstants {
 			}
 		}
 
+		private void send(JSONObject json, boolean expectingResponse) {
+			message = json.toString();
+			this.expectingResponse = expectingResponse;
+			synchronized (this) {
+				notify();
+			}
+		}
+
 		private boolean isDone() {
 			return response != null;
 		}
