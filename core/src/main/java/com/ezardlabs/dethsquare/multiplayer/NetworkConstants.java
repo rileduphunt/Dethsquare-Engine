@@ -10,5 +10,8 @@ public interface NetworkConstants {
 	String GAME_PING = "game_ping";
 	String GAME_LEAVE = "game_leave";
 
+	String PLAYER_JOIN = "player_join";
+	String PLAYER_LEAVE = "player_leave";
+
 	int PING_INTERVAL = 1000;
 }
