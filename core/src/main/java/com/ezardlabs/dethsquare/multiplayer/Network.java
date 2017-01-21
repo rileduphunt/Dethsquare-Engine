@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -73,16 +74,33 @@ public class Network {
 		while (true) {
 			switch (protocol) {
 				case UDP:
+					DatagramSocket ds = null;
 					try {
-						new DatagramSocket(port);
+						ds = new DatagramSocket();
+						ds.setReuseAddress(true);
+						ds.bind(new InetSocketAddress(port));
 						break loop;
 					} catch (SocketException ignored) {
+					} finally {
+						if (ds != null) {
+							ds.close();
+						}
 					}
 					break;
 				case TCP:
+					ServerSocket ss = null;
 					try {
-						new ServerSocket(port);
+						ss = new ServerSocket();
+						ss.setReuseAddress(true);
+						ss.bind(new InetSocketAddress(port));
 					} catch (IOException ignored) {
+					} finally {
+						if (ss != null) {
+							try {
+								ss.close();
+							} catch (IOException ignored) {
+							}
+						}
 					}
 					break;
 				default:
