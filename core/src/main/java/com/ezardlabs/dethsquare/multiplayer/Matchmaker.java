@@ -20,7 +20,7 @@ public class Matchmaker implements NetworkConstants {
 	}
 
 	public void findGame(MatchmakingListener listener) {
-		matchmakingThread.send(MATCHMAKING_JOIN);
+		matchmakingThread.send(MATCHMAKING_JOIN, true);
 		GameListeners.addUpdateListener(new UpdateListener() {
 			@Override
 			public void onUpdate() {
@@ -35,14 +35,14 @@ public class Matchmaker implements NetworkConstants {
 						switch (message) {
 							case GAME_CREATE:
 								if (listener.onCreateGame()) {
-									matchmakingThread.send(GAME_CREATE);
+									matchmakingThread.send(GAME_CREATE, false);
 								}
 								break;
 							case GAME_JOIN:
 								MatchmakingGame game = MatchmakingGame
 										.fromJson(json.getJSONObject("game"));
 								listener.onGameFound(json.getInt("playerId"), game);
-								matchmakingThread.send(GAME_JOIN);
+								matchmakingThread.send(GAME_JOIN, false);
 								break;
 							default:
 								listener.onError("Unknown error");
@@ -59,6 +59,7 @@ public class Matchmaker implements NetworkConstants {
 		private final int port;
 		private final DatagramSocket socket;
 		private volatile String message;
+		private boolean expectingResponse;
 		private volatile String response;
 
 		private MatchmakingThread(InetAddress ip, int port) {
@@ -84,17 +85,20 @@ public class Matchmaker implements NetworkConstants {
 					byte[] bytes = message.getBytes();
 					message = null;
 					socket.send(new DatagramPacket(bytes, bytes.length, ip, port));
-					DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
-					socket.receive(packet);
-					response = new String(packet.getData());
+					if (expectingResponse) {
+						DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
+						socket.receive(packet);
+						response = new String(packet.getData());
+					}
 				} catch (IOException | InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 
-		private void send(String data) {
+		private void send(String data, boolean expectingResponse) {
 			message = "{\"message\":\"" + data + "\"}";
+			this.expectingResponse = expectingResponse;
 			synchronized (this) {
 				notify();
 			}
