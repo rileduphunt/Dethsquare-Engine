@@ -458,34 +458,6 @@ public class Network {
 				}
 			}
 		}
-
-//		for (int i = 0; i < tcp.length; i++) {
-//			try (BufferedWriter out = new BufferedWriter(
-//					new OutputStreamWriter(tcp[i].getOutputStream()))) {
-//				out.write("instantiate");
-//				out.newLine();
-//				if (PrefabManager.prefabExists(prefabName + "_other")) {
-//					out.write(prefabName + "_other");
-//				} else {
-//					out.write(prefabName);
-//				}
-//				out.newLine();
-//				out.write(String.valueOf(position.x));
-//				out.newLine();
-//				out.write(String.valueOf(position.y));
-//				out.newLine();
-//				out.write(String.valueOf(playerId));
-//				out.newLine();
-//				for (String key : networkIds.keySet()) {
-//					out.write(key);
-//					out.newLine();
-//					out.write(networkIds.get(key));
-//					out.newLine();
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
 		return GameObject.instantiate(gameObject, position);
 	}
 
