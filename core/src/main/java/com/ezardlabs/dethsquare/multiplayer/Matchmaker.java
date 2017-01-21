@@ -62,9 +62,14 @@ public class Matchmaker implements NetworkConstants {
 							case GAME_JOIN:
 								MatchmakingGame game = MatchmakingGame
 										.fromJson(json.getJSONObject("game"));
+								Network.joinGame(game);
 								listener.onGameFound(json.getInt("playerId"), game);
 								udpWriter.sendMessage(
 										getJsonMessage(GAME_JOIN, true).toString().getBytes());
+								break;
+							case PLAYER_JOIN:
+								Network.addPlayer(
+										MatchmakingPlayer.fromJson(json.getJSONObject("player")));
 								break;
 							default:
 								listener.onError("Unknown error");
