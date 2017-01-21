@@ -167,6 +167,12 @@ public class Network {
 		for (MatchmakingPlayer player : game.getPlayers()) {
 			udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player
 					.getUdpPort());
+			try {
+				tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
+			} catch (IOException e) {
+				// TODO add proper error handling
+				e.printStackTrace();
+			}
 		}
 		udpOut = new UDPWriter(datagramSocket, udpAddresses);
 		udpIn = new UDPReader(datagramSocket);
@@ -175,6 +181,11 @@ public class Network {
 	static void addPlayer(MatchmakingPlayer player) {
 		udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
 		udpOut.setAddresses(udpAddresses);
+		try {
+			tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	static class UDPReader extends Thread {
