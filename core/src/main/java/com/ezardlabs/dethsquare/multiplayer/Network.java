@@ -18,7 +18,6 @@ import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -63,52 +62,42 @@ public class Network {
 		TCP
 	}
 
-	public static void init() {
-		udpPort = getAvailablePort(Protocol.UDP);
-		tcpPort = getAvailablePort(Protocol.TCP);
-	}
-
-	public static int getAvailablePort(Protocol protocol) {
+	public static DatagramSocket getDatagramSocket() {
 		int port = 2828;
-		loop:
+		DatagramSocket ds = null;
 		while (true) {
-			switch (protocol) {
-				case UDP:
-					DatagramSocket ds = null;
-					try {
-						ds = new DatagramSocket();
-						ds.setReuseAddress(true);
-						ds.bind(new InetSocketAddress(port));
-						break loop;
-					} catch (SocketException ignored) {
-					} finally {
-						if (ds != null) {
-							ds.close();
-						}
-					}
-					break;
-				case TCP:
-					ServerSocket ss = null;
-					try {
-						ss = new ServerSocket();
-						ss.setReuseAddress(true);
-						ss.bind(new InetSocketAddress(port));
-					} catch (IOException ignored) {
-					} finally {
-						if (ss != null) {
-							try {
-								ss.close();
-							} catch (IOException ignored) {
-							}
-						}
-					}
-					break;
-				default:
-					break;
+			try {
+				ds = new DatagramSocket(port);
+				break;
+			} catch (SocketException ignored) {
+			} finally {
+				if (ds != null) {
+					ds.close();
+				}
 			}
 			port++;
 		}
-		return port;
+		return ds;
+	}
+
+	public static ServerSocket getServerSocket() {
+		int port = 2828;
+		ServerSocket ss = null;
+		while (true) {
+			try {
+				ss = new ServerSocket(port);
+				break;
+			} catch (IOException ignored) {
+			} finally {
+				if (ss != null) {
+					try {
+						ss.close();
+					} catch (IOException ignored) {
+					}
+				}
+			}
+		}
+		return ss;
 	}
 
 	public static int getPlayerId() {
