@@ -13,6 +13,7 @@ import java.net.SocketException;
 
 public class Matchmaker implements NetworkConstants {
 	private final MatchmakingThread matchmakingThread;
+	private MatchmakingGame game;
 
 	public Matchmaker(InetAddress ip, int serverPort) {
 		matchmakingThread = new MatchmakingThread(ip, serverPort);
@@ -20,7 +21,7 @@ public class Matchmaker implements NetworkConstants {
 	}
 
 	public void findGame(MatchmakingListener listener) {
-		matchmakingThread.send(MATCHMAKING_JOIN, true);
+		matchmakingThread.send(getJsonMessage(MATCHMAKING_JOIN, false), true);
 		GameListeners.addUpdateListener(new UpdateListener() {
 			@Override
 			public void onUpdate() {
@@ -35,14 +36,15 @@ public class Matchmaker implements NetworkConstants {
 						switch (message) {
 							case GAME_CREATE:
 								if (listener.onCreateGame()) {
-									matchmakingThread.send(GAME_CREATE, false);
+									matchmakingThread
+											.send(getJsonMessage(GAME_CREATE, true), false);
 								}
 								break;
 							case GAME_JOIN:
 								MatchmakingGame game = MatchmakingGame
 										.fromJson(json.getJSONObject("game"));
 								listener.onGameFound(json.getInt("playerId"), game);
-								matchmakingThread.send(GAME_JOIN, false);
+								matchmakingThread.send(getJsonMessage(GAME_JOIN, true), false);
 								break;
 							default:
 								listener.onError("Unknown error");
@@ -52,6 +54,25 @@ public class Matchmaker implements NetworkConstants {
 				}
 			}
 		});
+	}
+
+	private void setGame(MatchmakingGame game) {
+		this.game = game;
+	}
+
+	private MatchmakingGame getGame() {
+		return game;
+	}
+
+	private JSONObject getJsonMessage(String message, boolean includeGame) {
+		JSONObject json = new JSONObject();
+		json.put("udpPort", Network.getUdpPort());
+		json.put("tcpPort", Network.getTcpPort());
+		json.put("message", message);
+		if (includeGame) {
+			json.put("gameId", getGame().getId());
+		}
+		return json;
 	}
 
 	private class MatchmakingThread extends Thread {

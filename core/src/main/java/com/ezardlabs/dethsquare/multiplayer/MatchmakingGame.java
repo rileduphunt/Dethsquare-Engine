@@ -12,6 +12,10 @@ public class MatchmakingGame {
 		this.players = players;
 	}
 
+	int getId() {
+		return id;
+	}
+
 	static MatchmakingGame fromJson(JSONObject object) {
 		JSONArray jsonPlayers = object.getJSONArray("players");
 		MatchmakingPlayer[] players = new MatchmakingPlayer[jsonPlayers.length()];
