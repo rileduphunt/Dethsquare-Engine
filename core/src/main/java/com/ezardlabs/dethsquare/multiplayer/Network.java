@@ -41,8 +41,10 @@ public class Network {
 	private static final TCPWriter[] tcpOut = new TCPWriter[3];
 
 	private static int myPort = 2828;
-	private static int udpPort = -1;
-	private static int tcpPort = -1;
+	public static DatagramSocket datagramSocket = getDatagramSocket();
+	private static ServerSocket serverSocket = getServerSocket();
+	private static int udpPort = datagramSocket.getLocalPort();
+	private static int tcpPort = serverSocket.getLocalPort();
 
 	private static int playerId = 0;
 	private static boolean host = true;
@@ -64,16 +66,12 @@ public class Network {
 
 	public static DatagramSocket getDatagramSocket() {
 		int port = 2828;
-		DatagramSocket ds = null;
+		DatagramSocket ds;
 		while (true) {
 			try {
 				ds = new DatagramSocket(port);
 				break;
 			} catch (SocketException ignored) {
-			} finally {
-				if (ds != null) {
-					ds.close();
-				}
 			}
 			port++;
 		}
@@ -82,19 +80,12 @@ public class Network {
 
 	public static ServerSocket getServerSocket() {
 		int port = 2828;
-		ServerSocket ss = null;
+		ServerSocket ss;
 		while (true) {
 			try {
 				ss = new ServerSocket(port);
 				break;
 			} catch (IOException ignored) {
-			} finally {
-				if (ss != null) {
-					try {
-						ss.close();
-					} catch (IOException ignored) {
-					}
-				}
 			}
 		}
 		return ss;
