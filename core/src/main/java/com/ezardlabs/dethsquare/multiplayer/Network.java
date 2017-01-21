@@ -120,10 +120,6 @@ public class Network {
 		return networkIdCounter++;
 	}
 
-	static void setHost(boolean host) {
-		Network.host = host;
-	}
-
 	public static boolean isHost() {
 		return host;
 	}
@@ -159,6 +155,16 @@ public class Network {
 			}
 		}
 	}
+
+	static void createGame() {
+		host = true;
+	}
+
+	static void joinGame(MatchmakingGame game) {
+		host = false;
+	}
+
+	static void addPlayer(MatchmakingPlayer player) {}
 
 	static class UDPReader extends Thread {
 		private final DatagramSocket socket;
