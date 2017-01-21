@@ -16,6 +16,10 @@ public class MatchmakingGame {
 		return id;
 	}
 
+	public MatchmakingPlayer[] getPlayers() {
+		return players;
+	}
+
 	static MatchmakingGame fromJson(JSONObject object) {
 		JSONArray jsonPlayers = object.getJSONArray("players");
 		MatchmakingPlayer[] players = new MatchmakingPlayer[jsonPlayers.length()];
