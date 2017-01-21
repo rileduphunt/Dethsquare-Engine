@@ -90,6 +90,14 @@ public class Network {
 		return ss;
 	}
 
+	public static int getUdpPort() {
+		return udpPort;
+	}
+
+	public static int getTcpPort() {
+		return tcpPort;
+	}
+
 	public static int getPlayerId() {
 		return playerId;
 	}
