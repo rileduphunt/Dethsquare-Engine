@@ -40,8 +40,8 @@ public class Network {
 	private static UDPReader udpIn;
 	private static final TCPWriter[] tcpOut = new TCPWriter[3];
 
-	public static DatagramSocket datagramSocket = getDatagramSocket();
-	private static ServerSocket serverSocket = getServerSocket();
+	private static DatagramSocket datagramSocket = getNewDatagramSocket();
+	private static ServerSocket serverSocket = getNewServerSocket();
 	private static int udpPort = datagramSocket.getLocalPort();
 	private static int tcpPort = serverSocket.getLocalPort();
 
@@ -63,7 +63,7 @@ public class Network {
 		TCP
 	}
 
-	public static DatagramSocket getDatagramSocket() {
+	public static DatagramSocket getNewDatagramSocket() {
 		int port = 2828;
 		DatagramSocket ds;
 		while (true) {
@@ -77,7 +77,7 @@ public class Network {
 		return ds;
 	}
 
-	public static ServerSocket getServerSocket() {
+	public static ServerSocket getNewServerSocket() {
 		int port = 2828;
 		ServerSocket ss;
 		while (true) {
