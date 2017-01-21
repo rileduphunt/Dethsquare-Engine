@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
@@ -30,6 +31,7 @@ public class Network {
 
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
+	private static final InetSocketAddress[] udpAddresses = new InetSocketAddress[4];
 	private static final TCPWriter[] tcpOut = new TCPWriter[4];
 
 	private static final int START_PORT = 2828;
@@ -162,6 +164,12 @@ public class Network {
 
 	static void joinGame(MatchmakingGame game) {
 		host = false;
+		for (MatchmakingPlayer player : game.getPlayers()) {
+			udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player
+					.getUdpPort());
+		}
+		udpOut = new UDPWriter(datagramSocket, udpAddresses);
+		udpIn = new UDPReader(datagramSocket);
 	}
 
 	static void addPlayer(MatchmakingPlayer player) {}
