@@ -18,8 +18,10 @@ import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -34,8 +36,6 @@ public class Network {
 	private static UpdateListener updateListener;
 	private static NetworkStateChangeListener listener;
 
-	private static InetAddress[] addresses;
-	private static int[] ports;
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
 	private static final TCPWriter[] tcpOut = new TCPWriter[3];
@@ -160,8 +160,9 @@ public class Network {
 
 			JSONArray peers = data.getJSONArray("peers");
 
-			addresses = new InetAddress[peers.length()];
-			ports = new int[peers.length()];
+			InetAddress[] addresses = new InetAddress[peers.length()];
+			int[] ports = new int[peers.length()];
+			InetSocketAddress[] socketAddresses = new InetSocketAddress[peers.length()];
 
 			listener.onNetworkStateChanged(State.GAME_CONNECTING);
 
@@ -174,6 +175,8 @@ public class Network {
 				}
 				ports[i] = player.getInt("port");
 
+				socketAddresses[i] = new InetSocketAddress(addresses[i], ports[i]);
+
 				try {
 					tcpOut[i] = new TCPWriter(new Socket(addresses[i], ports[i] + 1));
 					tcpOut[i].start();
@@ -182,7 +185,7 @@ public class Network {
 				}
 			}
 
-			udpOut = new UDPWriter(datagramSocket);
+			udpOut = new UDPWriter(datagramSocket, socketAddresses);
 			udpOut.start();
 			udpIn = new UDPReader(datagramSocket);
 			udpIn.start();
@@ -278,13 +281,14 @@ public class Network {
 	static class UDPWriter extends Thread {
 		private final DatagramSocket socket;
 		private final ArrayList<byte[]> messages = new ArrayList<>();
-		private final DatagramPacket[] packets = new DatagramPacket[addresses.length];
+		private final DatagramPacket[] packets;
 
-		UDPWriter(DatagramSocket socket) {
+		UDPWriter(DatagramSocket socket, SocketAddress[] addresses) {
 			super("UDPWriter");
 			this.socket = socket;
+			packets = new DatagramPacket[addresses.length];
 			for (int i = 0; i < packets.length; i++) {
-				packets[i] = new DatagramPacket(new byte[0], 0, addresses[i], ports[i]);
+				packets[i] = new DatagramPacket(new byte[0], 0, addresses[i]);
 			}
 		}
 
@@ -296,7 +300,7 @@ public class Network {
 						messages.wait();
 						while (!messages.isEmpty()) {
 							byte[] message = messages.remove(0);
-							for (int i = 0; i < addresses.length; i++) {
+							for (int i = 0; i < packets.length; i++) {
 								packets[i].setData(message);
 								socket.send(packets[i]);
 							}

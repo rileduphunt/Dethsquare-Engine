@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 
 public class Matchmaker implements NetworkConstants {
@@ -27,7 +28,8 @@ public class Matchmaker implements NetworkConstants {
 
 		} else {
 			udpReader = new UDPReader(socket);
-			udpWriter = new UDPWriter(socket);
+			udpWriter = new UDPWriter(socket,
+					new InetSocketAddress[]{new InetSocketAddress(ip, serverPort)});
 			udpReader.start();
 			udpWriter.start();
 			Network.init();
