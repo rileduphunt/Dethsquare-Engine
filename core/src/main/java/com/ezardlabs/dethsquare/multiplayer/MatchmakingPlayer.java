@@ -6,13 +6,13 @@ class MatchmakingPlayer {
 	private String ip;
 	private int udpPort;
 	private int tcpPort;
-	private boolean host = false;
+	private final int id;
 
-	private MatchmakingPlayer(String ip, int udpPort, int tcpPort, boolean host) {
+	private MatchmakingPlayer(String ip, int udpPort, int tcpPort, int id) {
 		this.ip = ip;
 		this.udpPort = udpPort;
 		this.tcpPort = tcpPort;
-		this.host = host;
+		this.id = id;
 	}
 
 	String getIp() {
@@ -27,8 +27,12 @@ class MatchmakingPlayer {
 		return tcpPort;
 	}
 
+	public int getId() {
+		return id;
+	}
+
 	static MatchmakingPlayer fromJson(JSONObject object) {
 		return new MatchmakingPlayer(object.getString("ip"), object.getInt("udpPort"),
-				object.getInt("tcpPort"), object.has("host") && object.getBoolean("host"));
+				object.getInt("tcpPort"), object.getInt("id"));
 	}
 }
