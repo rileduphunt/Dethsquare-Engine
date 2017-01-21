@@ -65,7 +65,7 @@ public class Network {
 
 	public static void init() {
 		udpPort = getAvailablePort(Protocol.UDP);
-		tcpPort = getAvailablePort(Protocol.UDP);
+		tcpPort = getAvailablePort(Protocol.TCP);
 	}
 
 	public static int getAvailablePort(Protocol protocol) {
