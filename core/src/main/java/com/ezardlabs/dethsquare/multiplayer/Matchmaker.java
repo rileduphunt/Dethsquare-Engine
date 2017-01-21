@@ -48,6 +48,7 @@ public class Matchmaker implements NetworkConstants {
 						String message = json.getString("message");
 						switch (message) {
 							case GAME_CREATE:
+								Network.setHost(true);
 								if (listener.onCreateGame()) {
 									udpWriter.sendMessage(
 											getJsonMessage(GAME_CREATE, true).toString()
@@ -55,6 +56,7 @@ public class Matchmaker implements NetworkConstants {
 								}
 								break;
 							case GAME_JOIN:
+								Network.setHost(false);
 								MatchmakingGame game = MatchmakingGame
 										.fromJson(json.getJSONObject("game"));
 								listener.onGameFound(json.getInt("playerId"), game);

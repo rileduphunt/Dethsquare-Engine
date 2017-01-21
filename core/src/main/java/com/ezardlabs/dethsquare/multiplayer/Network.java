@@ -128,6 +128,10 @@ public class Network {
 		return networkIdCounter++;
 	}
 
+	static void setHost(boolean host) {
+		Network.host = host;
+	}
+
 	public static boolean isHost() {
 		return host;
 	}
