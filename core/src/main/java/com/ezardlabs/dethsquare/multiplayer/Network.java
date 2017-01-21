@@ -172,7 +172,10 @@ public class Network {
 		udpIn = new UDPReader(datagramSocket);
 	}
 
-	static void addPlayer(MatchmakingPlayer player) {}
+	static void addPlayer(MatchmakingPlayer player) {
+		udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
+		udpOut.setAddresses(udpAddresses);
+	}
 
 	static class UDPReader extends Thread {
 		private final DatagramSocket socket;
