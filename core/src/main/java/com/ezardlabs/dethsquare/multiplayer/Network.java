@@ -42,7 +42,8 @@ public class Network {
 
 	private static final int START_PORT = 2828;
 	private static DatagramSocket datagramSocket = getNewDatagramSocket();
-	private static ServerSocket serverSocket = getNewServerSocket();
+	private static ServerSocket serverSocket = getNewServerSocket(
+			datagramSocket.getLocalPort() + 1);
 	private static int udpPort = datagramSocket.getLocalPort();
 	private static int tcpPort = serverSocket.getLocalPort();
 
