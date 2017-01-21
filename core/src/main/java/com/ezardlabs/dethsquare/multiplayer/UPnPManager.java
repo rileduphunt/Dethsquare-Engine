@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare.multiplayer;
 
+import com.ezardlabs.dethsquare.multiplayer.Network.Protocol;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,11 +46,6 @@ class UPnPManager {
 	private static String location;
 	private static String baseUrl;
 	private static ArrayList<String[]> services = new ArrayList<>();
-
-	public enum Protocol {
-		TCP,
-		UDP
-	}
 
 	private static List<InetAddress> getLocalInetAddresses() {
 		List<InetAddress> arrayIPAddress = new ArrayList<>();
