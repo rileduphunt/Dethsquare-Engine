@@ -184,6 +184,11 @@ public class Network {
 		udpOut.setAddresses(udpAddresses);
 		try {
 			tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
+			if (host) {
+				for (InstantiationData data : networkObjects.values()) {
+					tcpOut[player.getId()].sendMessage(INSTANTIATE, getInstantiationMessage(data));
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
