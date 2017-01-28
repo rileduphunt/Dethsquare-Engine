@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 
 public class Network {
 	private static UpdateListener updateListener;
-	private static NetworkStateChangeListener listener;
 
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
@@ -467,16 +466,5 @@ public class Network {
 		int networkId = Integer.parseInt(message);
 		GameObject.destroy(networkId);
 		networkObjects.remove(networkId);
-	}
-
-	public interface NetworkStateChangeListener {
-		enum State {
-			MATCHMAKING_SEARCHING,
-			MATCHMAKING_FOUND,
-			GAME_CONNECTING,
-			GAME_CONNECTED
-		}
-
-		void onNetworkStateChanged(State state);
 	}
 }
