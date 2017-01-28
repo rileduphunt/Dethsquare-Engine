@@ -362,6 +362,10 @@ public class Network {
 	}
 
 	public static GameObject instantiate(String prefabName, Vector2 position) {
+		return instantiate(prefabName, position, tcpOut);
+	}
+
+	private static GameObject instantiate(String prefabName, Vector2 position, TCPWriter... tcpWriters) {
 		GameObject gameObject = PrefabManager.loadPrefab(prefabName);
 		gameObject.networkId = getNewNetworkId();
 		List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
@@ -384,7 +388,7 @@ public class Network {
 		}
 		String message = sb.toString();
 		message = message.substring(0, message.length() - 1);
-		for (TCPWriter writer : tcpOut) {
+		for (TCPWriter writer : tcpWriters) {
 			if (writer != null) {
 				writer.sendMessage(INSTANTIATE, message);
 			}
