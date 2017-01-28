@@ -44,7 +44,7 @@ public class Network {
 	private static boolean host = true;
 
 	private static int networkIdCounter = 0;
-	private static HashMap<Integer, GameObject> networkObjects = new HashMap<>();
+	private static HashMap<Integer, InstantiationData> networkObjects = new HashMap<>();
 
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
@@ -361,6 +361,20 @@ public class Network {
 		}
 	}
 
+	private static class InstantiationData {
+		final String prefabName;
+		final Vector2 position;
+		final int playerId;
+		final GameObject gameObject;
+
+		private InstantiationData(String prefabName, Vector2 position, int playerId, GameObject gameObject) {
+			this.prefabName = prefabName;
+			this.position = position;
+			this.playerId = playerId;
+			this.gameObject = gameObject;
+		}
+	}
+
 	public static GameObject instantiate(String prefabName, Vector2 position) {
 		return instantiate(prefabName, position, tcpOut);
 	}
@@ -368,34 +382,40 @@ public class Network {
 	private static GameObject instantiate(String prefabName, Vector2 position, TCPWriter... tcpWriters) {
 		GameObject gameObject = PrefabManager.loadPrefab(prefabName);
 		gameObject.networkId = getNewNetworkId();
-		List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
-		HashMap<String, Integer> networkIds = new HashMap<>();
-		for (NetworkBehaviour nb : networkBehaviours) {
-			networkIds.put(nb.getClass().getCanonicalName(), nb.getNetworkId());
-		}
-		StringBuilder sb = new StringBuilder();
-		if (PrefabManager.prefabExists(prefabName + "_other")) {
-			sb.append(prefabName).append("_other").append(DIVIDER);
-		} else {
-			sb.append(prefabName).append(DIVIDER);
-		}
-		sb.append(gameObject.networkId).append(DIVIDER);
-		sb.append(position.x).append(DIVIDER);
-		sb.append(position.y).append(DIVIDER);
-		sb.append(playerId).append(DIVIDER);
-		for (String key : networkIds.keySet()) {
-			sb.append(key).append(DIVIDER).append(networkIds.get(key)).append(DIVIDER);
-		}
-		String message = sb.toString();
-		message = message.substring(0, message.length() - 1);
+		InstantiationData data = new InstantiationData(prefabName, position, playerId, gameObject);
+		String message = getInstantiationMessage(data);
 		for (TCPWriter writer : tcpWriters) {
 			if (writer != null) {
 				writer.sendMessage(INSTANTIATE, message);
 			}
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
-		networkObjects.put(go.networkId, go);
+		networkObjects.put(go.networkId, data);
 		return go;
+	}
+
+	private static String getInstantiationMessage(InstantiationData data) {
+		List<NetworkBehaviour> networkBehaviours = data.gameObject.getComponentsOfType(NetworkBehaviour.class);
+		HashMap<String, Integer> networkIds = new HashMap<>();
+		for (NetworkBehaviour nb : networkBehaviours) {
+			networkIds.put(nb.getClass().getCanonicalName(), nb.getNetworkId());
+		}
+		StringBuilder sb = new StringBuilder();
+		if (PrefabManager.prefabExists(data.prefabName + "_other")) {
+			sb.append(data.prefabName).append("_other").append(DIVIDER);
+		} else {
+			sb.append(data.prefabName).append(DIVIDER);
+		}
+		sb.append(data.gameObject.networkId).append(DIVIDER);
+		sb.append(data.position.x).append(DIVIDER);
+		sb.append(data.position.y).append(DIVIDER);
+		sb.append(playerId).append(DIVIDER);
+		for (String key : networkIds.keySet()) {
+			sb.append(key).append(DIVIDER).append(networkIds.get(key)).append(DIVIDER);
+		}
+		String message = sb.toString();
+		message = message.substring(0, message.length() - 1);
+		return message;
 	}
 
 	private static void processInstantiation(String message) throws IOException {
@@ -416,7 +436,7 @@ public class Network {
 			nb.setNetworkId(networkIds.get(nb.getClass().getCanonicalName()));
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
-		networkObjects.put(go.networkId, go);
+		networkObjects.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
 	}
 
 	public static void destroy(GameObject gameObject) {
