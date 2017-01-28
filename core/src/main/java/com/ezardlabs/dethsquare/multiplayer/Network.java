@@ -361,43 +361,32 @@ public class Network {
 		}
 	}
 
-	private static boolean isSolo() {
-		for (TCPWriter writer : tcpOut) {
-			if (writer != null) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public static GameObject instantiate(String prefabName, Vector2 position) {
 		GameObject gameObject = PrefabManager.loadPrefab(prefabName);
 		gameObject.networkId = getNewNetworkId();
-		if (!isSolo()) {
-			List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
-			HashMap<String, Integer> networkIds = new HashMap<>();
-			for (NetworkBehaviour nb : networkBehaviours) {
-				networkIds.put(nb.getClass().getCanonicalName(), nb.getNetworkId());
-			}
-			StringBuilder sb = new StringBuilder();
-			if (PrefabManager.prefabExists(prefabName + "_other")) {
-				sb.append(prefabName).append("_other").append(DIVIDER);
-			} else {
-				sb.append(prefabName).append(DIVIDER);
-			}
-			sb.append(gameObject.networkId).append(DIVIDER);
-			sb.append(position.x).append(DIVIDER);
-			sb.append(position.y).append(DIVIDER);
-			sb.append(playerId).append(DIVIDER);
-			for (String key : networkIds.keySet()) {
-				sb.append(key).append(DIVIDER).append(networkIds.get(key)).append(DIVIDER);
-			}
-			String message = sb.toString();
-			message = message.substring(0, message.length() - 1);
-			for (TCPWriter writer : tcpOut) {
-				if (writer != null) {
-					writer.sendMessage(INSTANTIATE, message);
-				}
+		List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
+		HashMap<String, Integer> networkIds = new HashMap<>();
+		for (NetworkBehaviour nb : networkBehaviours) {
+			networkIds.put(nb.getClass().getCanonicalName(), nb.getNetworkId());
+		}
+		StringBuilder sb = new StringBuilder();
+		if (PrefabManager.prefabExists(prefabName + "_other")) {
+			sb.append(prefabName).append("_other").append(DIVIDER);
+		} else {
+			sb.append(prefabName).append(DIVIDER);
+		}
+		sb.append(gameObject.networkId).append(DIVIDER);
+		sb.append(position.x).append(DIVIDER);
+		sb.append(position.y).append(DIVIDER);
+		sb.append(playerId).append(DIVIDER);
+		for (String key : networkIds.keySet()) {
+			sb.append(key).append(DIVIDER).append(networkIds.get(key)).append(DIVIDER);
+		}
+		String message = sb.toString();
+		message = message.substring(0, message.length() - 1);
+		for (TCPWriter writer : tcpOut) {
+			if (writer != null) {
+				writer.sendMessage(INSTANTIATE, message);
 			}
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
@@ -429,11 +418,9 @@ public class Network {
 	public static void destroy(GameObject gameObject) {
 		GameObject.destroy(gameObject);
 		networkObjects.remove(gameObject.networkId);
-		if (!isSolo()) {
-			for (TCPWriter writer : tcpOut) {
-				if (writer != null) {
-					writer.sendMessage(DESTROY, String.valueOf(gameObject.networkId));
-				}
+		for (TCPWriter writer : tcpOut) {
+			if (writer != null) {
+				writer.sendMessage(DESTROY, String.valueOf(gameObject.networkId));
 			}
 		}
 	}
