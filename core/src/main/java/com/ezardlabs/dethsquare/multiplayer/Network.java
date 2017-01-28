@@ -162,8 +162,9 @@ public class Network {
 		host = true;
 	}
 
-	static void joinGame(MatchmakingGame game) {
+	static void joinGame(MatchmakingGame game, int playerId) {
 		host = false;
+		Network.playerId = playerId;
 		for (MatchmakingPlayer player : game.getPlayers()) {
 			udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player
 					.getUdpPort());

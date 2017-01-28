@@ -65,8 +65,8 @@ public class Matchmaker implements NetworkConstants {
 								MatchmakingGame game = MatchmakingGame
 										.fromJson(json.getJSONObject("game"));
 								setGame(game);
-								Network.joinGame(game);
-								listener.onGameFound(json.getInt("playerId"), game);
+								Network.joinGame(game, json.getInt("playerId"));
+								listener.onGameFound(game);
 								udpWriter.sendMessage(
 										getJsonMessage(GAME_JOIN, true).toString().getBytes());
 								break;
@@ -106,7 +106,7 @@ public class Matchmaker implements NetworkConstants {
 	public interface MatchmakingListener {
 		boolean onCreateGame();
 
-		void onGameFound(int playerId, MatchmakingGame game);
+		void onGameFound(MatchmakingGame game);
 
 		void onError(String error);
 	}
