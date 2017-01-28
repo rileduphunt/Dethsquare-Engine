@@ -44,6 +44,7 @@ public class Network {
 	private static boolean host = true;
 
 	private static int networkIdCounter = 0;
+	private static HashMap<Integer, GameObject> networkObjects = new HashMap<>();
 
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
@@ -399,7 +400,9 @@ public class Network {
 				}
 			}
 		}
-		return GameObject.instantiate(gameObject, position);
+		GameObject go = GameObject.instantiate(gameObject, position);
+		networkObjects.put(go.networkId, go);
+		return go;
 	}
 
 	private static void processInstantiation(String message) throws IOException {
@@ -419,11 +422,13 @@ public class Network {
 			nb.setPlayerId(playerId);
 			nb.setNetworkId(networkIds.get(nb.getClass().getCanonicalName()));
 		}
-		GameObject.instantiate(gameObject, position);
+		GameObject go = GameObject.instantiate(gameObject, position);
+		networkObjects.put(go.networkId, go);
 	}
 
 	public static void destroy(GameObject gameObject) {
 		GameObject.destroy(gameObject);
+		networkObjects.remove(gameObject.networkId);
 		if (!isSolo()) {
 			for (TCPWriter writer : tcpOut) {
 				if (writer != null) {
@@ -443,7 +448,9 @@ public class Network {
 	}
 
 	private static void processDestruction(String message) throws IOException {
-		GameObject.destroy(Integer.parseInt(message));
+		int networkId = Integer.parseInt(message);
+		GameObject.destroy(networkId);
+		networkObjects.remove(networkId);
 	}
 
 	public interface NetworkStateChangeListener {
