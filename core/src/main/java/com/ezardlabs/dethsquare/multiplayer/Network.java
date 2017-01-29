@@ -166,13 +166,14 @@ public class Network {
 		host = false;
 		Network.playerId = playerId;
 		for (MatchmakingPlayer player : game.getPlayers()) {
-			udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player
-					.getUdpPort());
-			try {
-				tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
-			} catch (IOException e) {
-				// TODO add proper error handling
-				e.printStackTrace();
+			if (player.getId() != playerId) {
+				udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
+				try {
+					tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
+				} catch (IOException e) {
+					// TODO add proper error handling
+					e.printStackTrace();
+				}
 			}
 		}
 		udpOut = new UDPWriter(datagramSocket, udpAddresses);
