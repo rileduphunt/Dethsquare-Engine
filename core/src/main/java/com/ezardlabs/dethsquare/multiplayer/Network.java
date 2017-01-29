@@ -68,6 +68,8 @@ public class Network {
 		UPnPManager.addPortMapping(udpPort, Protocol.UDP, "Lost Sector UDP " + udpPort);
 		UPnPManager.addPortMapping(tcpPort, Protocol.TCP, "Lost Sector TCP " + tcpPort);
 
+		udpOut = new UDPWriter(datagramSocket, udpAddresses);
+		udpIn = new UDPReader(datagramSocket);
 		new TCPServer(serverSocket).start();
 	}
 
@@ -176,8 +178,6 @@ public class Network {
 				}
 			}
 		}
-		udpOut = new UDPWriter(datagramSocket, udpAddresses);
-		udpIn = new UDPReader(datagramSocket);
 	}
 
 	static void addPlayer(MatchmakingPlayer player) {
