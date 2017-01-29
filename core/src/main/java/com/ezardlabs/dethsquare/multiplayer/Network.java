@@ -175,6 +175,7 @@ public class Network {
 		for (MatchmakingPlayer player : game.getPlayers()) {
 			if (player.getId() != playerId) {
 				udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
+				udpOut.setAddresses(udpAddresses);
 				try {
 					tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
 					tcpOut[player.getId()].start();
