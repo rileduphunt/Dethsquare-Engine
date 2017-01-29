@@ -230,7 +230,11 @@ public class Network {
 			this.socket = socket;
 			packets = new DatagramPacket[addresses.length];
 			for (int i = 0; i < packets.length; i++) {
-				packets[i] = new DatagramPacket(new byte[0], 0, addresses[i]);
+				if (addresses[i] == null) {
+					packets[i] = null;
+				} else {
+					packets[i] = new DatagramPacket(new byte[0], 0, addresses[i]);
+				}
 			}
 		}
 
@@ -243,8 +247,10 @@ public class Network {
 						while (!messages.isEmpty()) {
 							byte[] message = messages.remove(0);
 							for (int i = 0; i < packets.length; i++) {
-								packets[i].setData(message);
-								socket.send(packets[i]);
+								if (packets[i] != null) {
+									packets[i].setData(message);
+									socket.send(packets[i]);
+								}
 							}
 						}
 					}
@@ -263,7 +269,11 @@ public class Network {
 
 		void setAddresses(SocketAddress[] addresses) {
 			for (int i = 0; i < packets.length; i++) {
-				packets[i] = new DatagramPacket(new byte[0], 0, addresses[i]);
+				if (addresses[i] == null) {
+					packets[i] = null;
+				} else {
+					packets[i] = new DatagramPacket(new byte[0], 0, addresses[i]);
+				}
 			}
 		}
 	}
