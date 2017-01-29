@@ -96,7 +96,6 @@ class UPnPManager {
 
 		@Override
 		public void run() {
-			System.out.println("Searching for UPnP devices from " + address);
 			try {
 				DatagramSocket socket = new DatagramSocket(0, address);
 				socket.setSoTimeout(3000);
@@ -148,8 +147,6 @@ class UPnPManager {
 								}
 							}
 
-							System.out.println("UPnP location: " + location);
-
 							URLConnection conn = new URL(location).openConnection();
 
 							DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -163,8 +160,6 @@ class UPnPManager {
 								URL url = new URL(location);
 								baseUrl = url.getProtocol() + "://" + url.getHost() + ":" +
 										url.getPort();
-								System.out.println(
-										"No explicit base URL was found; setting it to " + baseUrl);
 							}
 						} catch (SocketTimeoutException ste) {
 							System.err.println(
@@ -198,7 +193,6 @@ class UPnPManager {
 			} catch (InterruptedException ignored) {
 			}
 		}
-		System.out.println("Base URL: " + baseUrl);
 	}
 
 	private static void parseXML(Node element) {
@@ -266,7 +260,6 @@ class UPnPManager {
 
 	private static void sendSOAPMessage(String action, String service, String url,
 			Map<String, String> args) {
-		System.out.println(url);
 		StringBuilder sb = new StringBuilder();
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
 		sb.append("<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
@@ -292,8 +285,6 @@ class UPnPManager {
 			conn.setRequestProperty("Content-Type", "text/xml");
 			conn.setRequestProperty("SOAPAction", "\"" + service + "#" + action + "\"");
 			conn.setRequestProperty("Connection", "Close");
-
-			System.out.println("Message: " + message);
 
 			byte[] messageBytes = message.getBytes();
 
@@ -336,11 +327,9 @@ class UPnPManager {
 				} catch (SAXException ignored) {
 				}
 				conn.disconnect();
-				System.out.println(nameValue);
 			} else {
 				parser.parse(new InputSource(conn.getInputStream()));
 				conn.disconnect();
-				System.out.println(nameValue);
 			}
 
 			conn.disconnect();
@@ -350,7 +339,6 @@ class UPnPManager {
 	}
 
 	static void addPortMapping(int port, Protocol protocol, String description) {
-		System.out.println("Services: " + services);
 		HashMap<String, String> args = new HashMap<>();
 		args.put("NewRemoteHost", "");
 		args.put("NewExternalPort", String.valueOf(port));
