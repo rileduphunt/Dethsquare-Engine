@@ -70,7 +70,9 @@ public class Network {
 		UPnPManager.addPortMapping(tcpPort, Protocol.TCP, "Lost Sector TCP " + tcpPort);
 
 		udpOut = new UDPWriter(datagramSocket, udpAddresses);
+		udpOut.start();
 		udpIn = new UDPReader(datagramSocket);
+		udpIn.start();
 		new TCPServer(serverSocket).start();
 	}
 
