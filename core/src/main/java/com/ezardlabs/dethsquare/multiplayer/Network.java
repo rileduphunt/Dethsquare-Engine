@@ -192,7 +192,9 @@ public class Network {
 			tcpOut[player.getId()].start();
 			if (host) {
 				for (InstantiationData data : networkObjects.values()) {
-					tcpOut[player.getId()].sendMessage(INSTANTIATE, getInstantiationMessage(data));
+					if (data.playerId != player.getId()) {
+						tcpOut[player.getId()].sendMessage(INSTANTIATE, getInstantiationMessage(data));
+					}
 				}
 			}
 		} catch (IOException e) {
