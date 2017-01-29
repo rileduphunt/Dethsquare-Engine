@@ -174,6 +174,7 @@ public class Network {
 				udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
 				try {
 					tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
+					tcpOut[player.getId()].start();
 				} catch (IOException e) {
 					// TODO add proper error handling
 					e.printStackTrace();
