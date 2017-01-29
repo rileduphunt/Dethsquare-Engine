@@ -92,7 +92,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 	}
 
 	public int getCurrentAnimationFrame() {
-		return frame;
+		return frame == -1 ? 0 : frame;
 	}
 
 	public void setCurrentAnimationFrame(int frame) {
