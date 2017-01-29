@@ -3,6 +3,7 @@ package com.ezardlabs.dethsquare.multiplayer;
 import com.ezardlabs.dethsquare.GameObject;
 import com.ezardlabs.dethsquare.Vector2;
 import com.ezardlabs.dethsquare.prefabs.PrefabManager;
+import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
 import java.io.BufferedReader;
@@ -162,6 +163,7 @@ public class Network {
 
 	static void createGame() {
 		host = true;
+		GameListeners.addUpdateListener(Network::update);
 	}
 
 	static void joinGame(MatchmakingGame game, int playerId) {
@@ -178,6 +180,7 @@ public class Network {
 				}
 			}
 		}
+		GameListeners.addUpdateListener(Network::update);
 	}
 
 	static void addPlayer(MatchmakingPlayer player) {
