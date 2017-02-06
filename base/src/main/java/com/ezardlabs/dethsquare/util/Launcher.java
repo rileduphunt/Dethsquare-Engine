@@ -2,6 +2,8 @@ package com.ezardlabs.dethsquare.util;
 
 import com.ezardlabs.dethsquare.util.Utils.Platform;
 
+import java.util.Arrays;
+
 public abstract class Launcher implements GameListeners {
 
 	protected Launcher() {
@@ -25,7 +27,7 @@ public abstract class Launcher implements GameListeners {
 	public abstract void launch(BaseGame game);
 
 	protected final void update() {
-		updateListeners.forEach(UpdateListener::onUpdate);
+		Arrays.stream(((UpdateListener[]) updateListeners.toArray())).forEach(UpdateListener::onUpdate);
 	}
 
 	protected final void render() {
