@@ -62,7 +62,7 @@ public class Network {
 	static void init() {
 		datagramSocket = getNewDatagramSocket();
 		udpPort = datagramSocket.getLocalPort();
-		serverSocket = getNewServerSocket(udpPort + 1);
+		serverSocket = getNewServerSocket(udpPort);
 		tcpPort = serverSocket.getLocalPort();
 
 		UPnPManager.discover();
