@@ -67,6 +67,7 @@ public class Matchmaker implements NetworkConstants {
 								setGame(game);
 								Network.joinGame(game, json.getInt("playerId"));
 								listener.onGameFound(game);
+								Network.requestState();
 								udpWriter.sendMessage(
 										getJsonMessage(GAME_JOIN, true).toString().getBytes());
 								break;

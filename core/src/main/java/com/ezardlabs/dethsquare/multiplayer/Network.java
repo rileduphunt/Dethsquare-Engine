@@ -53,6 +53,7 @@ public class Network {
 	private static final String SPLIT_DIVIDER = Pattern.quote(DIVIDER);
 	private static final String INSTANTIATE = "instantiate";
 	private static final String DESTROY = "destroy";
+	private static final String REQUEST_STATE = "request_state";
 
 	public enum Protocol {
 		UDP,
@@ -194,13 +195,6 @@ public class Network {
 		try {
 			tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
 			tcpOut[player.getId()].start();
-			if (host) {
-				for (InstantiationData data : networkObjects.values()) {
-					if (data.playerId != player.getId()) {
-						tcpOut[player.getId()].sendMessage(INSTANTIATE, getInstantiationMessage(data));
-					}
-				}
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -331,6 +325,9 @@ public class Network {
 								break;
 							case DESTROY:
 								processDestruction(in.readLine());
+								break;
+							case REQUEST_STATE:
+								sendState(in.readLine());
 								break;
 							default:
 								System.out.println("Unknown command:" + command);
@@ -493,5 +490,19 @@ public class Network {
 		int networkId = Integer.parseInt(message);
 		GameObject.destroy(networkId);
 		networkObjects.remove(networkId);
+	}
+
+	static void requestState() {
+		tcpOut[0].sendMessage(REQUEST_STATE, String.valueOf(playerId));
+	}
+
+	private static void sendState(String in) {
+		int id = Integer.parseInt(in);
+		for (InstantiationData data : networkObjects.values()) {
+			if (data.playerId != id) {
+				System.out.println(playerId + ": Instantiation send: " + getInstantiationMessage(data));
+				tcpOut[id].sendMessage(INSTANTIATE, getInstantiationMessage(data));
+			}
+		}
 	}
 }
