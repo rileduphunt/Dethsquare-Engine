@@ -348,6 +348,7 @@ public class Network {
 	private static class TCPWriter extends Thread {
 		private final Socket socket;
 		private final ArrayList<String[]> messages = new ArrayList<>();
+		private boolean initialising = true;
 
 		TCPWriter(Socket socket) {
 			super("TCPWriter");
@@ -360,7 +361,10 @@ public class Network {
 					new OutputStreamWriter(socket.getOutputStream()))) {
 				while (true) {
 					synchronized (messages) {
-						messages.wait();
+						if (!initialising) {
+							messages.wait();
+							initialising = false;
+						}
 						while (!messages.isEmpty()) {
 							String[] s = messages.remove(0);
 							out.write(s[0]);
