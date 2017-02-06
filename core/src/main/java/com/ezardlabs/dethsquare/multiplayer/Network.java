@@ -43,7 +43,7 @@ public class Network {
 	private static int playerId = 0;
 	private static boolean host = true;
 
-	private static int networkIdCounter = 0;
+	private static int networkIdCounter = 1;
 	private static HashMap<Integer, InstantiationData> networkObjects = new HashMap<>();
 
 	private static final long UPDATES_PER_SECOND = 60;
