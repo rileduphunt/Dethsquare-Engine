@@ -31,4 +31,19 @@ public class DesktopIOUtils implements IOUtils {
 	public InputStream getInputStream(String path) {
 		return ClassLoader.getSystemResourceAsStream(path);
 	}
+
+	@Override
+	public String[] getFileLines(String path) {
+		try (BufferedReader reader = getReader(path)) {
+			ArrayList<String> data = new ArrayList<>();
+			String temp;
+			while ((temp = reader.readLine()) != null) {
+				data.add(temp);
+			}
+			return ((String[]) data.toArray());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new String[0];
+		}
+	}
 }

@@ -9,4 +9,6 @@ public interface IOUtils {
 	String[] listFileNames(String dirPath);
 
 	InputStream getInputStream(String path);
+
+	String[] getFileLines(String path);
 }
