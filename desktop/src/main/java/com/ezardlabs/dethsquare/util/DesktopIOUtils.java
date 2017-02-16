@@ -40,7 +40,7 @@ public class DesktopIOUtils implements IOUtils {
 			while ((temp = reader.readLine()) != null) {
 				data.add(temp);
 			}
-			return ((String[]) data.toArray());
+			return (data.toArray(new String[data.size()]));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new String[0];
