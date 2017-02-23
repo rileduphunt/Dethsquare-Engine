@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.util.Utils;
+
 public final class Camera extends Script {
 	public final RectF bounds = new RectF();
 	public static Camera main;
@@ -19,5 +21,9 @@ public final class Camera extends Script {
 		bounds.top = transform.position.y;
 		bounds.right = bounds.left + Screen.width / Screen.scale;
 		bounds.bottom = bounds.top + Screen.height / Screen.scale;
+
+		if (main == this) {
+			Utils.RENDER.setCameraPosition(transform.position.x, transform.position.y);
+		}
 	}
 }

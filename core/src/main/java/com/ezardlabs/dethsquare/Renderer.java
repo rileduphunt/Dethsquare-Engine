@@ -8,7 +8,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import static com.ezardlabs.dethsquare.util.Utils.RENDER;
@@ -23,7 +22,6 @@ public class Renderer extends BoundedComponent {
 	private static QuadTree<Renderer> qt = new QuadTree<>(30);
 	private static ArrayList<Renderer> renderers = new ArrayList<>();
 
-	private static ArrayList<Integer> idsRendered = new ArrayList<>();
 	private static HashMap<Integer, ArrayList<Renderer>> map = new HashMap<>();
 
 	private static ArrayList<Renderer> visible = new ArrayList<>();
@@ -165,37 +163,14 @@ public class Renderer extends BoundedComponent {
 		visible.addAll(renderers); // TODO only add renderers that are visible
 		map.clear();
 		for (int i = 0; i < visible.size(); i++) {
-			if (map.size() == 0 || !map.containsKey(visible.get(i).getZIndex())) {
-				map.put(visible.get(i).getZIndex(), new ArrayList<>());
+			if (map.size() == 0 || !map.containsKey(visible.get(i).textureName)) {
+				map.put(visible.get(i).textureName, new ArrayList<>());
 			}
-			map.get(visible.get(i).getZIndex()).add(visible.get(i));
+			map.get(visible.get(i).textureName).add(visible.get(i));
 		}
-
-		ArrayList<Integer> zIndices = new ArrayList<>(map.keySet());
-		Collections.sort(zIndices);
-
-		for (int zIndex = 0; zIndex < zIndices.size(); zIndex++) {
-			idsRendered.clear();
-			ArrayList<Renderer> temp = map.get(zIndices.get(zIndex));
-			for (int i = 0; i < temp.size(); i++) {
-				if (!idsRendered.contains(temp.get(i).textureName)) {
-					idsRendered.add(temp.get(i).textureName);
-
-					visible.clear();
-
-					for (int j = i; j < temp.size(); j++) {
-						if (temp.get(j).textureName == temp.get(i).textureName) {
-							visible.add(temp.get(j));
-						}
-					}
-
-					setupRenderData(visible);
-
-					RENDER.render(temp.get(i).textureName, vertexBuffer, uvBuffer, visible.size()
-							* 6, indexBuffer, Camera.main.transform.position.x, Camera.main
-							.transform.position.y, Screen.scale);
-				}
-			}
+		for (int i : map.keySet()) {
+			setupRenderData(map.get(i));
+			RENDER.render(i, vertices, uvs, indices, map.get(i).size());
 		}
 	}
 
@@ -229,11 +204,12 @@ public class Renderer extends BoundedComponent {
 	}
 
 	private static void setupVertices(Renderer r, int i) {
-		vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos() * Screen.scale;
-		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() * Screen.scale + (r.height * Screen.scale);
-		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[(i * 12) + 11] = 0;
-		vertices[(i * 12) + 4] = vertices[(i * 12) + 7] = r.getYPos() * Screen.scale;
-		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() * Screen.scale + (r.width * Screen.scale);
+		vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos();
+		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() + (r.height);
+		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[
+				(i * 12) + 11] = r.zIndex;
+		vertices[(i * 12) + 4] = vertices[(i * 12) + 7] = r.getYPos();
+		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() + (r.width);
 	}
 
 	private static void setupIndices(int i, int last) {

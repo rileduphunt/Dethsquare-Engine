@@ -1,15 +1,19 @@
 package com.ezardlabs.dethsquare.util;
 
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 import java.util.HashMap;
 
 public interface RenderUtils {
 	int[] loadImage(String path);
 
-	void render(int textureName, FloatBuffer vertexBuffer, FloatBuffer uvBuffer, int numIndices, ShortBuffer indexBuffer, float cameraPosX, float cameraPosY, float scale);
+	void render(int textureName, float[] vertices, float[] uvs, short[] indices, int num);
 
 	void destroyAllTextures(HashMap<String, int[]> textures);
+
+	void setCameraPosition(float x, float y);
+
+	void setScale(float scale);
+
+	void setScreenSize(int width, int height);
 
 	class ImageNotFoundError extends Error {
 

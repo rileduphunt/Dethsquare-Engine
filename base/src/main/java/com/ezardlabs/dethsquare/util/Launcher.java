@@ -2,13 +2,7 @@ package com.ezardlabs.dethsquare.util;
 
 import com.ezardlabs.dethsquare.util.Utils.Platform;
 
-import java.util.Arrays;
-
 public abstract class Launcher implements GameListeners {
-
-	protected Launcher() {
-		init();
-	}
 
 	protected void init() {
 		Utils.init(getPlatform(), getAudio(), getIO(), getPrefs(), getRender());
@@ -27,7 +21,11 @@ public abstract class Launcher implements GameListeners {
 	public abstract void launch(BaseGame game);
 
 	protected final void update() {
-		Arrays.stream(((UpdateListener[]) updateListeners.toArray())).forEach(UpdateListener::onUpdate);
+		if (!updateListeners.isEmpty()) {
+			for (Object o : updateListeners.toArray()) {
+				((UpdateListener) o).onUpdate();
+			}
+		}
 	}
 
 	protected final void render() {
