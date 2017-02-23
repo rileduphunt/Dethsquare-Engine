@@ -190,16 +190,16 @@ public class DesktopLauncher extends Launcher {
 	}
 
 	private void addNumberKeys() {
-		keyMap.put(GLFW_KEY_0, "0");
-		keyMap.put(GLFW_KEY_1, "1");
-		keyMap.put(GLFW_KEY_2, "2");
-		keyMap.put(GLFW_KEY_3, "3");
-		keyMap.put(GLFW_KEY_4, "4");
-		keyMap.put(GLFW_KEY_5, "5");
-		keyMap.put(GLFW_KEY_6, "6");
-		keyMap.put(GLFW_KEY_7, "7");
-		keyMap.put(GLFW_KEY_8, "8");
-		keyMap.put(GLFW_KEY_9, "9");
+		keyMap.put(GLFW_KEY_0, "ALPHA_0");
+		keyMap.put(GLFW_KEY_1, "ALPHA_1");
+		keyMap.put(GLFW_KEY_2, "ALPHA_2");
+		keyMap.put(GLFW_KEY_3, "ALPHA_3");
+		keyMap.put(GLFW_KEY_4, "ALPHA_4");
+		keyMap.put(GLFW_KEY_5, "ALPHA_5");
+		keyMap.put(GLFW_KEY_6, "ALPHA_6");
+		keyMap.put(GLFW_KEY_7, "ALPHA_7");
+		keyMap.put(GLFW_KEY_8, "ALPHA_8");
+		keyMap.put(GLFW_KEY_9, "ALPHA_9");
 	}
 
 	private void addFunctionKeys() {
