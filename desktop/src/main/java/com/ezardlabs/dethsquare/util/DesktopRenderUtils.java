@@ -231,10 +231,13 @@ public class DesktopRenderUtils implements RenderUtils {
 	}
 
 	private void calculateMatrices() {
+		Matrix.clear(projection);
+		Matrix.clear(view);
+		Matrix.clear(projectionAndView);
+
 		Matrix.orthoM(projection, 0, screenWidth, screenHeight, 0, 0, 50);
 
 		Matrix.setLookAtM(view, 0, 0, 1, 0, 0, 0, 0, 1, 0);
-		Matrix.setIdentityM(view);
 		Matrix.translateM(view, -cameraX, -cameraY, 0);
 
 		Matrix.multiplyMM(projectionAndView, projection, view);
