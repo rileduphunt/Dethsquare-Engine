@@ -71,6 +71,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
@@ -114,6 +115,10 @@ public class DesktopLauncher extends Launcher {
 					keyListeners.forEach(keyListener -> keyListener.onKeyUp(keyStr));
 				}
 			}
+		});
+
+		glfwSetCursorPosCallback(window, (window, xPos, yPos) -> {
+			mouseListeners.forEach(mouseListener -> mouseListener.onMove((int) xPos, (int) yPos));
 		});
 
 		glfwSetWindowSizeCallback(window, (window, width, height) -> resizeListeners
