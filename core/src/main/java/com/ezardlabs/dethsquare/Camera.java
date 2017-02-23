@@ -19,8 +19,8 @@ public final class Camera extends Script {
 	public void update() {
 		bounds.left = transform.position.x;
 		bounds.top = transform.position.y;
-		bounds.right = bounds.left + Screen.width / Screen.scale;
-		bounds.bottom = bounds.top + Screen.height / Screen.scale;
+		bounds.right = bounds.left + Screen.width;
+		bounds.bottom = bounds.top + Screen.height;
 
 		if (main == this) {
 			Utils.RENDER.setCameraPosition(transform.position.x, transform.position.y);
