@@ -62,6 +62,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_X;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Y;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
@@ -74,6 +77,7 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -119,6 +123,18 @@ public class DesktopLauncher extends Launcher {
 
 		glfwSetCursorPosCallback(window, (window, xPos, yPos) -> {
 			mouseListeners.forEach(mouseListener -> mouseListener.onMove((int) xPos, (int) yPos));
+		});
+
+		glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
+			int index = getMouseButtonIndex(button);
+			if (index != 0) {
+				if (action == GLFW_PRESS) {
+					mouseListeners.forEach(mouseListener -> mouseListener.onButtonDown(index));
+				}
+				if (action == GLFW_RELEASE) {
+					mouseListeners.forEach(mouseListener -> mouseListener.onButtonUp(index));
+				}
+			}
 		});
 
 		glfwSetWindowSizeCallback(window, (window, width, height) -> resizeListeners
@@ -207,6 +223,19 @@ public class DesktopLauncher extends Launcher {
 		keyMap.put(GLFW_KEY_ESCAPE, "ESCAPE");
 		keyMap.put(GLFW_KEY_BACKSPACE, "BACKSPACE");
 		keyMap.put(GLFW_KEY_DELETE, "DELETE");
+	}
+
+	private int getMouseButtonIndex(int button) {
+		switch (button) {
+			case GLFW_MOUSE_BUTTON_LEFT:
+				return 1;
+			case GLFW_MOUSE_BUTTON_MIDDLE:
+				return 2;
+			case GLFW_MOUSE_BUTTON_RIGHT:
+				return 3;
+			default:
+				return 0;
+		}
 	}
 
 	@Override
