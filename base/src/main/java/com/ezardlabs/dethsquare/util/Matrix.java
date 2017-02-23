@@ -1,6 +1,12 @@
 package com.ezardlabs.dethsquare.util;
 
+import java.util.Arrays;
+
 final class Matrix {
+
+	static void clear(float[] matrix) {
+		Arrays.fill(matrix, 0);
+	}
 
 	static void setIdentityM(float[] matrix) {
 		for (int i = 0; i < 16; i++) {
