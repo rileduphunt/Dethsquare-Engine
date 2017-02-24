@@ -17,7 +17,6 @@ public class Renderer extends BoundedComponent {
 	static {
 		GameListeners.addRenderListener(Renderer::renderAll);
 	}
-	static HashMap<String, int[]> textures = new HashMap<>();
 
 	private static QuadTree<Renderer> qt = new QuadTree<>(30);
 	private static ArrayList<Renderer> renderers = new ArrayList<>();
@@ -63,13 +62,8 @@ public class Renderer extends BoundedComponent {
 
 	public void setImage(String imagePath, float width, float height) {
 		mode = Mode.IMAGE;
-		if (textures.containsKey(imagePath)) {
-			textureName = textures.get(imagePath)[0];
-		} else {
-			int[] data = RENDER.loadImage(imagePath);
-			textures.put(imagePath, data);
-			textureName = data[0];
-		}
+		int[] data = RENDER.loadImage(imagePath);
+		textureName = data[0];
 		this.width = width;
 		this.height = height;
 	}
@@ -148,8 +142,7 @@ public class Renderer extends BoundedComponent {
 	}
 
 	static void destroyAllTextures() {
-		RENDER.destroyAllTextures(textures);
-		textures.clear();
+		RENDER.destroyAllTextures();
 	}
 
 	static void clearQuadTree() {

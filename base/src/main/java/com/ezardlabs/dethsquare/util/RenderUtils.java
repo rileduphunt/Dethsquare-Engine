@@ -1,13 +1,11 @@
 package com.ezardlabs.dethsquare.util;
 
-import java.util.HashMap;
-
 public interface RenderUtils {
 	int[] loadImage(String path);
 
 	void render(int textureName, float[] vertices, float[] uvs, short[] indices, int num);
 
-	void destroyAllTextures(HashMap<String, int[]> textures);
+	void destroyAllTextures();
 
 	void setCameraPosition(float x, float y);
 

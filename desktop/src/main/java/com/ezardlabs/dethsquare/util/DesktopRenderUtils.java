@@ -208,7 +208,7 @@ public class DesktopRenderUtils implements RenderUtils {
 		glDrawElements(GL_TRIANGLES, num * 6, GL_UNSIGNED_SHORT, 0);
 	}
 
-	public void destroyAllTextures(HashMap<String, int[]> textures) {
+	public void destroyAllTextures() {
 		for (int[] data : textures.values()) {
 			glDeleteTextures(data[0]);
 		}

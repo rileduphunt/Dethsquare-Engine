@@ -19,13 +19,7 @@ public final class TextureAtlas {
 		this.imagePath = imagePath;
 		this.mapPath = mapPath;
 
-		int[] data;
-		if (Renderer.textures.containsKey(imagePath)) {
-			data = Renderer.textures.get(imagePath);
-		} else {
-			data = RENDER.loadImage(imagePath);
-			Renderer.textures.put(imagePath, data);
-		}
+		int[] data = RENDER.loadImage(imagePath);
 
 		textureName = data[0];
 		width = data[1];
