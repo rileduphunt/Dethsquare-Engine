@@ -24,7 +24,9 @@ final class Matrix {
 	static void multiplyMM(float[] result, float[] lhs, float[] rhs) {
 		for (int a = 0; a <= 12; a += 4) {
 			for (int b = 0; b < 4; b++) {
-				for (int c = 0, d = 0; c < 4; c++, d += 4) {
+				int c;
+				int d;
+				for (c = 0, d = 0; c < 4; c++, d += 4) {
 					result[a + b] += rhs[a + c % 4] * lhs[d + b % 4];
 				}
 			}
