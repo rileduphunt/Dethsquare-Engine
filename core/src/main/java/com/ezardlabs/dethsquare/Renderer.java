@@ -10,7 +10,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.ezardlabs.dethsquare.util.Utils.RENDER;
+import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
 public class Renderer extends BoundedComponent {
 	// Add hook into game loop

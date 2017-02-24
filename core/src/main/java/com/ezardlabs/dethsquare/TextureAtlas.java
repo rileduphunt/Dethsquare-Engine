@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static com.ezardlabs.dethsquare.util.Utils.IO;
-import static com.ezardlabs.dethsquare.util.Utils.RENDER;
+import static com.ezardlabs.dethsquare.util.Dethsquare.IO;
+import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
 public final class TextureAtlas {
 	final String imagePath;

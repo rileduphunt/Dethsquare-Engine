@@ -1,11 +1,11 @@
 package com.ezardlabs.dethsquare.util;
 
-import com.ezardlabs.dethsquare.util.Utils.Platform;
+import com.ezardlabs.dethsquare.util.Dethsquare.Platform;
 
 public abstract class Launcher implements GameListeners {
 
 	protected void init() {
-		Utils.init(getPlatform(), getAudio(), getIO(), getPrefs(), getRender());
+		Dethsquare.init(getPlatform(), getAudio(), getIO(), getPrefs(), getRender());
 	}
 
 	protected abstract Platform getPlatform();

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.ezardlabs.dethsquare.util.Utils.AUDIO;
+import static com.ezardlabs.dethsquare.util.Dethsquare.AUDIO;
 
 /**
  * Base class for all entities in the game world

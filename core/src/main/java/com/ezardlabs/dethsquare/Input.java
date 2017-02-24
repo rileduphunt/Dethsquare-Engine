@@ -4,7 +4,7 @@ import com.ezardlabs.dethsquare.Touch.TouchPhase;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.KeyListener;
 import com.ezardlabs.dethsquare.util.GameListeners.MouseListener;
-import com.ezardlabs.dethsquare.util.Utils;
+import com.ezardlabs.dethsquare.util.Dethsquare;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,7 +153,7 @@ public final class Input {
 	}
 
 	public static void update() {
-		switch (Utils.PLATFORM) {
+		switch (Dethsquare.PLATFORM) {
 			case ANDROID:
 				updateTouches();
 				break;

@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare.util;
 
-public final class Utils {
+public final class Dethsquare {
 	public static Platform PLATFORM;
 	public static AudioUtils AUDIO;
 	public static IOUtils IO;

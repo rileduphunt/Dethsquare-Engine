@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare.util;
 
-import com.ezardlabs.dethsquare.util.Utils.Platform;
+import com.ezardlabs.dethsquare.util.Dethsquare.Platform;
 
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;

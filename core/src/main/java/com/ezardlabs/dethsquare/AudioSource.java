@@ -2,7 +2,7 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.AudioManager.AudioGroup;
 
-import static com.ezardlabs.dethsquare.util.Utils.AUDIO;
+import static com.ezardlabs.dethsquare.util.Dethsquare.AUDIO;
 
 public final class AudioSource extends Component {
 	private static final boolean LOOP_DEFAULT = false;

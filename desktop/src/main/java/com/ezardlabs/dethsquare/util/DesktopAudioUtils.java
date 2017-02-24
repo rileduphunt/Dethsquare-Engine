@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare.util;
 
-import com.ezardlabs.dethsquare.util.Utils.ResourceNotFoundError;
+import com.ezardlabs.dethsquare.util.Dethsquare.ResourceNotFoundError;
 
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.openal.AL;
@@ -14,7 +14,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.HashMap;
 
-import static com.ezardlabs.dethsquare.util.Utils.IO;
+import static com.ezardlabs.dethsquare.util.Dethsquare.IO;
 import static org.lwjgl.openal.AL10.AL_BUFFER;
 import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
 import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;

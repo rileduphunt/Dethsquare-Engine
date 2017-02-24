@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare;
 
-import com.ezardlabs.dethsquare.util.Utils;
+import com.ezardlabs.dethsquare.util.Dethsquare;
 
 public final class Camera extends Script {
 	public final RectF bounds = new RectF();
@@ -23,7 +23,7 @@ public final class Camera extends Script {
 		bounds.bottom = bounds.top + Screen.height;
 
 		if (main == this) {
-			Utils.RENDER.setCameraPosition(transform.position.x, transform.position.y);
+			Dethsquare.RENDER.setCameraPosition(transform.position.x, transform.position.y);
 		}
 	}
 }

@@ -149,7 +149,7 @@ public class DesktopRenderUtils implements RenderUtils {
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
-			String[] lines = Utils.IO.getFileLines("shaders/texture/vert.glsl");
+			String[] lines = Dethsquare.IO.getFileLines("shaders/texture/vert.glsl");
 			String shader = "";
 			for (String s : lines) {
 				shader += s + "\n";
@@ -159,7 +159,7 @@ public class DesktopRenderUtils implements RenderUtils {
 			glShaderSource(vs, shader);
 			glCompileShader(vs);
 
-			lines = Utils.IO.getFileLines("shaders/texture/frag.glsl");
+			lines = Dethsquare.IO.getFileLines("shaders/texture/frag.glsl");
 			shader = "";
 			for (String s : lines) {
 				shader += s + "\n";

@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare;
 
-import static com.ezardlabs.dethsquare.util.Utils.PREFS;
+import static com.ezardlabs.dethsquare.util.Dethsquare.PREFS;
 
 public final class PlayerPrefs {
 
