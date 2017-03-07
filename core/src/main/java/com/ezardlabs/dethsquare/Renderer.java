@@ -199,8 +199,7 @@ public class Renderer extends BoundedComponent {
 	private static void setupVertices(Renderer r, int i) {
 		vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos();
 		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() + (r.height);
-		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[
-				(i * 12) + 11] = r.zIndex;
+		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[(i * 12) + 11] = r.zIndex;
 		vertices[(i * 12) + 4] = vertices[(i * 12) + 7] = r.getYPos();
 		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() + (r.width);
 	}
