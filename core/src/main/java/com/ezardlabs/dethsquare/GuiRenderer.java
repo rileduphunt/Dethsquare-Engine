@@ -11,16 +11,6 @@ public class GuiRenderer extends Renderer {
 	}
 
 	@Override
-	protected float getXPos() {
-		return super.getXPos() + Camera.main.transform.position.x;
-	}
-
-	@Override
-	protected float getYPos() {
-		return super.getYPos() + Camera.main.transform.position.y;
-	}
-
-	@Override
 	protected int getZIndex() {
 		return super.getZIndex() + 1000000;
 	}

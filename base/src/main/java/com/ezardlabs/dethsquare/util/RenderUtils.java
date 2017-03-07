@@ -13,6 +13,8 @@ public interface RenderUtils {
 
 	void setScreenSize(int width, int height);
 
+	void setGuiRenderMode(boolean guiRenderMode);
+
 	class ImageNotFoundError extends Error {
 
 		ImageNotFoundError(String path) {

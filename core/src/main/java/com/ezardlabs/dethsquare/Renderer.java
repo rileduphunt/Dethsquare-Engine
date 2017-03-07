@@ -20,6 +20,7 @@ public class Renderer extends BoundedComponent {
 
 	private static QuadTree<Renderer> qt = new QuadTree<>(30);
 	private static ArrayList<Renderer> renderers = new ArrayList<>();
+	private static ArrayList<Renderer> guiRenderers = new ArrayList<>();
 
 	private static HashMap<Integer, ArrayList<Renderer>> map = new HashMap<>();
 
@@ -108,7 +109,11 @@ public class Renderer extends BoundedComponent {
 
 	@Override
 	public void start() {
-		renderers.add(this);
+		if (this instanceof GuiRenderer) {
+			guiRenderers.add(this);
+		} else {
+			renderers.add(this);
+		}
 		vertices = new float[vertices.length + 12];
 		indices = new short[indices.length + 6];
 		uvs = new float[uvs.length + 8];
@@ -119,7 +124,11 @@ public class Renderer extends BoundedComponent {
 
 	@Override
 	protected void destroy() {
-		renderers.remove(this);
+		if (this instanceof GuiRenderer) {
+			guiRenderers.remove(this);
+		} else {
+			renderers.remove(this);
+		}
 		vertices = new float[vertices.length - 12];
 		indices = new short[indices.length - 6];
 		uvs = new float[uvs.length - 8];
@@ -139,6 +148,7 @@ public class Renderer extends BoundedComponent {
 
 	static void clearAll() {
 		renderers.clear();
+		guiRenderers.clear();
 	}
 
 	static void destroyAllTextures() {
@@ -154,12 +164,20 @@ public class Renderer extends BoundedComponent {
 		qt.getVisibleObjects(visible, qt, Camera.main);
 
 		visible.addAll(renderers); // TODO only add renderers that are visible
+
+		render(visible, false);
+		render(guiRenderers, true);
+	}
+
+	private static void render(ArrayList<Renderer> renderers, boolean gui) {
+		RENDER.setGuiRenderMode(gui);
+
 		map.clear();
-		for (int i = 0; i < visible.size(); i++) {
-			if (map.size() == 0 || !map.containsKey(visible.get(i).textureName)) {
-				map.put(visible.get(i).textureName, new ArrayList<>());
+		for (int i = 0; i < renderers.size(); i++) {
+			if (map.size() == 0 || !map.containsKey(renderers.get(i).textureName)) {
+				map.put(renderers.get(i).textureName, new ArrayList<>());
 			}
-			map.get(visible.get(i).textureName).add(visible.get(i));
+			map.get(renderers.get(i).textureName).add(renderers.get(i));
 		}
 		for (int i : map.keySet()) {
 			setupRenderData(map.get(i));
@@ -198,10 +216,10 @@ public class Renderer extends BoundedComponent {
 
 	private static void setupVertices(Renderer r, int i) {
 		vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos();
-		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() + (r.height);
+		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() + r.height;
 		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[(i * 12) + 11] = r.zIndex;
 		vertices[(i * 12) + 4] = vertices[(i * 12) + 7] = r.getYPos();
-		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() + (r.width);
+		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() + r.width;
 	}
 
 	private static void setupIndices(int i, int last) {

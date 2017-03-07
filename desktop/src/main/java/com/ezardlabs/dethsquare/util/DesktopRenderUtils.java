@@ -77,6 +77,9 @@ public class DesktopRenderUtils implements RenderUtils {
 	private final float[] view = new float[16];
 	private final float[] projectionAndView = new float[16];
 
+	private final float[] guiView = new float[16];
+	private final float[] guiProjectionAndView = new float[16];
+
 	private float cameraX = 0;
 	private float cameraY = 0;
 	private float scale = 1;
@@ -238,9 +241,11 @@ public class DesktopRenderUtils implements RenderUtils {
 		Matrix.orthoM(projection, 0, screenWidth, screenHeight, 0, 0, 50);
 
 		Matrix.setLookAtM(view, 0, 0, 1, 0, 0, 0, 0, 1, 0);
+		System.arraycopy(view, 0, guiView, 0, view.length);
 		Matrix.translateM(view, -cameraX, -cameraY, 0);
 
 		Matrix.multiplyMM(projectionAndView, projection, view);
+		Matrix.multiplyMM(guiProjectionAndView, projection, guiView);
 
 		glUniformMatrix4fv(transformLoc, false, projectionAndView);
 	}
@@ -253,5 +258,10 @@ public class DesktopRenderUtils implements RenderUtils {
 		glViewport(0, 0, width, height);
 
 		calculateMatrices();
+	}
+
+	@Override
+	public void setGuiRenderMode(boolean guiRenderMode) {
+		glUniformMatrix4fv(transformLoc, false, guiRenderMode ? guiProjectionAndView : projectionAndView);
 	}
 }
