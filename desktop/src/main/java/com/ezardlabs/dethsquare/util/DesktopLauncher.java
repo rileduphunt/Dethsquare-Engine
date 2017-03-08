@@ -93,6 +93,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class DesktopLauncher extends Launcher {
 	private final long window;
 	private final HashMap<Integer, String> keyMap = new HashMap<>();
+	private boolean setupCompleted = false;
 
 	public DesktopLauncher() {
 		glfwInit();
@@ -151,6 +152,8 @@ public class DesktopLauncher extends Launcher {
 		glClearColor(0, 0, 0, 1);
 
 		init();
+
+		setupCompleted = true;
 	}
 
 	private void initKeyMap() {
@@ -265,6 +268,7 @@ public class DesktopLauncher extends Launcher {
 
 	@Override
 	public void launch(BaseGame game) {
+		while (!setupCompleted) {}
 		int[] width = new int[1];
 		int[] height = new int[1];
 		glfwGetWindowSize(window, width, height);
