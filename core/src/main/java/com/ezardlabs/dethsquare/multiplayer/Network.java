@@ -63,7 +63,7 @@ public class Network {
 	static void init() {
 		datagramSocket = getNewDatagramSocket();
 		udpPort = datagramSocket.getLocalPort();
-		serverSocket = getNewServerSocket(udpPort);
+		serverSocket = getNewServerSocket(udpPort + 1);
 		tcpPort = serverSocket.getLocalPort();
 
 		UPnPManager.discover();
@@ -178,6 +178,7 @@ public class Network {
 				udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
 				udpOut.setAddresses(udpAddresses);
 				try {
+					System.out.println("Attempting to connect to TCP port " + player.getTcpPort());
 					tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
 					tcpOut[player.getId()].start();
 				} catch (IOException e) {
@@ -193,6 +194,7 @@ public class Network {
 		udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
 		udpOut.setAddresses(udpAddresses);
 		try {
+			System.out.println("Attempting to connect to TCP port " + player.getTcpPort());
 			tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
 			tcpOut[player.getId()].start();
 		} catch (IOException e) {
