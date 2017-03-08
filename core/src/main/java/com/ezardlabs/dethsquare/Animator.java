@@ -41,8 +41,10 @@ public final class Animator extends Script implements Iterable<Animation> {
 			nextFrameTime += animations[index].frameDuration;
 			tempFrame = animations[index].type.update(frame, animations[index].frames.length);
 			if (tempFrame == -1) {
-				if (animations[index].listener != null && !finished) {
-					animations[index].listener.onAnimationFinished(this);
+				if (!finished) {
+					if (animations[index].listener != null) {
+						animations[index].listener.onAnimationFinished(this);
+					}
 					finished = true;
 				}
 				frame = tempFrame;
@@ -97,6 +99,10 @@ public final class Animator extends Script implements Iterable<Animation> {
 
 	public void setCurrentAnimationFrame(int frame) {
 		this.frame = frame;
+	}
+
+	public boolean isFinished() {
+		return finished;
 	}
 
 	@Override
