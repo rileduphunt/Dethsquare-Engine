@@ -44,7 +44,9 @@ public class Renderer extends BoundedComponent {
 	public float yOffset;
 
 	private enum Mode {
-		NONE, IMAGE, SPRITE
+		NONE,
+		IMAGE,
+		SPRITE
 	}
 
 	public Renderer() {

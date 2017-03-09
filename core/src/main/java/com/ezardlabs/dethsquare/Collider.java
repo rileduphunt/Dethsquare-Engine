@@ -32,7 +32,10 @@ public final class Collider extends BoundedComponent {
 	boolean isTrigger = false;
 
 	public enum CollisionLocation {
-		TOP, RIGHT, BOTTOM, LEFT
+		TOP,
+		RIGHT,
+		BOTTOM,
+		LEFT
 	}
 
 	public class Collision {

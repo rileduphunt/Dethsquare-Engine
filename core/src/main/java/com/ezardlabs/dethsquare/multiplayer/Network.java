@@ -56,7 +56,8 @@ public class Network {
 	private static final String REQUEST_STATE = "request_state";
 
 	public enum Protocol {
-		UDP, TCP
+		UDP,
+		TCP
 	}
 
 	static void init() {

@@ -11,16 +11,20 @@ public final class Touch {
 		/**
 		 * A finger touched the screen
 		 */
-		BEGAN, /**
+		BEGAN,
+		/**
 		 * A finger moved on the screen
 		 */
-		MOVED, /**
+		MOVED,
+		/**
 		 * A finger is touching the screen but hasn't moved
 		 */
-		STATIONARY, /**
+		STATIONARY,
+		/**
 		 * A finger was lifted from the screen. This is the final phase of a touch
 		 */
-		ENDED, /**
+		ENDED,
+		/**
 		 * The system cancelled tracking for the touch
 		 */
 		CANCELLED

@@ -9,7 +9,9 @@ public class AudioManager {
 	private static ArrayList<AudioSource> audioSources = new ArrayList<>();
 
 	public enum AudioGroup {
-		NONE, MUSIC, SFX
+		NONE,
+		MUSIC,
+		SFX
 	}
 
 	public static void setMasterVolume(float volume) {
