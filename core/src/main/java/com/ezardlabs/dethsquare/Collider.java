@@ -168,13 +168,14 @@ public final class Collider extends BoundedComponent {
 						gameObject.onCollision(
 								new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
 										CollisionLocation.BOTTOM, y));
-						if (gameObject.rigidbody != null) gameObject.rigidbody.velocity.y = 0;
 					} else if (y < 0 && bounds.top < c.bounds.bottom) {
 						transform.position.y = Math.round(c.bounds.bottom);
 						if (transform.position.y != lastBounds.top) {
 							gameObject.onCollision(new Collision(c, c.gameObject, c.transform,
 									c.gameObject.rigidbody, CollisionLocation.TOP, y));
 						}
+					}
+					if (gameObject.rigidbody != null) {
 						gameObject.rigidbody.velocity.y = 0;
 					}
 					recalculateBounds();
