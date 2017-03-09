@@ -199,6 +199,9 @@ public final class Collider extends BoundedComponent {
 									c.gameObject.rigidbody, CollisionLocation.LEFT, x));
 						}
 					}
+					if (gameObject.rigidbody != null) {
+						gameObject.rigidbody.velocity.x = 0;
+					}
 					recalculateBounds();
 				}
 			}
