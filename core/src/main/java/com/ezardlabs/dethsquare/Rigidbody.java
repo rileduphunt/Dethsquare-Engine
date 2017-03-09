@@ -1,7 +1,7 @@
 package com.ezardlabs.dethsquare;
 
 public final class Rigidbody extends Script {
-    public Vector2 velocity = new Vector2(0, 0.9375f);
+	public Vector2 velocity = new Vector2(0, 0.9375f);
 	public float gravity = 1.25f;
 
 	@Override

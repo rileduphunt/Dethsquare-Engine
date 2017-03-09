@@ -32,7 +32,7 @@ class MatchmakingPlayer {
 	}
 
 	static MatchmakingPlayer fromJson(JSONObject object) {
-		return new MatchmakingPlayer(object.getString("ip"), object.getInt("udpPort"),
-				object.getInt("tcpPort"), object.getInt("id"));
+		return new MatchmakingPlayer(object.getString("ip"), object.getInt("udpPort"), object.getInt("tcpPort"),
+				object.getInt("id"));
 	}
 }

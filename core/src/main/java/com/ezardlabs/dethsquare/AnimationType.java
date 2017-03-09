@@ -40,8 +40,9 @@ public abstract class AnimationType implements Cloneable {
 
 	/**
 	 * Describes how the animation should progress, based on the current frame
+	 *
 	 * @param currentFrame The frame that the animation is currently at
-	 * @param numFrames The total number of frames in the animation
+	 * @param numFrames    The total number of frames in the animation
 	 * @return The next frame in the animation to go to
 	 */
 	public abstract int update(int currentFrame, int numFrames);

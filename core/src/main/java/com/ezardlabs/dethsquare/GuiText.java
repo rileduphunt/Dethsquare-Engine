@@ -164,10 +164,8 @@ public class GuiText extends BoundedComponent {
 	}
 
 	public boolean hitTest(float x, float y) {
-		return x > transform.position.x * Screen.scale &&
-				x < (transform.position.x + totalWidth) * Screen.scale &&
-				y > transform.position.y * Screen.scale &&
-				y < (transform.position.y + fontSize) * Screen.scale;
+		return x > transform.position.x * Screen.scale && x < (transform.position.x + totalWidth) * Screen.scale &&
+				y > transform.position.y * Screen.scale && y < (transform.position.y + fontSize) * Screen.scale;
 	}
 
 	public boolean hitTest(Vector2 position) {

@@ -15,10 +15,7 @@ public final class RectF {
 	public float right;
 	public float bottom;
 
-	private Vector2[] temp = {new Vector2(),
-			new Vector2(),
-			new Vector2(),
-			new Vector2()};
+	private Vector2[] temp = {new Vector2(), new Vector2(), new Vector2(), new Vector2()};
 
 	/**
 	 * Create a new empty RectF. All coordinates are initialized to 0.
@@ -196,6 +193,7 @@ public final class RectF {
 	/**
 	 * Modify the width of the rectangle by setting its right coordinate to its left coordinate
 	 * plus the given width
+	 *
 	 * @param width The width that you want the rectangle to be
 	 */
 	public void setWidth(float width) {
@@ -206,6 +204,7 @@ public final class RectF {
 	/**
 	 * Modify the height of the rectangle by setting its bottom coordinate to its top coordinate
 	 * plus the given height
+	 *
 	 * @param height The height that you want the rectangle to be
 	 */
 	public void setHeight(float height) {
@@ -288,8 +287,7 @@ public final class RectF {
 		// check for empty first
 		return this.left < this.right && this.top < this.bottom
 				// now check for containment
-				&& this.left <= left && this.top <= top && this.right >= right &&
-				this.bottom >= bottom;
+				&& this.left <= left && this.top <= top && this.right >= right && this.bottom >= bottom;
 	}
 
 	/**
@@ -406,7 +404,7 @@ public final class RectF {
 	 * if either rectangle is empty. To record the intersection, use intersect()
 	 * or setIntersect().
 	 *
-	 * @param r      The rectangle being tested for intersection
+	 * @param r The rectangle being tested for intersection
 	 * @return true iff the specified rectangle intersects this rectangle. In
 	 * no event is this rectangle modified.
 	 */
@@ -430,6 +428,7 @@ public final class RectF {
 
 	/**
 	 * Checks whether a line intersects with this rectangle
+	 *
 	 * @param a The start point of the line
 	 * @param b The end point of the line
 	 * @return The intersect point if one exists; null otherwise
@@ -457,8 +456,8 @@ public final class RectF {
 		return best == -1 ? null : temp[best];
 	}
 
-	private boolean intersect(float x1, float y1, float x2, float y2, float x3, float y3, float
-			x4, float y4, Vector2 returnVal) {
+	private boolean intersect(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4,
+			Vector2 returnVal) {
 		// vertical check
 		if (x1 == x2) {
 			if (x3 == x4) {
@@ -469,8 +468,7 @@ public final class RectF {
 				float a2 = (y4 - y3) / (x4 - x3);
 				float b2 = y3 - a2 * x3;
 				float yIntercept = a2 * x3 + b2;
-				if (Math.min(x3, x4) <= x1 && x1 <= Math.max(x3, x4) && y1 <= yIntercept &&
-						yIntercept <= y2) {
+				if (Math.min(x3, x4) <= x1 && x1 <= Math.max(x3, x4) && y1 <= yIntercept && yIntercept <= y2) {
 					returnVal.set(x1, yIntercept);
 					return true;
 				} else {
@@ -483,8 +481,7 @@ public final class RectF {
 				float a1 = (y2 - y1) / (x2 - x1);
 				float b1 = y1 - a1 * x1;
 				float yIntercept = a1 * x3 + b1;
-				if (Math.min(x1, x2) <= x3 && x3 <= Math.max(x1, x2) && y3 <= yIntercept &&
-						yIntercept <= y4) {
+				if (Math.min(x1, x2) <= x3 && x3 <= Math.max(x1, x2) && y3 <= yIntercept && yIntercept <= y4) {
 					returnVal.set(x3, yIntercept);
 					return true;
 				} else {
@@ -499,8 +496,7 @@ public final class RectF {
 
 				float x0 = -(b1 - b2) / (a1 - a2);
 				float y0 = a1 * x0 + b1;
-				if (Math.min(x1, x2) < x0 && x0 < Math.max(x1, x2) && Math.min(x3, x4) < x0 &&
-						x0 < Math.max(x3, x4)) {
+				if (Math.min(x1, x2) < x0 && x0 < Math.max(x1, x2) && Math.min(x3, x4) < x0 && x0 < Math.max(x3, x4)) {
 					returnVal.set(x0, y0);
 					return true;
 				} else {

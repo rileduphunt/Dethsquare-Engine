@@ -40,9 +40,7 @@ import javax.xml.parsers.ParserConfigurationException;
 class UPnPManager {
 	private static final String IP = "239.255.255.250";
 	private static final int PORT = 1900;
-	private static final String[] SEARCH_TYPES = {"urn:schemas-upnp-org:device:InternetGatewayDevice:1",
-			"urn:schemas-upnp-org:service:WANIPConnection:1",
-			"urn:schemas-upnp-org:service:WANPPPConnection:1"};
+	private static final String[] SEARCH_TYPES = {"urn:schemas-upnp-org:device:InternetGatewayDevice:1", "urn:schemas-upnp-org:service:WANIPConnection:1", "urn:schemas-upnp-org:service:WANPPPConnection:1"};
 	private static String location;
 	private static String baseUrl;
 	private static ArrayList<String[]> services = new ArrayList<>();
@@ -66,8 +64,7 @@ class UPnPManager {
 
 			try {
 				// skip devices, not suitable to search gateways for
-				if (card.isLoopback() || card.isPointToPoint() || card.isVirtual() || !card.isUp())
-					continue;
+				if (card.isLoopback() || card.isPointToPoint() || card.isVirtual() || !card.isUp()) continue;
 			} catch (SocketException e) {
 				continue;
 			}
@@ -101,9 +98,8 @@ class UPnPManager {
 				socket.setSoTimeout(3000);
 				outer:
 				for (String searchType : SEARCH_TYPES) {
-					String message =
-							"M-SEARCH * HTTP/1.1\r\nHOST: " + IP + ":" + PORT + "\r\nST: " +
-									searchType + "\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\n\r\n";
+					String message = "M-SEARCH * HTTP/1.1\r\nHOST: " + IP + ":" + PORT + "\r\nST: " + searchType +
+							"\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\n\r\n";
 					byte[] messageBytes = message.getBytes();
 					DatagramPacket packet = new DatagramPacket(messageBytes, messageBytes.length,
 							InetAddress.getByName(IP), PORT);
@@ -118,8 +114,7 @@ class UPnPManager {
 						try {
 							socket.receive(receivePacket);
 							byte[] receivedData = new byte[receivePacket.getLength()];
-							System.arraycopy(receivePacket.getData(), 0, receivedData, 0,
-									receivePacket.getLength());
+							System.arraycopy(receivePacket.getData(), 0, receivedData, 0, receivePacket.getLength());
 
 							String data = new String(receivedData);
 
@@ -130,12 +125,11 @@ class UPnPManager {
 
 								if (line.isEmpty()) continue;
 
-								if (line.startsWith("HTTP/1.") || line.startsWith("NOTIFY *"))
-									continue;
+								if (line.startsWith("HTTP/1.") || line.startsWith("NOTIFY *")) continue;
 
 								String key = line.substring(0, line.indexOf(':'));
-								String value = line.length() > key.length() + 1 ? line
-										.substring(key.length() + 1) : null;
+								String value =
+										line.length() > key.length() + 1 ? line.substring(key.length() + 1) : null;
 
 								key = key.trim();
 								if (value != null) {
@@ -158,12 +152,10 @@ class UPnPManager {
 
 							if (baseUrl == null) {
 								URL url = new URL(location);
-								baseUrl = url.getProtocol() + "://" + url.getHost() + ":" +
-										url.getPort();
+								baseUrl = url.getProtocol() + "://" + url.getHost() + ":" + url.getPort();
 							}
 						} catch (SocketTimeoutException ste) {
-							System.err.println(
-									"Timed out waiting for UPnP discovery response: " + count);
+							System.err.println("Timed out waiting for UPnP discovery response: " + count);
 							waitingPacket = false;
 						} catch (ParserConfigurationException | SAXException e) {
 							e.printStackTrace();
@@ -243,8 +235,7 @@ class UPnPManager {
 						for (int j = 0; j < children.getLength(); j++) {
 							Node child2 = children.item(j);
 							if ("controlURL".equals(child2.getNodeName())) {
-								services.add(new String[]{child.getTextContent(),
-										child2.getTextContent()});
+								services.add(new String[]{child.getTextContent(), child2.getTextContent()});
 								breakOuterLoop = true;
 								break;
 							}
@@ -258,8 +249,7 @@ class UPnPManager {
 		}
 	}
 
-	private static void sendSOAPMessage(String action, String service, String url,
-			Map<String, String> args) {
+	private static void sendSOAPMessage(String action, String service, String url, Map<String, String> args) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
 		sb.append("<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
@@ -267,8 +257,7 @@ class UPnPManager {
 		sb.append("<s:Body>");
 		sb.append("<m:").append(action).append(" xmlns:m=\"").append(service).append("\">");
 		for (String s : args.keySet()) {
-			sb.append("<").append(s).append(">").append(args.get(s)).append("</").append(s)
-			  .append(">");
+			sb.append("<").append(s).append(">").append(args.get(s)).append("</").append(s).append(">");
 		}
 		sb.append("</m:").append(action).append(">");
 		sb.append("</s:Body>");
@@ -304,16 +293,14 @@ class UPnPManager {
 				}
 
 				@Override
-				public void endElement(String uri, String localName, String qName)
-						throws SAXException {
+				public void endElement(String uri, String localName, String qName) throws SAXException {
 					currentElement = null;
 				}
 
 				@Override
-				public void characters(char[] ch, int start, int length)
-						throws SAXException {
+				public void characters(char[] ch, int start, int length) throws SAXException {
 					if (currentElement != null) {
-						String value = new String(ch,start,length);
+						String value = new String(ch, start, length);
 						String old = nameValue.put(currentElement, value);
 						if (old != null) {
 							nameValue.put(currentElement, old + value);

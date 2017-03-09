@@ -56,8 +56,7 @@ public class Network {
 	private static final String REQUEST_STATE = "request_state";
 
 	public enum Protocol {
-		UDP,
-		TCP
+		UDP, TCP
 	}
 
 	static void init() {
@@ -135,8 +134,8 @@ public class Network {
 	private static void update() {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
-			ByteBuffer data = ByteBuffer.allocate(NetworkBehaviour.totalSize + (NetworkBehaviour
-					.myNetworkBehaviours.size() * 8));
+			ByteBuffer data = ByteBuffer.allocate(
+					NetworkBehaviour.totalSize + (NetworkBehaviour.myNetworkBehaviours.size() * 8));
 			for (NetworkBehaviour nb : NetworkBehaviour.myNetworkBehaviours.values()) {
 				data.putInt(nb.getNetworkId());
 				data.putShort(nb.getSize());
@@ -315,8 +314,7 @@ public class Network {
 
 		@Override
 		public void run() {
-			try (BufferedReader in = new BufferedReader(
-					new InputStreamReader(socket.getInputStream()))) {
+			try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
 				socket.setKeepAlive(true);
 				while (socket.isConnected()) {
 					String command = in.readLine();
@@ -356,8 +354,7 @@ public class Network {
 
 		@Override
 		public void run() {
-			try (BufferedWriter out = new BufferedWriter(
-					new OutputStreamWriter(socket.getOutputStream()))) {
+			try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
 				while (true) {
 					synchronized (messages) {
 						if (!initialising) {
@@ -384,8 +381,7 @@ public class Network {
 				throw new IllegalArgumentException("Message cannot contain newline characters");
 			}
 			synchronized (messages) {
-				messages.add(new String[]{command,
-						message});
+				messages.add(new String[]{command, message});
 				messages.notify();
 			}
 		}
@@ -452,11 +448,9 @@ public class Network {
 		String[] split = message.split(SPLIT_DIVIDER);
 		GameObject gameObject = PrefabManager.loadPrefab(split[0]);
 		gameObject.networkId = Integer.parseInt(split[1]);
-		Vector2 position = new Vector2(Float.parseFloat(split[2]),
-				Float.parseFloat(split[3]));
+		Vector2 position = new Vector2(Float.parseFloat(split[2]), Float.parseFloat(split[3]));
 		int playerId = Integer.parseInt(split[4]);
-		List<NetworkBehaviour> networkBehaviours = gameObject
-				.getComponentsOfType(NetworkBehaviour.class);
+		List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
 		HashMap<String, Integer> networkIds = new HashMap<>();
 		for (int i = 0; i < networkBehaviours.size(); i++) {
 			networkIds.put(split[5 + (i * 2)], Integer.parseInt(split[6 + (i * 2)]));

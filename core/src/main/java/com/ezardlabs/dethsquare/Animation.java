@@ -16,8 +16,7 @@ public final class Animation {
 		this.frameDuration = frameDuration;
 	}
 
-	public Animation(String name, Sprite[] frames, AnimationType type, long frameDuration,
-			AnimationListener listener) {
+	public Animation(String name, Sprite[] frames, AnimationType type, long frameDuration, AnimationListener listener) {
 		this(name, frames, type, frameDuration);
 		this.listener = listener;
 	}

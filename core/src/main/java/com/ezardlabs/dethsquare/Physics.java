@@ -4,15 +4,12 @@ import java.util.HashSet;
 
 public class Physics {
 
-	public static RaycastHit raycast(Vector2 origin, Vector2 direction, float distance,
-			String targetTag) {
+	public static RaycastHit raycast(Vector2 origin, Vector2 direction, float distance, String targetTag) {
 		direction.normalise();
-		Vector2 end = new Vector2(origin.x + direction.x * distance,
-				origin.y + direction.y * distance);
+		Vector2 end = new Vector2(origin.x + direction.x * distance, origin.y + direction.y * distance);
 		RaycastHit raycastHit = null;
 		HashSet<Collider> temp = new HashSet<>(
-				Collider.staticColliders.size() + Collider.normalColliders.size() +
-						Collider.triggerColliders.size());
+				Collider.staticColliders.size() + Collider.normalColliders.size() + Collider.triggerColliders.size());
 		temp.addAll(Collider.staticColliders);
 		temp.addAll(Collider.normalColliders);
 		temp.addAll(Collider.triggerColliders);
@@ -21,8 +18,7 @@ public class Physics {
 				Vector2 hit = c.bounds.intersect(origin, end);
 				if (hit != null) {
 					if (raycastHit == null) {
-						raycastHit = new RaycastHit(hit, Vector2.distance(origin, hit), c.transform,
-								c);
+						raycastHit = new RaycastHit(hit, Vector2.distance(origin, hit), c.transform, c);
 					} else if (Vector2.distance(origin, hit) < raycastHit.distance) {
 						raycastHit.point = hit;
 						raycastHit.distance = Vector2.distance(origin, hit);

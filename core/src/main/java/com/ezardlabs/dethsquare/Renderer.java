@@ -44,9 +44,7 @@ public class Renderer extends BoundedComponent {
 	public float yOffset;
 
 	private enum Mode {
-		NONE,
-		IMAGE,
-		SPRITE
+		NONE, IMAGE, SPRITE
 	}
 
 	public Renderer() {
@@ -137,7 +135,8 @@ public class Renderer extends BoundedComponent {
 	public static void init() {
 		ArrayList<Renderer> staticRenderers = new ArrayList<>();
 		for (Renderer r : renderers.toArray(new Renderer[renderers.size()])) {
-			r.bounds.set(r.transform.position.x, r.transform.position.y, r.transform.position.x + r.width, r.transform.position.y + r.height);
+			r.bounds.set(r.transform.position.x, r.transform.position.y, r.transform.position.x + r.width,
+					r.transform.position.y + r.height);
 			if (r.gameObject.isStatic) {
 				staticRenderers.add(r);
 				renderers.remove(r);

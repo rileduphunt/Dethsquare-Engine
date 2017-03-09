@@ -29,8 +29,7 @@ public class Matchmaker implements NetworkConstants {
 			throw new IllegalStateException("Failed to create matchmaking socket");
 		} else {
 			udpReader = new UDPReader(socket);
-			udpWriter = new UDPWriter(socket,
-					new InetSocketAddress[]{new InetSocketAddress(ip, serverPort)});
+			udpWriter = new UDPWriter(socket, new InetSocketAddress[]{new InetSocketAddress(ip, serverPort)});
 			udpReader.start();
 			udpWriter.start();
 			Network.init();
@@ -48,32 +47,26 @@ public class Matchmaker implements NetworkConstants {
 				}
 				synchronized (udpReader.udpMessages) {
 					while (!udpReader.udpMessages.isEmpty()) {
-						JSONObject json = new JSONObject(
-								new String(udpReader.udpMessages.remove(0)));
+						JSONObject json = new JSONObject(new String(udpReader.udpMessages.remove(0)));
 						String message = json.getString("message");
 						switch (message) {
 							case GAME_CREATE:
 								setGame(MatchmakingGame.fromJson(json.getJSONObject("game")));
 								Network.createGame();
 								if (listener.onCreateGame()) {
-									udpWriter.sendMessage(
-											getJsonMessage(GAME_CREATE, true).toString()
-																			 .getBytes());
+									udpWriter.sendMessage(getJsonMessage(GAME_CREATE, true).toString().getBytes());
 								}
 								break;
 							case GAME_JOIN:
-								MatchmakingGame game = MatchmakingGame
-										.fromJson(json.getJSONObject("game"));
+								MatchmakingGame game = MatchmakingGame.fromJson(json.getJSONObject("game"));
 								setGame(game);
 								Network.joinGame(game, json.getInt("playerId"));
 								listener.onGameFound(game);
 								Network.requestState();
-								udpWriter.sendMessage(
-										getJsonMessage(GAME_JOIN, true).toString().getBytes());
+								udpWriter.sendMessage(getJsonMessage(GAME_JOIN, true).toString().getBytes());
 								break;
 							case PLAYER_JOIN:
-								Network.addPlayer(
-										MatchmakingPlayer.fromJson(json.getJSONObject("player")));
+								Network.addPlayer(MatchmakingPlayer.fromJson(json.getJSONObject("player")));
 								break;
 							default:
 								listener.onError("Unknown error");

@@ -44,6 +44,7 @@ public final class Vector2 {
 
 	/**
 	 * Sets the x and y components of the vector to be the same as teh given source vector
+	 *
 	 * @param source the source vector to copy x and y component values from
 	 */
 	public void set(Vector2 source) {
@@ -54,6 +55,7 @@ public final class Vector2 {
 
 	/**
 	 * Returns a new {@link Vector2} that has been offset by the given parameters
+	 *
 	 * @param x The amount to offset the x coordinate by
 	 * @param y The amount to offset the y coordinate by
 	 * @return The offset {@link Vector2}
@@ -64,7 +66,7 @@ public final class Vector2 {
 
 	/**
 	 * Returns the length of this vector
-	 *
+	 * <p>
 	 * If you want to compare the magnitudes of 2 vectors then it is advisable to compare their
 	 * square magnitudes({@link #sqrMagnitude()}) as they are faster to compute
 	 *
@@ -76,6 +78,7 @@ public final class Vector2 {
 
 	/**
 	 * Returns the squared length of this vector
+	 *
 	 * @return The squared length of this vector
 	 */
 	public float sqrMagnitude() {
@@ -84,7 +87,7 @@ public final class Vector2 {
 
 	/**
 	 * Makes this vector have a magnitude of 1
-	 *
+	 * <p>
 	 * Note that this method modifies the vector it is called on; if you want to keep the vector
 	 * unchanged, then use {@link #normalised()} instead
 	 */
@@ -96,7 +99,7 @@ public final class Vector2 {
 
 	/**
 	 * Returns this vector with a magnitude of 1
-	 *
+	 * <p>
 	 * Not that this method does not modify the vector it is caleld on; if you want to modify the
 	 * vector then use {@link #normalise()} instead
 	 *
@@ -110,6 +113,7 @@ public final class Vector2 {
 
 	/**
 	 * Calculates the distance between 2 vector points
+	 *
 	 * @param a the first point
 	 * @param b the second point
 	 * @return The distance between the 2 points

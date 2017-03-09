@@ -25,8 +25,7 @@ public class NetworkTransform extends NetworkBehaviour {
 			gameObject.collider.recalculateBounds();
 			gameObject.collider.triggerCheck();
 		}
-		transform.scale
-				.set(data.getFloat(index + 8), data.getFloat(index + 12));
+		transform.scale.set(data.getFloat(index + 8), data.getFloat(index + 12));
 	}
 
 	@Override

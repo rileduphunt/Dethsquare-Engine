@@ -26,11 +26,9 @@ public class Component {
 	void internalStart() {
 		for (Annotation a : getClass().getAnnotations()) {
 			if (a instanceof RequiredComponents) {
-				for (Class<? extends Component> c : ((RequiredComponents) a)
-						.value()) {
+				for (Class<? extends Component> c : ((RequiredComponents) a).value()) {
 					if (!gameObject.hasComponentOfType(c)) {
-						throw new RequiredComponentNotPresentError(
-								gameObject.name, getClass(), c);
+						throw new RequiredComponentNotPresentError(gameObject.name, getClass(), c);
 					}
 				}
 				break;
@@ -39,19 +37,19 @@ public class Component {
 		start();
 	}
 
-    /**
-     * Called when this {@link Component} is first created
-     */
+	/**
+	 * Called when this {@link Component} is first created
+	 */
 	public void start() {
 		// Only used in subclasses
 	}
 
-    /**
-     * Called when this {@link Component} is destroyed
-     */
-    protected void destroy() {
+	/**
+	 * Called when this {@link Component} is destroyed
+	 */
+	protected void destroy() {
 		// Only used in subclasses
-    }
+	}
 
 	/**
 	 * Called when the {@link Collider} other enters the trigger
@@ -64,6 +62,7 @@ public class Component {
 
 	/**
 	 * Called when this {@link Component}'s {@link Collider} collides with another {@link Collider}
+	 *
 	 * @param collision the {@link Collision} data associated with this collision
 	 */
 	public void onCollision(Collision collision) {
@@ -78,17 +77,14 @@ public class Component {
 
 	private static class RequiredComponentNotPresentError extends Error {
 
-		private RequiredComponentNotPresentError(String gameObjectName,
-				Class component, Class requiredComponent) {
-			super(gameObjectName + ": Could not create " +
-					addIndefiniteArticle(component.getSimpleName()) +
-					" because it requires " +
-					addIndefiniteArticle(requiredComponent.getSimpleName()) +
+		private RequiredComponentNotPresentError(String gameObjectName, Class component, Class requiredComponent) {
+			super(gameObjectName + ": Could not create " + addIndefiniteArticle(component.getSimpleName()) +
+					" because it requires " + addIndefiniteArticle(requiredComponent.getSimpleName()) +
 					", which was missing");
 		}
 
 		private static String addIndefiniteArticle(String str) {
-			switch(str.charAt(0)) {
+			switch (str.charAt(0)) {
 				case 'a':
 				case 'e':
 				case 'i':

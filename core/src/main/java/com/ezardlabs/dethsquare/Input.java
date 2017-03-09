@@ -1,10 +1,10 @@
 package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.Touch.TouchPhase;
+import com.ezardlabs.dethsquare.util.Dethsquare;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.KeyListener;
 import com.ezardlabs.dethsquare.util.GameListeners.MouseListener;
-import com.ezardlabs.dethsquare.util.Dethsquare;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ public final class Input {
 
 			@Override
 			public void onButtonDown(int index) {
-				switch(index) {
+				switch (index) {
 					case 1:
 						setKeyDown(KeyCode.MOUSE_LEFT);
 						break;
@@ -36,7 +36,7 @@ public final class Input {
 
 			@Override
 			public void onButtonUp(int index) {
-				switch(index) {
+				switch (index) {
 					case 1:
 						setKeyUp(KeyCode.MOUSE_LEFT);
 						break;
@@ -80,62 +80,7 @@ public final class Input {
 	private static ArrayList<Touch> touchesToRemove = new ArrayList<>(10);
 
 	public enum KeyCode {
-		A,
-		B,
-		C,
-		D,
-		E,
-		F,
-		G,
-		H,
-		I,
-		J,
-		K,
-		L,
-		M,
-		N,
-		O,
-		P,
-		Q,
-		R,
-		S,
-		T,
-		U,
-		V,
-		W,
-		X,
-		Y,
-		Z,
-		ALPHA_0,
-		ALPHA_1,
-		ALPHA_2,
-		ALPHA_3,
-		ALPHA_4,
-		ALPHA_5,
-		ALPHA_6,
-		ALPHA_7,
-		ALPHA_8,
-		ALPHA_9,
-		SPACE,
-		RETURN,
-		ESCAPE,
-		BACKSPACE,
-		DELETE,
-		F1,
-		F2,
-		F3,
-		F4,
-		F5,
-		F6,
-		F7,
-		F8,
-		F9,
-		F10,
-		F11,
-		F12,
-		MOUSE_LEFT,
-		MOUSE_RIGHT,
-		MOUSE_MIDDLE
+		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, ALPHA_0, ALPHA_1, ALPHA_2, ALPHA_3, ALPHA_4, ALPHA_5, ALPHA_6, ALPHA_7, ALPHA_8, ALPHA_9, SPACE, RETURN, ESCAPE, BACKSPACE, DELETE, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE
 	}
 
 	private static class Holder {
@@ -172,8 +117,7 @@ public final class Input {
 				case BEGAN:
 					Touch[] temp = new Touch[touches.length + 1];
 					System.arraycopy(touches, 0, temp, 0, touches.length);
-					temp[touches.length] = new Touch(holder.id,
-							new Vector2(holder.x, holder.y));
+					temp[touches.length] = new Touch(holder.id, new Vector2(holder.x, holder.y));
 					touches = temp;
 					break;
 				case MOVED:
@@ -230,7 +174,8 @@ public final class Input {
 		keyChanges.clear();
 		//noinspection ForLoopReplaceableByForEach
 		for (int i = 0; i < touches.length; i++) {
-			if ((touches[i].phase == Touch.TouchPhase.ENDED || touches[i].phase == Touch.TouchPhase.CANCELLED) && touches[i].lastModified < Time.frameCount) {
+			if ((touches[i].phase == Touch.TouchPhase.ENDED || touches[i].phase == Touch.TouchPhase.CANCELLED) &&
+					touches[i].lastModified < Time.frameCount) {
 				touchesToRemove.add(touches[i]);
 			} else if (touches[i].lastModified < Time.frameCount) {
 				touches[i].lastModified = Time.frameCount;

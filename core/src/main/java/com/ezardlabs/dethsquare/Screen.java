@@ -1,7 +1,7 @@
 package com.ezardlabs.dethsquare;
 
-import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.Dethsquare;
+import com.ezardlabs.dethsquare.util.GameListeners;
 
 public final class Screen {
 	/**

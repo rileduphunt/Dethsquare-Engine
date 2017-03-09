@@ -32,10 +32,7 @@ public final class Collider extends BoundedComponent {
 	boolean isTrigger = false;
 
 	public enum CollisionLocation {
-		TOP,
-		RIGHT,
-		BOTTOM,
-		LEFT
+		TOP, RIGHT, BOTTOM, LEFT
 	}
 
 	public class Collision {
@@ -64,8 +61,8 @@ public final class Collider extends BoundedComponent {
 		 */
 		public final Rigidbody rigidbody;
 
-		Collision(Collider collider, GameObject gameObject, Transform transform,
-				Rigidbody rigidbody, CollisionLocation location, float speed) {
+		Collision(Collider collider, GameObject gameObject, Transform transform, Rigidbody rigidbody,
+				CollisionLocation location, float speed) {
 			this.collider = collider;
 			this.gameObject = gameObject;
 			this.transform = transform;
@@ -165,14 +162,13 @@ public final class Collider extends BoundedComponent {
 				if (c != this && c != null && !c.isTrigger && RectF.intersects(bounds, c.bounds)) {
 					if (y > 0 && bounds.bottom > c.bounds.top) {
 						transform.position.y = Math.round(c.bounds.top - bounds.height());
-						gameObject.onCollision(
-								new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
-										CollisionLocation.BOTTOM, y));
+						gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
+								CollisionLocation.BOTTOM, y));
 					} else if (y < 0 && bounds.top < c.bounds.bottom) {
 						transform.position.y = Math.round(c.bounds.bottom);
 						if (transform.position.y != lastBounds.top) {
-							gameObject.onCollision(new Collision(c, c.gameObject, c.transform,
-									c.gameObject.rigidbody, CollisionLocation.TOP, y));
+							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
+									CollisionLocation.TOP, y));
 						}
 					}
 					if (gameObject.rigidbody != null) {
@@ -189,14 +185,14 @@ public final class Collider extends BoundedComponent {
 					if (x > 0 && bounds.right > c.bounds.left) {
 						transform.position.x = Math.round(c.bounds.left - bounds.width());
 						if (transform.position.x != lastBounds.left) {
-							gameObject.onCollision(new Collision(c, c.gameObject, c.transform,
-									c.gameObject.rigidbody, CollisionLocation.RIGHT, x));
+							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
+									CollisionLocation.RIGHT, x));
 						}
 					} else if (x < 0 && bounds.left < c.bounds.right) {
 						transform.position.x = Math.round(c.bounds.right);
 						if (transform.position.x != lastBounds.left) {
-							gameObject.onCollision(new Collision(c, c.gameObject, c.transform,
-									c.gameObject.rigidbody, CollisionLocation.LEFT, x));
+							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
+									CollisionLocation.LEFT, x));
 						}
 					}
 					if (gameObject.rigidbody != null) {

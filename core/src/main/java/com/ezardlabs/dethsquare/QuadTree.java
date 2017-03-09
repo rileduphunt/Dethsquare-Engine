@@ -33,10 +33,8 @@ final class QuadTree<T extends BoundedComponent> {
 		float x = 0;
 		float y = 0;
 		for (BoundedComponent bc : items) {
-			if (bc.gameObject == null || bc.gameObject.isStatic && bc.bounds.right > x)
-				x = bc.bounds.right;
-			if (bc.gameObject == null || bc.gameObject.isStatic && bc.bounds.bottom > y)
-				y = bc.bounds.bottom;
+			if (bc.gameObject == null || bc.gameObject.isStatic && bc.bounds.right > x) x = bc.bounds.right;
+			if (bc.gameObject == null || bc.gameObject.isStatic && bc.bounds.bottom > y) y = bc.bounds.bottom;
 		}
 		if (x >= y) {
 			bounds = new RectF(0, 0, (int) x, (int) x);
@@ -51,8 +49,8 @@ final class QuadTree<T extends BoundedComponent> {
 		finalise(items);
 	}
 
-	static <T extends BoundedComponent> ArrayList<T> retrieve(ArrayList<T> returnObjects,
-			QuadTree<T> qt, BoundedComponent bc) {
+	static <T extends BoundedComponent> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt,
+			BoundedComponent bc) {
 		if (!qt.isLeaf()) {
 			for (QuadTree qt2 : qt.nodes) {
 				if (qt2.bounds.contains(bc.bounds)) {
@@ -152,15 +150,12 @@ final class QuadTree<T extends BoundedComponent> {
 		float subHeight = bounds.height() / 2f;
 		float x = bounds.left;
 		float y = bounds.top;
-		nodes[0] = new QuadTree(maxObjects,
-				new RectF(x, y, x + subWidth, y + subHeight)); // top left
-		nodes[1] = new QuadTree(maxObjects,
-				new RectF(x + subWidth, y, x + (subWidth * 2), y + subHeight)); // top right
+		nodes[0] = new QuadTree(maxObjects, new RectF(x, y, x + subWidth, y + subHeight)); // top left
+		nodes[1] = new QuadTree(maxObjects, new RectF(x + subWidth, y, x + (subWidth * 2), y + subHeight)); // top right
 		nodes[2] = new QuadTree(maxObjects,
 				new RectF(x, y + subHeight, x + subWidth, y + (subHeight * 2))); // bottom left
 		nodes[3] = new QuadTree(maxObjects,
-				new RectF(x + subWidth, y + subHeight, x + (subWidth * 2),
-						y + (subHeight * 2))); // bottom right
+				new RectF(x + subWidth, y + subHeight, x + (subWidth * 2), y + (subHeight * 2))); // bottom right
 	}
 
 	public boolean isLeaf() {

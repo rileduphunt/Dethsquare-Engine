@@ -27,16 +27,11 @@ public final class TextureAtlas {
 
 		if (mapPath == null) {
 			int count = 0;
-			for(int y = 0; y < height; y += tileHeight) {
-				for(int x = 0; x < width; x += tileWidth) {
+			for (int y = 0; y < height; y += tileHeight) {
+				for (int x = 0; x < width; x += tileWidth) {
 					atlas.put(String.valueOf(count++),
-						new Sprite(
-							(float) x / width,
-							(float) y / height,
-							(float) tileWidth / width,
-							(float) tileHeight / height
-						)
-					);
+							new Sprite((float) x / width, (float) y / height, (float) tileWidth / width,
+									(float) tileHeight / height));
 				}
 			}
 		} else {
@@ -46,9 +41,9 @@ public final class TextureAtlas {
 				while ((temp = reader.readLine()) != null) {
 					String[] split = temp.split(" = ");
 					String[] split2 = split[1].split(" ");
-					atlas.put(split[0], new Sprite(Float.parseFloat(split2[0]) / width,
-							Float.parseFloat(split2[1]) / height, Float.parseFloat(split2[2]) / width,
-							Float.parseFloat(split2[3]) / height));
+					atlas.put(split[0],
+							new Sprite(Float.parseFloat(split2[0]) / width, Float.parseFloat(split2[1]) / height,
+									Float.parseFloat(split2[2]) / width, Float.parseFloat(split2[3]) / height));
 				}
 			} catch (IOException ignored) {
 			}

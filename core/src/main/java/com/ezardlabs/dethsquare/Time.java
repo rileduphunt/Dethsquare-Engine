@@ -8,6 +8,7 @@ public final class Time {
 		// Add hook into game loop
 		GameListeners.addUpdateListener(new UpdateListener() {
 			long last = 0;
+
 			@Override
 			public void onUpdate() {
 				long now = System.currentTimeMillis();
@@ -17,6 +18,7 @@ public final class Time {
 			}
 		});
 	}
+
 	/**
 	 * The time in seconds it took to complete the last frame
 	 */
