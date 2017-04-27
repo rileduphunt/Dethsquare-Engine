@@ -93,8 +93,10 @@ public final class Vector2 {
 	 */
 	public void normalise() {
 		double length = Math.sqrt(x * x + y * y);
-		x /= length;
-		y /= length;
+		if (length != 0) {
+			x /= length;
+			y /= length;
+		}
 	}
 
 	/**
