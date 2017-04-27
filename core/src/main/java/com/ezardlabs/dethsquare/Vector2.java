@@ -100,7 +100,7 @@ public final class Vector2 {
 	/**
 	 * Returns this vector with a magnitude of 1
 	 * <p>
-	 * Not that this method does not modify the vector it is caleld on; if you want to modify the
+	 * Not that this method does not modify the vector it is called on; if you want to modify the
 	 * vector then use {@link #normalise()} instead
 	 *
 	 * @return The normalised version of this vector
