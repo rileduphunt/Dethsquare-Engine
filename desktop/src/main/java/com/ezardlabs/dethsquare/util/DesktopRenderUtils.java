@@ -163,10 +163,11 @@ public class DesktopRenderUtils implements RenderUtils {
 			glCompileShader(vs);
 
 			lines = Dethsquare.IO.getFileLines("shaders/texture/frag.glsl");
-			shader = "";
+			StringBuilder shaderBuilder = new StringBuilder();
 			for (String s : lines) {
-				shader += s + "\n";
+				shaderBuilder.append(s).append("\n");
 			}
+			shader = shaderBuilder.toString();
 
 			int fs = glCreateShader(GL_FRAGMENT_SHADER);
 			glShaderSource(fs, shader);
