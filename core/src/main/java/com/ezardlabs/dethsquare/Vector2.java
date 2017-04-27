@@ -112,6 +112,32 @@ public final class Vector2 {
 	}
 
 	/**
+	 * Multiplies the vector by the given value
+	 * <p>
+	 * Note that this method modifies the vector it is called on; if you want to keep the vector
+	 * unchanged, then use {@link #multipliedBy(float)} instead
+	 *
+	 * @param multiplier The amount to multiply the vector by
+	 */
+	public void multiplyBy(float multiplier) {
+		x *= multiplier;
+		y *= multiplier;
+	}
+
+	/**
+	 * Returns this vector multiplied by the given value
+	 * <p>
+	 * Not that this method does not modify the vector it is called on; if you want to modify the
+	 * vector then use {@link #multiplyBy(float)} instead
+	 *
+	 * @param multiplier The amount to multiply the vector by
+	 * @return A new vector, equal to the vector this method was called on multiplied by the given value
+	 */
+	public Vector2 multipliedBy(float multiplier) {
+		return new Vector2(x * multiplier, y * multiplier);
+	}
+
+	/**
 	 * Calculates the distance between 2 vector points
 	 *
 	 * @param a the first point
