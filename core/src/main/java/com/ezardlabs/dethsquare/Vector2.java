@@ -140,6 +140,32 @@ public final class Vector2 {
 	}
 
 	/**
+	 * Divides the vector by the given value
+	 * <p>
+	 * Note that this method modifies the vector it is called on; if you want to keep the vector
+	 * unchanged, then use {@link #dividedBy(float)} instead
+	 *
+	 * @param divider The amount to divide the vector by
+	 */
+	public void divideBy(float divider) {
+		x /= divider;
+		y /= divider;
+	}
+
+	/**
+	 * Returns this vector divided by the given value
+	 * <p>
+	 * Not that this method does not modify the vector it is called on; if you want to modify the
+	 * vector then use {@link #divideBy(float)} instead
+	 *
+	 * @param divider The amount to multiply the vector by
+	 * @return A new vector, equal to the vector this method was called on multiplied by the given value
+	 */
+	public Vector2 dividedBy(float divider) {
+		return new Vector2(x / divider, y / divider);
+	}
+
+	/**
 	 * Calculates the distance between 2 vector points
 	 *
 	 * @param a the first point
