@@ -153,24 +153,23 @@ public class DesktopRenderUtils implements RenderUtils {
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
 			String[] lines = Dethsquare.IO.getFileLines("shaders/texture/vert.glsl");
-			String shader = "";
+			StringBuilder shader = new StringBuilder();
 			for (String s : lines) {
-				shader += s + "\n";
+				shader.append(s).append("\n");
 			}
 
 			int vs = glCreateShader(GL_VERTEX_SHADER);
-			glShaderSource(vs, shader);
+			glShaderSource(vs, shader.toString());
 			glCompileShader(vs);
 
 			lines = Dethsquare.IO.getFileLines("shaders/texture/frag.glsl");
-			StringBuilder shaderBuilder = new StringBuilder();
+			shader = new StringBuilder();
 			for (String s : lines) {
-				shaderBuilder.append(s).append("\n");
+				shader.append(s).append("\n");
 			}
-			shader = shaderBuilder.toString();
 
 			int fs = glCreateShader(GL_FRAGMENT_SHADER);
-			glShaderSource(fs, shader);
+			glShaderSource(fs, shader.toString());
 			glCompileShader(fs);
 
 			program = glCreateProgram();
