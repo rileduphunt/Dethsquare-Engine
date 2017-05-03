@@ -166,6 +166,19 @@ public final class Vector2 {
 	}
 
 	/**
+	 * Calculates the distance between 2 coordinate points
+	 *
+	 * @param x1 the first point's x coordinate
+	 * @param y1 the first point's y coordinate
+	 * @param x2 the second point's x coordinate
+	 * @param y2 the second point's y coordinate
+	 * @return The distance between the 2 points
+	 */
+	public static double distance(double x1, double y1, double x2, double y2) {
+		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+	}
+
+	/**
 	 * Calculates the distance between 2 vector points
 	 *
 	 * @param a the first point
@@ -173,7 +186,7 @@ public final class Vector2 {
 	 * @return The distance between the 2 points
 	 */
 	public static double distance(Vector2 a, Vector2 b) {
-		return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2));
+		return distance(a.x, a.y, b.x, b.y);
 	}
 
 	@Override
