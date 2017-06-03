@@ -38,7 +38,7 @@ import static org.lwjgl.stb.STBVorbis.stb_vorbis_decode_memory;
 import static org.lwjgl.system.MemoryStack.stackMallocInt;
 import static org.lwjgl.system.MemoryStack.stackPop;
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.libc.Stdlib.free;
+import static org.lwjgl.system.libc.LibCStdlib.free;
 
 public class DesktopAudioUtils implements AudioUtils {
 	private static HashMap<Integer, Integer> audio = new HashMap<>();
