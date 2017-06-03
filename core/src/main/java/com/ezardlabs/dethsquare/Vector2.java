@@ -8,6 +8,11 @@ public final class Vector2 {
 	public float y;
 	private Vector2ChangeListener listener;
 
+	public static final Vector2 UP = new Vector2(0, -1);
+	public static final Vector2 DOWN = new Vector2(0, 1);
+	public static final Vector2 LEFT = new Vector2(1, 0);
+	public static final Vector2 RIGHT = new Vector2(-1, 0);
+
 	/**
 	 * Shorthand for writing Vector2(0, 0)
 	 */
