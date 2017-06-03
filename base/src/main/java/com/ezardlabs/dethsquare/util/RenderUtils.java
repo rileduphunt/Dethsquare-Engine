@@ -1,9 +1,15 @@
 package com.ezardlabs.dethsquare.util;
 
+import com.ezardlabs.dethsquare.debug.DebugGraphic;
+
+import java.util.ArrayList;
+
 public interface RenderUtils {
 	int[] loadImage(String path);
 
 	void render(int textureName, float[] vertices, float[] uvs, short[] indices, int num);
+
+	void render(ArrayList<DebugGraphic> debugGraphics);
 
 	void destroyAllTextures();
 

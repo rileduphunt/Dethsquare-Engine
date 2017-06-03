@@ -1,6 +1,9 @@
 package com.ezardlabs.dethsquare.util;
 
+import com.ezardlabs.dethsquare.debug.DebugGraphic;
+
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
@@ -53,6 +57,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform4f;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
@@ -209,6 +214,48 @@ public class DesktopRenderUtils implements RenderUtils {
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_DYNAMIC_DRAW);
 
 		glDrawElements(GL_TRIANGLES, num * 6, GL_UNSIGNED_SHORT, 0);
+	}
+
+	int program2 = -1;
+	int colourLoc;
+
+	public void render(ArrayList<DebugGraphic> debugGraphics) {
+		if (program2 == -1) {
+			program2 = glCreateProgram();
+			String[] lines = Dethsquare.IO.getFileLines("shaders/plain/vert.glsl");
+			StringBuilder shader = new StringBuilder();
+			for (String s : lines) {
+				shader.append(s).append("\n");
+			}
+
+			int vs = glCreateShader(GL_VERTEX_SHADER);
+			glShaderSource(vs, shader.toString());
+			glCompileShader(vs);
+
+			lines = Dethsquare.IO.getFileLines("shaders/plain/frag.glsl");
+			shader = new StringBuilder();
+			for (String s : lines) {
+				shader.append(s).append("\n");
+			}
+
+			int fs = glCreateShader(GL_FRAGMENT_SHADER);
+			glShaderSource(fs, shader.toString());
+			glCompileShader(fs);
+
+			glAttachShader(program2, vs);
+			glAttachShader(program2, fs);
+			glLinkProgram(program2);
+
+			colourLoc = glGetUniformLocation(program2, "colour");
+		}
+		glUseProgram(program2);
+		GL11.glPushMatrix();
+		for (DebugGraphic dg : debugGraphics) {
+			glUniform4f(colourLoc, dg.red, dg.green, dg.blue, 1);
+			dg.draw(cameraX, cameraY, scale);
+		}
+		GL11.glPopMatrix();
+		glUseProgram(program);
 	}
 
 	public void destroyAllTextures() {
