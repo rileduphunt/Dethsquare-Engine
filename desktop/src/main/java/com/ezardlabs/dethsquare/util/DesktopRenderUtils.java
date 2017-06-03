@@ -78,6 +78,9 @@ public class DesktopRenderUtils implements RenderUtils {
 	private int indexBuffer;
 	private int texCoordBuffer;
 
+	private int program2 = -1;
+	private int colourLoc;
+
 	private final float[] projection = new float[16];
 	private final float[] view = new float[16];
 	private final float[] projectionAndView = new float[16];
@@ -215,9 +218,6 @@ public class DesktopRenderUtils implements RenderUtils {
 
 		glDrawElements(GL_TRIANGLES, num * 6, GL_UNSIGNED_SHORT, 0);
 	}
-
-	int program2 = -1;
-	int colourLoc;
 
 	public void render(ArrayList<DebugGraphic> debugGraphics) {
 		if (program2 == -1) {
