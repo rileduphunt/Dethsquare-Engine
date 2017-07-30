@@ -110,6 +110,15 @@ public final class Animator extends Script implements Iterable<Animation> {
 		return finished;
 	}
 
+	public Animation getAnimation(String name) {
+		for (Animation animation : animations) {
+			if (animation.name.equals(name)) {
+				return animation;
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public Iterator<Animation> iterator() {
 		return new ObjectIterator<>(animations);
