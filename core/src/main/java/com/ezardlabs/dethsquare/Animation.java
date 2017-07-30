@@ -22,6 +22,10 @@ public final class Animation {
 		this.listener = listener;
 	}
 
+	public void setAnimationListener(AnimationListener listener) {
+		this.listener = listener;
+	}
+
 	public static class FrameData {
 		final int width;
 		final int height;
