@@ -28,6 +28,12 @@ public final class Animator extends Script implements Iterable<Animation> {
 		this.animations = newAnimations;
 	}
 
+	private void setFrame(int frame) {
+		this.frame = frame;
+		this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
+		gameObject.renderer.setData(animations[index].frameData[frame]);
+	}
+
 	public void update() {
 		if (!shouldUpdate) {
 			if (index == -1 || frame == -1) return;
@@ -38,7 +44,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 		if (index == -1 || frame == -1) return;
 		int tempFrame;
 		if (System.currentTimeMillis() >= nextFrameTime) {
-			nextFrameTime += animations[index].frameDuration;
+			nextFrameTime += animations[index].frameData[frame].duration;
 			tempFrame = animations[index].type.update(frame, animations[index].frames.length);
 			if (tempFrame == -1) {
 				if (!finished) {
@@ -47,12 +53,12 @@ public final class Animator extends Script implements Iterable<Animation> {
 					}
 					finished = true;
 				}
-				frame = tempFrame;
+				setFrame(tempFrame);
 				return;
 			} else {
 				finished = false;
 			}
-			frame = tempFrame;
+			setFrame(tempFrame);
 			try {
 				gameObject.renderer.sprite = animations[index].frames[frame];
 			} catch (ArrayIndexOutOfBoundsException ignored) {
@@ -70,9 +76,8 @@ public final class Animator extends Script implements Iterable<Animation> {
 		for (int i = 0; i < animations.length; i++) {
 			if (i != index && animations[i].name.equals(animationName)) {
 				index = i;
-				frame = 0;
+				setFrame(0);
 				finished = false;
-				nextFrameTime = System.currentTimeMillis() + animations[index].frameDuration;
 				gameObject.renderer.sprite = animations[index].frames[frame];
 				if (animations[index].listener != null) animations[index].listener.onAnimatedStarted(this);
 				break;
@@ -98,7 +103,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 	}
 
 	public void setCurrentAnimationFrame(int frame) {
-		this.frame = frame;
+		setFrame(frame);
 	}
 
 	public boolean isFinished() {
