@@ -51,7 +51,8 @@ public class Animations {
 		}
 
 		private static AnimationData parse(String path) {
-			JSONObject json = new JSONObject(String.join(" ", Dethsquare.IO.getFileLines(path + "/anim.json")));
+			JSONObject json = new JSONObject(
+					String.join(" ", Dethsquare.IO.getFileLines("animations/" + path + "/anim.json")));
 
 			AnimationData data;
 			if (json.has("extends")) {
