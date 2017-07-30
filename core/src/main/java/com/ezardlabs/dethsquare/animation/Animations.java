@@ -28,7 +28,7 @@ public class Animations {
 			if (validator.validate(animations)) {
 				return animations;
 			} else {
-				return null;
+				throw new Error("Animation validation failed for " + path);
 			}
 		}
 		return animations;
