@@ -191,14 +191,14 @@ public class Animations {
 		}
 	}
 
-	public static abstract class Validator {
+	public static class Validator {
 		private final String[] requiredAnimations;
 
 		public Validator(String... requiredAnimations) {
 			this.requiredAnimations = requiredAnimations;
 		}
 
-		boolean validate(Animation[] animations) {
+		private boolean validate(Animation[] animations) {
 			for (String s : requiredAnimations) {
 				boolean found = false;
 				for (Animation a : animations) {
