@@ -171,6 +171,10 @@ public class Animations {
 				ArrayList<DataSprite> sprites = new ArrayList<>();
 				JSONArray array = json.getJSONArray("sprites");
 
+				if (json.has("defaults")) {
+					defaults = Defaults.parse(json.getJSONObject("defaults"));
+				}
+
 				for (int i = 0; i < array.length(); i++) {
 					sprites.add(DataSprite.parse(array.getJSONObject(i), defaults));
 				}
