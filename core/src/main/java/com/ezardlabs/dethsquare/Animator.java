@@ -8,7 +8,7 @@ import java.util.Iterator;
 public final class Animator extends Script implements Iterable<Animation> {
 	private Animation[] animations;
 	private int index = -1;
-	private int frame = 0;
+	private int frame = -2;
 	private long nextFrameTime = 0;
 	private boolean finished = false;
 	public boolean shouldUpdate = true;
@@ -29,11 +29,13 @@ public final class Animator extends Script implements Iterable<Animation> {
 	}
 
 	private void setFrame(int frame) {
-		this.frame = frame;
-		if (frame != -1) {
-			this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
-			gameObject.renderer.sprite = animations[index].frames[frame];
-			gameObject.renderer.setData(animations[index].frameData[frame]);
+		if (this.frame == -2 || frame != this.frame) {
+			this.frame = frame;
+			if (frame != -1) {
+				this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
+				gameObject.renderer.sprite = animations[index].frames[frame];
+				gameObject.renderer.setData(animations[index].frameData[frame]);
+			}
 		}
 	}
 
