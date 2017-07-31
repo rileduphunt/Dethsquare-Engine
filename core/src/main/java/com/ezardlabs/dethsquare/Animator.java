@@ -30,8 +30,10 @@ public final class Animator extends Script implements Iterable<Animation> {
 
 	private void setFrame(int frame) {
 		this.frame = frame;
-		this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
-		gameObject.renderer.setData(animations[index].frameData[frame]);
+		if (frame != -1) {
+			this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
+			gameObject.renderer.setData(animations[index].frameData[frame]);
+		}
 	}
 
 	public void update() {
