@@ -61,10 +61,6 @@ public final class Animator extends Script implements Iterable<Animation> {
 				finished = false;
 			}
 			setFrame(tempFrame);
-			/*try {
-				gameObject.renderer.sprite = animations[index].frames[frame];
-			} catch (ArrayIndexOutOfBoundsException ignored) {
-			}*/
 		} else {
 			tempFrame = frame;
 		}
