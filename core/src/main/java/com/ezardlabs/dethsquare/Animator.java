@@ -76,6 +76,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 		for (int i = 0; i < animations.length; i++) {
 			if (i != index && animations[i].name.equals(animationName)) {
 				index = i;
+				frame = -2;
 				setFrame(0);
 				finished = false;
 				if (animations[index].listener != null) animations[index].listener.onAnimatedStarted(this);
