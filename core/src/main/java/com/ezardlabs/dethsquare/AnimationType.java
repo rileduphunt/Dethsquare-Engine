@@ -39,6 +39,16 @@ public abstract class AnimationType implements Cloneable {
 	};
 
 	/**
+	 * An animation that will be defined later in code
+	 */
+	public static final AnimationType CUSTOM = new AnimationType() {
+		@Override
+		public int update(int currentFrame, int numFrames) {
+			throw new RuntimeException("Custom animations should be defined in code");
+		}
+	};
+
+	/**
 	 * Describes how the animation should progress, based on the current frame
 	 *
 	 * @param currentFrame The frame that the animation is currently at
