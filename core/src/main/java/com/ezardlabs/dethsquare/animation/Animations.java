@@ -126,7 +126,7 @@ public class Animations {
 				int count = 0;
 				for (DataSprite ds : this.sprites) {
 					sprites[count] = ds.toSprite(ta);
-					frameData[count] = ds.toFrameData();
+					frameData[count++] = ds.toFrameData();
 				}
 
 				AnimationType animationType;
