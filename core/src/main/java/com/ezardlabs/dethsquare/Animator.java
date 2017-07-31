@@ -32,6 +32,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 		this.frame = frame;
 		if (frame != -1) {
 			this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
+			gameObject.renderer.sprite = animations[index].frames[frame];
 			gameObject.renderer.setData(animations[index].frameData[frame]);
 		}
 	}
@@ -39,7 +40,6 @@ public final class Animator extends Script implements Iterable<Animation> {
 	public void update() {
 		if (!shouldUpdate) {
 			if (index == -1 || frame == -1) return;
-			gameObject.renderer.sprite = animations[index].frames[frame];
 			return;
 		}
 		int startFrame = frame;
@@ -61,10 +61,10 @@ public final class Animator extends Script implements Iterable<Animation> {
 				finished = false;
 			}
 			setFrame(tempFrame);
-			try {
+			/*try {
 				gameObject.renderer.sprite = animations[index].frames[frame];
 			} catch (ArrayIndexOutOfBoundsException ignored) {
-			}
+			}*/
 		} else {
 			tempFrame = frame;
 		}
@@ -80,7 +80,6 @@ public final class Animator extends Script implements Iterable<Animation> {
 				index = i;
 				setFrame(0);
 				finished = false;
-				gameObject.renderer.sprite = animations[index].frames[frame];
 				if (animations[index].listener != null) animations[index].listener.onAnimatedStarted(this);
 				break;
 			}
