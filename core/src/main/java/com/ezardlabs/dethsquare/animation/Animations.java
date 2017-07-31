@@ -65,8 +65,7 @@ public class Animations {
 		}
 
 		private static AnimationData parse(String path) {
-			JSONObject json = new JSONObject(
-					String.join(" ", Dethsquare.IO.getFileLines(path + "/anim.json")));
+			JSONObject json = new JSONObject(String.join(" ", Dethsquare.IO.getFileLines(path + "/anim.json")));
 
 			AnimationData data;
 			if (json.has("extends")) {
@@ -79,7 +78,12 @@ public class Animations {
 				data.defaults = Defaults.parse(json.getJSONObject("defaults"));
 			}
 
-			data.animations.addAll(DataAnimation.parseArray(json.getJSONArray("animations"), data.defaults));
+			for (DataAnimation da : DataAnimation.parseArray(json.getJSONArray("animations"), data.defaults)) {
+				if (!data.animations.add(da)) {
+					data.animations.remove(da);
+					data.animations.add(da);
+				}
+			}
 
 			return data;
 		}
