@@ -6,7 +6,7 @@ public final class Animation {
 	public final String name;
 	final Sprite[] frames;
 	final FrameData[] frameData;
-	final AnimationType type;
+	AnimationType type;
 	AnimationListener listener;
 
 	public Animation(String name, Sprite[] frames, FrameData[] frameData, AnimationType type) {
@@ -20,6 +20,10 @@ public final class Animation {
 		this.type = (AnimationType) type.clone();
 		this.frameData = frameData;
 		this.listener = listener;
+	}
+
+	public void setAnimationType(AnimationType type) {
+		this.type = type;
 	}
 
 	public void setAnimationListener(AnimationListener listener) {
