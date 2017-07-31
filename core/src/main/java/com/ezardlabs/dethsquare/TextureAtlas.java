@@ -8,8 +8,8 @@ import static com.ezardlabs.dethsquare.util.Dethsquare.IO;
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
 public final class TextureAtlas {
-	final String imagePath;
-	final String mapPath;
+	private final String imagePath;
+	private final String mapPath;
 	private final HashMap<String, Sprite> atlas = new HashMap<>();
 	public int textureName = -1;
 	public int width;
@@ -66,6 +66,14 @@ public final class TextureAtlas {
 
 	public Sprite[] getSprites() {
 		return atlas.values().toArray(new Sprite[atlas.size()]);
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public String getMapPath() {
+		return mapPath;
 	}
 
 	public static class Sprite {
