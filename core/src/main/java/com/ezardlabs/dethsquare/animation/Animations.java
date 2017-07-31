@@ -140,6 +140,9 @@ public class Animations {
 					case "OSCILLATE":
 						animationType = AnimationType.OSCILLATE;
 						break;
+					case "CUSTOM":
+						animationType = AnimationType.CUSTOM;
+						break;
 					default:
 						throw new Error("No animation type was specified for '" + name + "'");
 				}
