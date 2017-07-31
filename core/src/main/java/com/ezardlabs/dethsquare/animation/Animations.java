@@ -12,25 +12,39 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Animations {
+	private static HashMap<String, Animation[]> cache = new HashMap<>();
 
 	public static Animation[] load(String path, TextureAtlas ta) {
 		return load(path, ta, null);
 	}
 
 	public static Animation[] load(String path, TextureAtlas ta, Validator validator) {
-		AnimationData data = AnimationData.parse(path);
-		Animation[] animations = data.getAnimations(ta);
+		String cacheKey = path + ta.getImagePath() + ta.getMapPath();
+		Animation[] anims;
 
-		if (validator != null) {
-			if (validator.validate(animations)) {
-				return animations;
-			} else {
-				throw new Error("Animation validation failed for " + path);
+		if (cache.containsKey(cacheKey)) {
+			anims = cache.get(cacheKey);
+		} else {
+			AnimationData data = AnimationData.parse(path);
+			anims = data.getAnimations(ta);
+
+			if (validator != null) {
+				if (validator.validate(anims)) {
+					return anims;
+				} else {
+					throw new Error("Animation validation failed for " + path);
+				}
 			}
+
+			cache.put(cacheKey, anims);
 		}
+
+		Animation[] animations = new Animation[anims.length];
+		System.arraycopy(anims, 0, animations, 0, anims.length);
 		return animations;
 	}
 
