@@ -30,6 +30,7 @@ public class Renderer extends BoundedComponent {
 	private static float[] vertices = new float[0];
 	private static short[] indices = new short[0];
 	private static float[] uvs = new float[0];
+	private static float[] colours = new float[0];
 	private static FloatBuffer vertexBuffer;
 	private static ShortBuffer indexBuffer;
 	private static FloatBuffer uvBuffer;
@@ -38,6 +39,7 @@ public class Renderer extends BoundedComponent {
 	public float width;
 	public float height;
 	private int zIndex = 0;
+	private final float[] tint = new float[3];
 
 	public int textureName = -1;
 	public Mode mode = Mode.NONE;
@@ -96,6 +98,12 @@ public class Renderer extends BoundedComponent {
 		height = spriteHeight;
 	}
 
+	public void setTint(float red, float green, float blue) {
+		tint[0] = red;
+		tint[1] = green;
+		tint[2] = blue;
+	}
+
 	public Renderer setzIndex(int zIndex) {
 		this.zIndex = zIndex;
 		return this;
@@ -123,6 +131,7 @@ public class Renderer extends BoundedComponent {
 		vertices = new float[vertices.length + 12];
 		indices = new short[indices.length + 6];
 		uvs = new float[uvs.length + 8];
+		colours = new float[colours.length + 3];
 		vertexBuffer = ByteBuffer.allocateDirect(vertices.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		indexBuffer = ByteBuffer.allocateDirect(indices.length * 2).order(ByteOrder.nativeOrder()).asShortBuffer();
 		uvBuffer = ByteBuffer.allocateDirect(uvs.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -138,6 +147,7 @@ public class Renderer extends BoundedComponent {
 		vertices = new float[vertices.length - 12];
 		indices = new short[indices.length - 6];
 		uvs = new float[uvs.length - 8];
+		colours = new float[colours.length - 3];
 	}
 
 	public static void init() {
@@ -188,7 +198,7 @@ public class Renderer extends BoundedComponent {
 		}
 		for (int i : map.keySet()) {
 			setupRenderData(map.get(i));
-			RENDER.render(i, vertices, uvs, indices, map.get(i).size());
+			RENDER.render(i, vertices, uvs, indices, colours, map.get(i).size());
 		}
 	}
 
@@ -205,6 +215,8 @@ public class Renderer extends BoundedComponent {
 			last = last + 4;
 
 			setupUVs(r, i);
+
+			setupColours(r, i);
 
 			i++;
 		}
@@ -296,5 +308,11 @@ public class Renderer extends BoundedComponent {
 			uvs[(i * 8) + 4] = u + w;
 			uvs[(i * 8) + 5] = v;
 		}
+	}
+
+	private static void setupColours(Renderer r, int i) {
+		colours[i * 3] = r.tint[0];
+		colours[i * 3 + 1] = r.tint[1];
+		colours[i * 3 + 2] = r.tint[2];
 	}
 }

@@ -73,13 +73,15 @@ public class DesktopRenderUtils implements RenderUtils {
 	private int positionLoc;
 	private int transformLoc;
 	private int texCoordsLoc;
+	private int colourLoc;
 	private int vertexArray;
 	private int vertexBuffer;
 	private int indexBuffer;
 	private int texCoordBuffer;
+	private int colourBuffer;
 
 	private int program2 = -1;
-	private int colourLoc;
+	private int colour2Loc;
 
 	private final float[] projection = new float[16];
 	private final float[] view = new float[16];
@@ -155,7 +157,7 @@ public class DesktopRenderUtils implements RenderUtils {
 		}
 	}
 
-	public void render(int textureName, float[] vertices, float[] uvs, short[] indices, int num) {
+	public void render(int textureName, float[] vertices, float[] uvs, short[] indices, float[] colours, int num) {
 		if (!initialised) {
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
@@ -190,10 +192,12 @@ public class DesktopRenderUtils implements RenderUtils {
 			positionLoc = glGetAttribLocation(program, "position");
 			transformLoc = glGetUniformLocation(program, "transform");
 			texCoordsLoc = glGetAttribLocation(program, "texCoords");
+			colourLoc = glGetAttribLocation(program, "colour");
 
 			vertexArray = glGenVertexArrays();
 			vertexBuffer = glGenBuffers();
 			texCoordBuffer = glGenBuffers();
+			colourBuffer = glGenBuffers();
 			glBindVertexArray(vertexArray);
 
 			indexBuffer = glGenBuffers();
@@ -212,6 +216,11 @@ public class DesktopRenderUtils implements RenderUtils {
 		glBufferData(GL_ARRAY_BUFFER, uvs, GL_DYNAMIC_DRAW);
 		glVertexAttribPointer(texCoordsLoc, 2, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(texCoordsLoc);
+
+		glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
+		glBufferData(GL_ARRAY_BUFFER, colours, GL_DYNAMIC_DRAW);
+		glVertexAttribPointer(colourLoc, 3, GL_FLOAT, false, 0, 0);
+		glEnableVertexAttribArray(colourLoc);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_DYNAMIC_DRAW);
@@ -246,12 +255,12 @@ public class DesktopRenderUtils implements RenderUtils {
 			glAttachShader(program2, fs);
 			glLinkProgram(program2);
 
-			colourLoc = glGetUniformLocation(program2, "colour");
+			colour2Loc = glGetUniformLocation(program2, "colour");
 		}
 		glUseProgram(program2);
 		GL11.glPushMatrix();
 		for (DebugGraphic dg : debugGraphics) {
-			glUniform4f(colourLoc, dg.red, dg.green, dg.blue, 1);
+			glUniform4f(colour2Loc, dg.red, dg.green, dg.blue, 1);
 			dg.draw(cameraX, cameraY, scale);
 		}
 		GL11.glPopMatrix();
