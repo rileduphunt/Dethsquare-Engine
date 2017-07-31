@@ -29,7 +29,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 	}
 
 	private void setFrame(int frame) {
-		if (this.frame == -2 || frame != this.frame) {
+		if (frame != this.frame) {
 			this.frame = frame;
 			if (frame != -1) {
 				this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
