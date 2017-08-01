@@ -71,15 +71,29 @@ public final class Animator extends Script implements Iterable<Animation> {
 		}
 	}
 
+	private void resetAndStart(int i) {
+		index = i;
+		frame = -2;
+		setFrame(0);
+		finished = false;
+		if (animations[index].listener != null) animations[index].listener.onAnimatedStarted(this);
+	}
+
 	public void play(String animationName) {
-		if (index != -1 && animations[index].name.equals(animationName)) return;
+		if (index > -1) {
+			if (animations[index].name.equals(animationName)) {
+				if (finished) {
+					resetAndStart(index);
+					return;
+				} else {
+					return;
+				}
+			}
+		}
+
 		for (int i = 0; i < animations.length; i++) {
 			if (i != index && animations[i].name.equals(animationName)) {
-				index = i;
-				frame = -2;
-				setFrame(0);
-				finished = false;
-				if (animations[index].listener != null) animations[index].listener.onAnimatedStarted(this);
+				resetAndStart(i);
 				break;
 			}
 		}
