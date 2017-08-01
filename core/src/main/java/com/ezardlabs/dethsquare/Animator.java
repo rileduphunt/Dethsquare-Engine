@@ -80,7 +80,11 @@ public final class Animator extends Script implements Iterable<Animation> {
 	}
 
 	public void play(String animationName) {
-		if (index > -1) {
+		play(animationName, false);
+	}
+
+	public void play(String animationName, boolean refresh) {
+		if (refresh && index > -1) {
 			if (animations[index].name.equals(animationName)) {
 				if (finished) {
 					resetAndStart(index);
