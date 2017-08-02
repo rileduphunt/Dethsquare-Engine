@@ -28,6 +28,11 @@ public class Renderer extends BoundedComponent {
 	private static float[] uvs = new float[0];
 	private static float[] colours = new float[0];
 
+	private static int verticesLength = 0;
+	private static int indicesLength = 0;
+	private static int uvsLength = 0;
+	private static int coloursLength = 0;
+
 	Sprite sprite;
 	public float width;
 	public float height;
@@ -121,10 +126,10 @@ public class Renderer extends BoundedComponent {
 		} else {
 			renderers.add(this);
 		}
-		vertices = new float[vertices.length + 12];
-		indices = new short[indices.length + 6];
-		uvs = new float[uvs.length + 8];
-		colours = new float[colours.length + 3];
+		verticesLength += 12;
+		indicesLength += 6;
+		uvsLength += 8;
+		coloursLength += 3;
 	}
 
 	@Override
@@ -213,6 +218,9 @@ public class Renderer extends BoundedComponent {
 	}
 
 	private static void setupVertices(Renderer r, int i) {
+		if (vertices.length != verticesLength) {
+			vertices = new float[verticesLength];
+		}
 		vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos();
 		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() + r.height;
 		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[(i * 12) + 11] = r.zIndex;
@@ -221,6 +229,9 @@ public class Renderer extends BoundedComponent {
 	}
 
 	private static void setupIndices(int i, int last) {
+		if (indices.length != indicesLength) {
+			indices = new short[indicesLength];
+		}
 		indices[(i * 6)] = indices[(i * 6) + 3] = (short) (last);
 		indices[(i * 6) + 1] = (short) (last + 1);
 		indices[(i * 6) + 2] = indices[(i * 6) + 4] = (short) (last + 2);
@@ -228,6 +239,9 @@ public class Renderer extends BoundedComponent {
 	}
 
 	private static void setupUVs(Renderer r, int i) {
+		if (uvs.length != uvsLength) {
+			uvs = new float[uvsLength];
+		}
 		float u;
 		float v;
 		float w;
@@ -290,6 +304,9 @@ public class Renderer extends BoundedComponent {
 	}
 
 	private static void setupColours(Renderer r, int i) {
+		if (colours.length != coloursLength) {
+			colours = new float[coloursLength];
+		}
 		colours[i * 3] = r.tint[0];
 		colours[i * 3 + 1] = r.tint[1];
 		colours[i * 3 + 2] = r.tint[2];
