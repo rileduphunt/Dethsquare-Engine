@@ -60,8 +60,7 @@ public final class TextureAtlas {
 
 	public Sprite getSprite(String name) {
 		if (!atlas.containsKey(name)) throw new SpriteNotFoundInAtlasError(name, mapPath);
-		Sprite sprite = atlas.get(name);
-		return sprite;
+		return atlas.get(name);
 	}
 
 	public Sprite[] getSprites() {
