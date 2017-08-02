@@ -33,14 +33,30 @@ public final class Animation {
 	public static class FrameData {
 		final int width;
 		final int height;
-		final Vector2 offset;
+		final Vector2[] offsets;
 		final long duration;
 
 		public FrameData(int width, int height, Vector2 offset, long duration) {
 			this.width = width;
 			this.height = height;
-			this.offset = offset;
+			this.offsets = new Vector2[]{offset};
 			this.duration = duration;
+		}
+
+		public FrameData(int width, int height, Vector2[] offsets, long duration) {
+			this.width = width;
+			this.height = height;
+			this.offsets = offsets;
+			this.duration = duration;
+		}
+
+		Vector2 getOffset(float scale) {
+			if (offsets.length == 1) return offsets[0];
+			if (scale > 0) {
+				return offsets[0];
+			} else {
+				return offsets[1];
+			}
 		}
 	}
 

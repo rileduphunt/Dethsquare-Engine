@@ -88,7 +88,7 @@ public class Renderer extends BoundedComponent {
 
 	public void setData(FrameData data) {
 		setSize(data.width, data.height);
-		setOffsets(data.offset.x, data.offset.y);
+		setOffsets(data.getOffset(transform.scale.x).x, data.getOffset(transform.scale.x).y);
 	}
 
 	public void setTextureAtlas(TextureAtlas textureAtlas, float spriteWidth, float spriteHeight) {

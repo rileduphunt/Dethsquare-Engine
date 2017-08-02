@@ -88,13 +88,24 @@ public class Animations {
 			return data;
 		}
 
+		private static Vector2[] parseOffsets(JSONObject offset) {
+			if (offset.has("x") && offset.has("y")) {
+				return new Vector2[]{new Vector2(offset.getInt("x"), offset.getInt("y"))};
+			} else if (offset.has("normal") && offset.has("flipped")) {
+				return new Vector2[]{parseOffsets(offset.getJSONObject("normal"))[0], parseOffsets(
+						offset.getJSONObject("flipped"))[0]};
+			} else {
+				throw new IllegalArgumentException("Unsupported offset type");
+			}
+		}
+
 		private static class Defaults {
 			private final int width;
 			private final int height;
-			private final Vector2 offset;
+			private final Vector2[] offset;
 			private final long duration;
 
-			private Defaults(int width, int height, Vector2 offset, long duration) {
+			private Defaults(int width, int height, Vector2[] offset, long duration) {
 				this.width = width;
 				this.height = height;
 				this.offset = offset;
@@ -102,9 +113,8 @@ public class Animations {
 			}
 
 			private static Defaults parse(JSONObject json) {
-				JSONObject offset = json.getJSONObject("offset");
 				return new Defaults(json.getInt("width"), json.getInt("height"),
-						new Vector2(offset.getInt("x"), offset.getInt("y")), json.getLong("duration"));
+						parseOffsets(json.getJSONObject("offset")), json.getLong("duration"));
 			}
 		}
 
@@ -186,10 +196,10 @@ public class Animations {
 				private final String name;
 				private final int width;
 				private final int height;
-				private final Vector2 offset;
+				private final Vector2[] offset;
 				private final long duration;
 
-				private DataSprite(String name, int width, int height, Vector2 offset, long duration) {
+				private DataSprite(String name, int width, int height, Vector2[] offset, long duration) {
 					this.name = name;
 					this.width = width;
 					this.height = height;
@@ -209,8 +219,7 @@ public class Animations {
 					return new DataSprite(json.getString("name"),
 							json.has("width") ? json.getInt("width") : defaults.width,
 							json.has("height") ? json.getInt("height") : defaults.height,
-							json.has("offset") ? new Vector2(json.getJSONObject("offset").getInt("x"),
-									json.getJSONObject("offset").getInt("y")) : defaults.offset,
+							json.has("offset") ? parseOffsets(json.getJSONObject("offset")) : defaults.offset,
 							json.has("duration") ? json.getLong("duration") : defaults.duration);
 				}
 			}
