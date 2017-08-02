@@ -4,10 +4,6 @@ import com.ezardlabs.dethsquare.Animation.FrameData;
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,9 +27,6 @@ public class Renderer extends BoundedComponent {
 	private static short[] indices = new short[0];
 	private static float[] uvs = new float[0];
 	private static float[] colours = new float[0];
-	private static FloatBuffer vertexBuffer;
-	private static ShortBuffer indexBuffer;
-	private static FloatBuffer uvBuffer;
 
 	Sprite sprite;
 	public float width;
@@ -132,9 +125,6 @@ public class Renderer extends BoundedComponent {
 		indices = new short[indices.length + 6];
 		uvs = new float[uvs.length + 8];
 		colours = new float[colours.length + 3];
-		vertexBuffer = ByteBuffer.allocateDirect(vertices.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		indexBuffer = ByteBuffer.allocateDirect(indices.length * 2).order(ByteOrder.nativeOrder()).asShortBuffer();
-		uvBuffer = ByteBuffer.allocateDirect(uvs.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
 	}
 
 	@Override
@@ -220,17 +210,6 @@ public class Renderer extends BoundedComponent {
 
 			i++;
 		}
-		vertexBuffer.position(0);
-		vertexBuffer.put(vertices);
-		vertexBuffer.position(0);
-
-		indexBuffer.position(0);
-		indexBuffer.put(indices);
-		indexBuffer.position(0);
-
-		uvBuffer.position(0);
-		uvBuffer.put(uvs);
-		uvBuffer.position(0);
 	}
 
 	private static void setupVertices(Renderer r, int i) {
