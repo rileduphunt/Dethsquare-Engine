@@ -8,6 +8,7 @@ public interface GameListeners {
 	ArrayList<ResizeListener> resizeListeners = new ArrayList<>();
 	ArrayList<MouseListener> mouseListeners = new ArrayList<>();
 	ArrayList<KeyListener> keyListeners = new ArrayList<>();
+	ArrayList<GamepadListener> gamepadListeners = new ArrayList<>();
 
 	ScreenSize screenSize = new ScreenSize();
 
@@ -61,6 +62,14 @@ public interface GameListeners {
 		keyListeners.remove(keyListener);
 	}
 
+	static void addGamepadListener(GamepadListener gamepadListener) {
+		gamepadListeners.add(gamepadListener);
+	}
+
+	static void removeGamepadListener(GamepadListener gamepadListener) {
+		gamepadListeners.remove(gamepadListener);
+	}
+
 	interface UpdateListener {
 		void onUpdate();
 	}
@@ -82,5 +91,12 @@ public interface GameListeners {
 	interface KeyListener {
 		void onKeyDown(String key);
 		void onKeyUp(String key);
+	}
+
+	interface GamepadListener {
+		void onConnectionStateChanged(boolean connected);
+		void onButtonDown(String button);
+		void onButtonUp(String button);
+		void onAxis(String axis, float value);
 	}
 }

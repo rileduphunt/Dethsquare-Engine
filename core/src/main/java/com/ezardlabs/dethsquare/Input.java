@@ -3,6 +3,7 @@ package com.ezardlabs.dethsquare;
 import com.ezardlabs.dethsquare.Touch.TouchPhase;
 import com.ezardlabs.dethsquare.util.Dethsquare;
 import com.ezardlabs.dethsquare.util.GameListeners;
+import com.ezardlabs.dethsquare.util.GameListeners.GamepadListener;
 import com.ezardlabs.dethsquare.util.GameListeners.KeyListener;
 import com.ezardlabs.dethsquare.util.GameListeners.MouseListener;
 
@@ -62,7 +63,26 @@ public final class Input {
 				setKeyUp(KeyCode.valueOf(key));
 			}
 		});
+		GameListeners.addGamepadListener(new GamepadListener() {
+			@Override
+			public void onConnectionStateChanged(boolean connected) {
+				controllerConnected = connected;
+			}
 
+			@Override
+			public void onButtonDown(String button) {
+
+			}
+
+			@Override
+			public void onButtonUp(String button) {
+
+			}
+
+			@Override
+			public void onAxis(String axis, float value) {
+			}
+		});
 		GameListeners.addUpdateListener(Input::update);
 	}
 
@@ -75,6 +95,37 @@ public final class Input {
 	 */
 	private static HashMap<KeyCode, Integer> keys = new HashMap<>();
 	private static HashMap<KeyCode, Integer> keyChanges = new HashMap<>();
+
+	private static boolean controllerConnected = false;
+	private static HashMap<Button, Integer> buttons = new HashMap<>();
+	private static HashMap<Axis, Vector2> axes = new HashMap<>();
+
+	public enum Button {
+		A,
+		B,
+		X,
+		Y,
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+		THUMB_LEFT,
+		THUMB_RIGHT,
+		SHOULDER_LEFT,
+		SHOULDER_RIGHT,
+		START,
+		BACK,
+		GUIDE
+	}
+
+	public enum Axis {
+		LEFT,
+		RIGHT,
+		LEFT_RAW,
+		RIGHT_RAW,
+		TRIGGER_LEFT,
+		TRIGGER_RIGHT
+	}
 
 	private static ArrayList<Holder> changesToMake = new ArrayList<>(10);
 	private static ArrayList<Touch> touchesToRemove = new ArrayList<>(10);
