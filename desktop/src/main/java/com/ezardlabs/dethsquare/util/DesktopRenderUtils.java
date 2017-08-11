@@ -157,6 +157,33 @@ public class DesktopRenderUtils implements RenderUtils {
 		}
 	}
 
+	@Override
+	public int loadShaderProgram(String path) {
+		int vert = loadShader(path + "/vert.glsl", GL_VERTEX_SHADER);
+		int frag = loadShader(path + "/frag.glsl", GL_FRAGMENT_SHADER);
+
+		int program = glCreateProgram();
+		glAttachShader(program, vert);
+		glAttachShader(program, frag);
+		glLinkProgram(program);
+
+		return program;
+	}
+
+	private int loadShader(String path, int type) {
+		String[] lines = Dethsquare.IO.getFileLines(path);
+		StringBuilder sb = new StringBuilder();
+		for (String s : lines) {
+			sb.append(s).append("\n");
+		}
+
+		int shader = glCreateShader(type);
+		glShaderSource(shader, sb.toString());
+		glCompileShader(shader);
+
+		return shader;
+	}
+
 	public void render(int textureName, float[] vertices, float[] uvs, short[] indices, float[] colours, int num) {
 		if (!initialised) {
 			glEnable(GL_BLEND);
