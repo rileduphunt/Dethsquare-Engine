@@ -69,6 +69,7 @@ import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 public class DesktopRenderUtils implements RenderUtils {
 	private final HashMap<String, int[]> textures = new HashMap<>();
 	private final HashMap<String, Integer> programCache = new HashMap<>();
+	private final HashMap<String, Integer> shaderCache = new HashMap<>();
 
 	private int program;
 	private int positionLoc;
@@ -178,17 +179,24 @@ public class DesktopRenderUtils implements RenderUtils {
 	}
 
 	private int loadShader(String path, int type) {
-		String[] lines = Dethsquare.IO.getFileLines(path);
-		StringBuilder sb = new StringBuilder();
-		for (String s : lines) {
-			sb.append(s).append("\n");
+		String key = path + "||" + type;
+		if (shaderCache.containsKey(key)) {
+			return shaderCache.get(key);
+		} else {
+			String[] lines = Dethsquare.IO.getFileLines(path);
+			StringBuilder sb = new StringBuilder();
+			for (String s : lines) {
+				sb.append(s).append("\n");
+			}
+
+			int shader = glCreateShader(type);
+			glShaderSource(shader, sb.toString());
+			glCompileShader(shader);
+
+			shaderCache.put(key, shader);
+
+			return shader;
 		}
-
-		int shader = glCreateShader(type);
-		glShaderSource(shader, sb.toString());
-		glCompileShader(shader);
-
-		return shader;
 	}
 
 	public void render(int textureName, float[] vertices, float[] uvs, short[] indices, float[] colours, int num) {
