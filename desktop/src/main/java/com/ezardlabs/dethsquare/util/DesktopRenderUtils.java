@@ -161,21 +161,22 @@ public class DesktopRenderUtils implements RenderUtils {
 
 	@Override
 	public int loadShaderProgram(String path) {
+		int program;
 		if (programCache.containsKey(path)) {
-			return programCache.get(path);
+			program =  programCache.get(path);
 		} else {
 			int vert = loadShader(path + "/vert.glsl", GL_VERTEX_SHADER);
 			int frag = loadShader(path + "/frag.glsl", GL_FRAGMENT_SHADER);
 
-			int program = glCreateProgram();
+			program = glCreateProgram();
 			glAttachShader(program, vert);
 			glAttachShader(program, frag);
 			glLinkProgram(program);
 
 			programCache.put(path, program);
-
-			return program;
 		}
+		glUseProgram(program);
+		return program;
 	}
 
 	private int loadShader(String path, int type) {
