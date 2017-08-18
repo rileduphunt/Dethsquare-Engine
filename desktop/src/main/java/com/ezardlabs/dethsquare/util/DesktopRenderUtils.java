@@ -71,7 +71,7 @@ public class DesktopRenderUtils implements RenderUtils {
 	private final HashMap<String, Integer> programCache = new HashMap<>();
 	private final HashMap<String, Integer> shaderCache = new HashMap<>();
 
-	private int program;
+	private int program = -1;
 	private int positionLoc;
 	private int transformLoc;
 	private int texCoordsLoc;
@@ -135,6 +135,10 @@ public class DesktopRenderUtils implements RenderUtils {
 			ByteBuffer imageBuffer = stbi_load_from_memory(nativeData, width, height, components,
 					4);
 
+			if (program == -1) {
+				program = loadShaderProgram("shaders/texture");
+			}
+
 			glBindTexture(GL_TEXTURE_2D, texture);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -143,7 +147,9 @@ public class DesktopRenderUtils implements RenderUtils {
 
 			glActiveTexture(GL_TEXTURE0);
 
-			glUniform1i(glGetAttribLocation(program, "texUnit"), 0);
+			glUseProgram(program);
+
+			glUniform1i(glGetUniformLocation(program, "texUnit"), 0);
 
 			stbi_image_free(imageBuffer);
 
