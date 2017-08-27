@@ -78,6 +78,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowCloseCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -140,6 +141,8 @@ public class DesktopLauncher extends Launcher {
 
 		glfwSetWindowSizeCallback(window, (window, width, height) -> resizeListeners
 				.forEach(resizeListener -> resizeListener.onResize(width, height)));
+
+		glfwSetWindowCloseCallback(window, window -> Dethsquare.AUDIO.shutdown());
 
 		glfwShowWindow(window);
 

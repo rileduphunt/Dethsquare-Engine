@@ -61,4 +61,9 @@ public interface AudioUtils {
 	 * playing audio
 	 */
 	void destroyAll();
+
+	/**
+	 * Cleanly shutdown OpenAL
+	 */
+	void shutdown();
 }

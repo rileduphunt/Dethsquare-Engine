@@ -30,6 +30,7 @@ import static org.lwjgl.openal.AL10.alSourceStop;
 import static org.lwjgl.openal.AL10.alSourcef;
 import static org.lwjgl.openal.AL10.alSourcei;
 import static org.lwjgl.openal.ALC10.ALC_DEFAULT_DEVICE_SPECIFIER;
+import static org.lwjgl.openal.ALC10.alcCloseDevice;
 import static org.lwjgl.openal.ALC10.alcCreateContext;
 import static org.lwjgl.openal.ALC10.alcGetString;
 import static org.lwjgl.openal.ALC10.alcMakeContextCurrent;
@@ -43,10 +44,11 @@ import static org.lwjgl.system.libc.LibCStdlib.free;
 public class DesktopAudioUtils implements AudioUtils {
 	private static HashMap<Integer, Integer> audio = new HashMap<>();
 	private static HashMap<String, Integer> mapping = new HashMap<>();
+	private final long device;
 
 	DesktopAudioUtils() {
 		String defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
-		long device = alcOpenDevice(defaultDeviceName);
+		device = alcOpenDevice(defaultDeviceName);
 
 		int[] attributes = {0};
 		long context = alcCreateContext(device, attributes);
@@ -145,6 +147,11 @@ public class DesktopAudioUtils implements AudioUtils {
 		audio.clear();
 		mapping.values().forEach(AL10::alDeleteBuffers);
 		mapping.clear();
+	}
+
+	@Override
+	public void shutdown() {
+		alcCloseDevice(device);
 	}
 
 	private static ByteBuffer loadAudio(String path) throws IOException {
