@@ -29,7 +29,7 @@ public final class Collider extends BoundedComponent {
 	private final float width;
 	ArrayList<Collider> possible = new ArrayList<>();
 	private Collider[] triggers = new Collider[0];
-	boolean isTrigger = false;
+	private boolean isTrigger = false;
 
 	public enum CollisionLocation {
 		TOP,
@@ -119,6 +119,16 @@ public final class Collider extends BoundedComponent {
 	private void removeTrigger() {
 		triggerColliders.remove(this);
 		triggers = new Collider[triggerColliders.size()];
+	}
+
+	public void setIsTrigger(boolean isTrigger) {
+		if (isTrigger == this.isTrigger) return;
+		this.isTrigger = isTrigger;
+		if (isTrigger) {
+			addTrigger();
+		} else {
+			removeTrigger();
+		}
 	}
 
 	public void destroy() {
