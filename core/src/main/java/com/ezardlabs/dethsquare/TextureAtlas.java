@@ -58,6 +58,10 @@ public final class TextureAtlas {
 		this(imagePath, null, tileWidth, tileHeight);
 	}
 
+	public TextureAtlas(String directory) {
+		this(directory + "/atlas.png", directory + "/atlas.txt", 0, 0);
+	}
+
 	public Sprite getSprite(String name) {
 		if (!atlas.containsKey(name)) throw new SpriteNotFoundInAtlasError(name, mapPath);
 		return atlas.get(name);
