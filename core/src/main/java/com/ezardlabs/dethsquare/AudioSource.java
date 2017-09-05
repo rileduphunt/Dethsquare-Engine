@@ -1,10 +1,11 @@
 package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.AudioManager.AudioGroup;
+import com.ezardlabs.dethsquare.util.Dethsquare;
 
 import static com.ezardlabs.dethsquare.util.Dethsquare.AUDIO;
 
-public final class AudioSource extends Component {
+public final class AudioSource extends Script {
 	private static final boolean LOOP_DEFAULT = false;
 	private static final float VOLUME_DEFAULT = 1;
 	private static final AudioGroup GROUP_DEFAULT = AudioGroup.NONE;
@@ -66,6 +67,11 @@ public final class AudioSource extends Component {
 			setVolume(volume);
 		}
 		AudioManager.addAudioSource(this);
+	}
+
+	@Override
+	public void update() {
+		Dethsquare.AUDIO.setAudioPosition(current, transform.position.x, transform.position.y);
 	}
 
 	@Override

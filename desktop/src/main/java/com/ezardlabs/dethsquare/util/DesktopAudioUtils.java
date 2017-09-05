@@ -19,11 +19,18 @@ import static org.lwjgl.openal.AL10.AL_BUFFER;
 import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
 import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;
 import static org.lwjgl.openal.AL10.AL_GAIN;
+import static org.lwjgl.openal.AL10.AL_INVERSE_DISTANCE_CLAMPED;
 import static org.lwjgl.openal.AL10.AL_LOOPING;
+import static org.lwjgl.openal.AL10.AL_MAX_DISTANCE;
+import static org.lwjgl.openal.AL10.AL_POSITION;
+import static org.lwjgl.openal.AL10.AL_REFERENCE_DISTANCE;
 import static org.lwjgl.openal.AL10.alBufferData;
 import static org.lwjgl.openal.AL10.alDeleteSources;
+import static org.lwjgl.openal.AL10.alDistanceModel;
 import static org.lwjgl.openal.AL10.alGenBuffers;
 import static org.lwjgl.openal.AL10.alGenSources;
+import static org.lwjgl.openal.AL10.alListener3f;
+import static org.lwjgl.openal.AL10.alSource3f;
 import static org.lwjgl.openal.AL10.alSourcePause;
 import static org.lwjgl.openal.AL10.alSourcePlay;
 import static org.lwjgl.openal.AL10.alSourceStop;
@@ -55,6 +62,8 @@ public class DesktopAudioUtils implements AudioUtils {
 		alcMakeContextCurrent(context);
 
 		AL.createCapabilities(ALC.createCapabilities(device));
+
+		alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
 	}
 
 	public void create(int id, String path) {
@@ -67,8 +76,9 @@ public class DesktopAudioUtils implements AudioUtils {
 
 		int sourcePointer = alGenSources();
 
-		// Assign our buffer to the source
 		alSourcei(sourcePointer, AL_BUFFER, bufferPointer);
+		alSourcei(sourcePointer, AL_REFERENCE_DISTANCE, 500);
+		alSourcei(sourcePointer, AL_MAX_DISTANCE, 4000);
 
 		audio.put(id, sourcePointer);
 		mapping.put(path, bufferPointer);
@@ -136,6 +146,16 @@ public class DesktopAudioUtils implements AudioUtils {
 
 	public void setVolume(int id, float volume) {
 		alSourcef(audio.get(id), AL_GAIN, volume);
+	}
+
+	@Override
+	public void setAudioPosition(int id, float x, float y) {
+		alSource3f(audio.get(id), AL_POSITION, x, y, 0);
+	}
+
+	@Override
+	public void setListenerPosition(float x, float y) {
+		alListener3f(AL_POSITION, x, y, 0);
 	}
 
 	public void destroy(int id) {

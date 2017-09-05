@@ -50,6 +50,21 @@ public interface AudioUtils {
 	void setVolume(int id, float volume);
 
 	/**
+	 * Specify the location in the game world of an audio clip
+	 * @param id The ID of the audio clip
+	 * @param x The x coordinate of the audio clip
+	 * @param y The y coordinate of hte audio clip
+	 */
+	void setAudioPosition(int id, float x, float y);
+
+	/**
+	 * Specify the location in the game world of an audio listener
+	 * @param x The x coordinate of the audio listener
+	 * @param y The y coordinate of the audio listener
+	 */
+	void setListenerPosition(float x, float y);
+
+	/**
 	 * Destroy the audio file associated with the given audio clip ID
 	 *
 	 * @param id The ID of the audio clip
