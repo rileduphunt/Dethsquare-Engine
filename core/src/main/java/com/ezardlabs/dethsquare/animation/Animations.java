@@ -6,6 +6,7 @@ import com.ezardlabs.dethsquare.AnimationType;
 import com.ezardlabs.dethsquare.TextureAtlas;
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
 import com.ezardlabs.dethsquare.Vector2;
+import com.ezardlabs.dethsquare.animation.Animations.Validator.ValidationError;
 import com.ezardlabs.dethsquare.util.Dethsquare;
 
 import org.json.JSONArray;
@@ -36,7 +37,7 @@ public class Animations {
 				if (validator.validate(anims)) {
 					return anims;
 				} else {
-					throw new Error("Animation validation failed for " + path);
+					throw new ValidationError(path);
 				}
 			}
 
@@ -154,7 +155,7 @@ public class Animations {
 						animationType = AnimationType.CUSTOM;
 						break;
 					default:
-						throw new Error("No animation type was specified for '" + name + "'");
+						throw new IllegalArgumentException("No animation type was specified for '" + name + "'");
 				}
 				return new Animation(name, sprites, frameData, animationType);
 			}
@@ -245,6 +246,13 @@ public class Animations {
 				if (!found) return false;
 			}
 			return true;
+		}
+
+		static class ValidationError extends Error {
+
+			ValidationError(String path) {
+				System.err.println("Animation validation failed for " + path);
+			}
 		}
 	}
 }
