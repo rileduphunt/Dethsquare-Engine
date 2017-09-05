@@ -301,8 +301,8 @@ public class DesktopRenderUtils implements RenderUtils {
 
 	@Override
 	public void setCameraPosition(float x, float y) {
-		this.cameraX = x;
-		this.cameraY = y;
+		this.cameraX = Math.round(x);
+		this.cameraY = Math.round(y);
 
 		calculateMatrices();
 	}
