@@ -32,8 +32,7 @@ public class LevelManager {
 	}
 
 	public static Level getCurrentLevel() {
-		if (currentLevelName == null) return null;
-		else return levels.get(currentLevelName);
+		return levels.get(currentLevelName);
 	}
 
 	public static String getCurrentLevelName() {
