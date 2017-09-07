@@ -51,15 +51,20 @@ final class QuadTree<T extends BoundedComponent> {
 
 	static <T extends BoundedComponent> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt,
 			BoundedComponent bc) {
+		return retrieve(returnObjects, qt, bc.bounds);
+	}
+
+	static <T extends BoundedComponent> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt,
+			RectF bounds) {
 		if (!qt.isLeaf()) {
 			for (QuadTree qt2 : qt.nodes) {
-				if (qt2.bounds.contains(bc.bounds)) {
-					return retrieve(returnObjects, qt2, bc);
+				if (qt2.bounds.contains(bounds)) {
+					return retrieve(returnObjects, qt2, bounds);
 				}
 			}
 			for (QuadTree qt2 : qt.nodes) {
-				if (RectF.intersects(qt2.bounds, bc.bounds)) {
-					retrieve(returnObjects, qt2, bc);
+				if (RectF.intersects(qt2.bounds, bounds)) {
+					retrieve(returnObjects, qt2, bounds);
 				}
 			}
 			if (!returnObjects.isEmpty()) return returnObjects;
