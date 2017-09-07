@@ -73,23 +73,6 @@ final class QuadTree<T extends BoundedComponent> {
 		return returnObjects;
 	}
 
-	final ArrayList<T> getVisibleObjects(ArrayList<T> returnObjects, QuadTree qt, Camera c) {
-		if (qt.bounds == null) return returnObjects;
-		if (c.bounds.contains(qt.bounds)) { // quad is completely inside camera
-			addAllChildren(returnObjects, qt);
-		}
-		if (RectF.intersects(c.bounds, qt.bounds)) { // camera and quad are intersecting
-			if (qt.isLeaf()) {
-				returnObjects.addAll(qt.objects);
-			} else {
-				for (QuadTree qt2 : qt.nodes) {
-					getVisibleObjects(returnObjects, qt2, Camera.main);
-				}
-			}
-		}
-		return returnObjects;
-	}
-
 	final void addAllChildren(ArrayList<T> returnObjects, QuadTree qt) {
 		if (qt.isLeaf()) {
 			returnObjects.addAll(qt.objects);
