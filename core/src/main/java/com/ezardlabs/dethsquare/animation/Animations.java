@@ -32,15 +32,9 @@ public class Animations {
 		} else {
 			AnimationData data = AnimationData.parse(path);
 			anims = data.getAnimations(ta);
-
-			if (validator != null) {
-				if (validator.validate(anims)) {
-					return anims;
-				} else {
-					throw new ValidationError(path);
-				}
+			if (validator != null && !validator.validate(anims)) {
+				throw new ValidationError(path);
 			}
-
 			cache.put(cacheKey, anims);
 		}
 
