@@ -8,12 +8,36 @@ import static com.ezardlabs.dethsquare.util.Dethsquare.IO;
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
 public final class TextureAtlas {
+	private static final HashMap<String, TextureAtlas> mapping = new HashMap<>();
 	private final String imagePath;
 	private final String mapPath;
 	private final HashMap<String, Sprite> atlas = new HashMap<>();
 	public int textureName = -1;
 	public int width;
 	public int height;
+
+	public static TextureAtlas load(String directory) {
+		return load(directory + "/atlas.png", directory + "/atlas.txt", 0, 0);
+	}
+
+	public static TextureAtlas load(String imagePath, String mapPath) {
+		return load(imagePath, mapPath, 0, 0);
+	}
+
+	public static TextureAtlas load(String imagePath, int tileWidth, int tileHeight) {
+		return load(imagePath, null, tileWidth, tileHeight);
+	}
+
+	private static TextureAtlas load(String imagePath, String mapPath, int tileWidth, int tileHeight) {
+		String key = imagePath + mapPath;
+		if (mapping.containsKey(key)) {
+			return mapping.get(key);
+		} else {
+			TextureAtlas ta = new TextureAtlas(imagePath, mapPath, tileWidth, tileHeight);
+			mapping.put(key, ta);
+			return ta;
+		}
+	}
 
 	private TextureAtlas(String imagePath, String mapPath, int tileWidth, int tileHeight) {
 		this.imagePath = imagePath;
@@ -37,6 +61,7 @@ public final class TextureAtlas {
 		} else {
 			try {
 				String temp;
+				System.out.println("Culprit");
 				BufferedReader reader = IO.getReader(mapPath);
 				while ((temp = reader.readLine()) != null) {
 					String[] split = temp.split(" = ");
@@ -48,18 +73,6 @@ public final class TextureAtlas {
 			} catch (IOException ignored) {
 			}
 		}
-	}
-
-	public TextureAtlas(String imagePath, String mapPath) {
-		this(imagePath, mapPath, 0, 0);
-	}
-
-	public TextureAtlas(String imagePath, int tileWidth, int tileHeight) {
-		this(imagePath, null, tileWidth, tileHeight);
-	}
-
-	public TextureAtlas(String directory) {
-		this(directory + "/atlas.png", directory + "/atlas.txt", 0, 0);
 	}
 
 	public Sprite getSprite(String name) {
