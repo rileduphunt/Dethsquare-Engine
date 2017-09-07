@@ -49,9 +49,8 @@ final class QuadTree<T extends BoundedComponent> {
 		finalise(items);
 	}
 
-	static <T extends BoundedComponent> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt,
-			BoundedComponent bc) {
-		return retrieve(returnObjects, qt, bc.bounds);
+	static <T extends BoundedComponent> void retrieve(ArrayList<T> returnObjects, QuadTree<T> qt, BoundedComponent bc) {
+		retrieve(returnObjects, qt, bc.bounds);
 	}
 
 	static <T extends BoundedComponent> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt,
