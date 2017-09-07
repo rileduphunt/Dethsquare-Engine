@@ -173,7 +173,7 @@ public class Renderer extends BoundedComponent {
 
 	private static void renderAll() {
 		visible.clear();
-		qt.getVisibleObjects(visible, qt, Camera.main);
+		QuadTree.retrieve(visible, qt, Camera.main.bounds);
 
 		visible.addAll(renderers); // TODO only add renderers that are visible
 
