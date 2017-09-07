@@ -61,7 +61,6 @@ public final class TextureAtlas {
 		} else {
 			try {
 				String temp;
-				System.out.println("Culprit");
 				BufferedReader reader = IO.getReader(mapPath);
 				while ((temp = reader.readLine()) != null) {
 					String[] split = temp.split(" = ");
