@@ -55,6 +55,10 @@ public final class GameObject implements Serializable {
 	 */
 	private String tag;
 	/**
+	 * The layer that this {@link GameObject} is in. Must be in the range of [0..31]
+	 */
+	private int layer = 0;
+	/**
 	 * Whether or not the {@link GameObject} is static, i.e. whether or not it will ever move.
 	 * Static {@link GameObject GameObjects} can have their rendering and collision optimised
 	 */
@@ -333,6 +337,25 @@ public final class GameObject implements Serializable {
 	 */
 	public String getTag() {
 		return tag;
+	}
+
+	/**
+	 * Sets the layer that this {@link GameObject} is in
+	 * @param layer The layer that this {@link GameObject} should be in. Must be in the range [0..31]
+	 */
+	public void setLayer(int layer) {
+		if (layer < 0 || layer > 31) {
+			throw new IllegalArgumentException("Layer must be in the range [0..31]");
+		}
+		this.layer = layer;
+	}
+
+	/**
+	 * Gets the layer that this {@link GameObject} is in
+	 * @return The layer that this {@link GameObject} is in
+	 */
+	public int getLayer() {
+		return layer;
 	}
 
 	/**
