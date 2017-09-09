@@ -1,0 +1,21 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "Dethsquare Engine Layers",
+	"description": "Data about the layers in a Dethsquare Engine game",
+	"type": "array",
+	"items": {
+		"title": "Layer",
+		"type": "object",
+		"properties": {
+			"layer": {
+				"type": "number"
+			},
+			"name": {
+				"type": "string"
+			}
+		},
+		"required": [
+			"layer", "name"
+		]
+	}
+}
