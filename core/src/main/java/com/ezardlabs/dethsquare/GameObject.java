@@ -482,7 +482,7 @@ public final class GameObject implements Serializable {
 	}
 
 	private static void handleDestruction() {
-		for (GameObject gameObject : destroyedObjects) {
+		for (GameObject gameObject : destroyedObjects.toArray(new GameObject[destroyedObjects.size()])) {
 			if (gameObject != null) {
 				for (Component c : gameObject.components) {
 					c.destroy();
