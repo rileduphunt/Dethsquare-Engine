@@ -79,8 +79,8 @@ final class QuadTree<T extends Bounded> {
 					temp = object.getBounds().intersect(start, end);
 					if (temp != null) {
 						dist = Vector2.distance(start, temp);
-						if (dist < collision.distance &&
-								(object.getGameObject().getLayer() & layerMask) == object.getGameObject().getLayer()) {
+						if (dist < collision.distance && (object.getGameObject().getLayerMask() & layerMask) ==
+								object.getGameObject().getLayerMask()) {
 							collision.set(object, temp, dist);
 						}
 					}

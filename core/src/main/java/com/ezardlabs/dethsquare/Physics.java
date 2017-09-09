@@ -2,8 +2,6 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.QuadTree.RayCollision;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.stream.Stream;
 
 public class Physics {
@@ -15,7 +13,7 @@ public class Physics {
 		RayCollision<Collider> collision = QuadTree.getRayCollision(Collider.qt, origin, end, layerMask);
 		Stream.concat(Collider.normalColliders.stream(), Collider.triggerColliders.stream())
 			  .parallel()
-			  .filter(collider -> (collider.gameObject.getLayer() & layerMask) == collider.gameObject.getLayer())
+			  .filter(collider -> (collider.gameObject.getLayerMask() & layerMask) == collider.gameObject.getLayerMask())
 			  .forEach(collider -> {
 				  Vector2 intersect = collider.getBounds().intersect(origin, end);
 				  if (intersect != null) {
