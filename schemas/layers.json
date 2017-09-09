@@ -8,7 +8,9 @@
 		"type": "object",
 		"properties": {
 			"layer": {
-				"type": "number"
+				"type": "number",
+				"minimum": 8,
+				"maximum": 31
 			},
 			"name": {
 				"type": "string"
