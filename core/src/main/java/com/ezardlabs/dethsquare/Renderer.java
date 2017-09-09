@@ -315,7 +315,7 @@ public class Renderer extends Component implements Bounded {
 
 	@Override
 	public RectF getBounds() {
-		return null;
+		return bounds;
 	}
 
 	@Override
