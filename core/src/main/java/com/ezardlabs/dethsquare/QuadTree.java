@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 @SuppressWarnings("unchecked")
-final class QuadTree<T extends BoundedComponent> {
+final class QuadTree<T extends Bounded> {
 	private final int maxObjects;
 	private RectF bounds;
 	private ArrayList<T> objects = new ArrayList<>();
@@ -31,32 +31,33 @@ final class QuadTree<T extends BoundedComponent> {
 		return qt.objects.size();
 	}
 
-	public final void init(BoundedComponent[] items) {
+	public final void init(Bounded[] items) {
 		float x = 0;
 		float y = 0;
-		for (BoundedComponent bc : items) {
-			if (bc.gameObject == null || bc.gameObject.isStatic && bc.bounds.right > x) x = bc.bounds.right;
-			if (bc.gameObject == null || bc.gameObject.isStatic && bc.bounds.bottom > y) y = bc.bounds.bottom;
+		for (Bounded b : items) {
+			if (b.getGameObject() == null || b.getGameObject().isStatic && b.getBounds().right > x)
+				x = b.getBounds().right;
+			if (b.getGameObject() == null || b.getGameObject().isStatic && b.getBounds().bottom > y)
+				y = b.getBounds().bottom;
 		}
 		if (x >= y) {
 			bounds = new RectF(0, 0, (int) x, (int) x);
 		} else if (y > x) {
 			bounds = new RectF(0, 0, (int) y, (int) y);
 		}
-		for (BoundedComponent bc : items) {
-			if (bc.gameObject == null || bc.gameObject.isStatic) {
-				insert(bc);
+		for (Bounded b : items) {
+			if (b.getGameObject() == null || b.getGameObject().isStatic) {
+				insert(b);
 			}
 		}
 		finalise(items);
 	}
 
-	static <T extends BoundedComponent> void retrieve(ArrayList<T> returnObjects, QuadTree<T> qt, BoundedComponent bc) {
-		retrieve(returnObjects, qt, bc.bounds);
+	static <T extends Bounded> void retrieve(ArrayList<T> returnObjects, QuadTree<T> qt, Bounded b) {
+		retrieve(returnObjects, qt, b.getBounds());
 	}
 
-	static <T extends BoundedComponent> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt,
-			RectF bounds) {
+	static <T extends Bounded> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt, RectF bounds) {
 		if (!qt.isLeaf()) {
 			for (QuadTree qt2 : qt.nodes) {
 				if (qt2.bounds.contains(bounds)) {
@@ -74,25 +75,25 @@ final class QuadTree<T extends BoundedComponent> {
 		return returnObjects;
 	}
 
-	static <T extends BoundedComponent> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start, Vector2 end,
+	static <T extends Bounded> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start, Vector2 end,
 			String targetTags[]) {
 		return getRayCollision(qt, start, end, targetTags, new RayCollision<>());
 	}
 
-	private static <T extends BoundedComponent> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start,
+	private static <T extends Bounded> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start,
 			Vector2 end, String[] targetTags, RayCollision<T> collision) {
 		if (qt.bounds.intersect(start, end) != null) {
 			if (qt.isLeaf()) {
 				Vector2 temp;
 				double dist;
 				for (T object : qt.objects) {
-					temp = object.bounds.intersect(start, end);
+					temp = object.getBounds().intersect(start, end);
 					if (temp != null) {
 						dist = Vector2.distance(start, temp);
-						if ("player".equals(object.gameObject.getTag())) {
+						if ("player".equals(object.getGameObject().getTag())) {
 							System.out.println("Found player");
 						}
-						if (dist < collision.distance && arrayContains(targetTags, object.gameObject.getTag())) {
+						if (dist < collision.distance && arrayContains(targetTags, object.getGameObject().getTag())) {
 							collision.set(object, temp, dist);
 						}
 					}
@@ -138,12 +139,12 @@ final class QuadTree<T extends BoundedComponent> {
 		}
 	}
 
-	private void finalise(BoundedComponent[] items) {
+	private void finalise(Bounded[] items) {
 		objects.clear();
 		if (isLeaf()) {
-			for (BoundedComponent bc : items) {
-				if (bounds.contains(bc.bounds) || RectF.intersects(bounds, bc.bounds)) {
-					objects.add((T) bc);
+			for (Bounded b : items) {
+				if (bounds.contains(b.getBounds()) || RectF.intersects(bounds, b.getBounds())) {
+					objects.add((T) b);
 				}
 			}
 		} else {
@@ -155,35 +156,35 @@ final class QuadTree<T extends BoundedComponent> {
 
 	public int insertCount = 0;
 
-	private void insert(BoundedComponent bc) {
+	private void insert(Bounded b) {
 		insertCount++;
 		if (isLeaf()) {
-			objects.add((T) bc);
+			objects.add((T) b);
 			if (objects.size() > maxObjects) {
 				if (isLeaf()) split();
 				outer:
 				while (!objects.isEmpty()) {
 					for (int j = 0; j < 4; j++) {
-						if (nodes[j].bounds.contains(bc.bounds)) {
+						if (nodes[j].bounds.contains(b.getBounds())) {
 							nodes[j].insert(objects.remove(0));
 							continue outer;
 						}
 					}
-					BoundedComponent bc2 = objects.remove(0);
+					Bounded b2 = objects.remove(0);
 					for (int j = 0; j < 4; j++) {
-						if (RectF.intersects(nodes[j].bounds, bc2.bounds)) nodes[j].insert(bc2);
+						if (RectF.intersects(nodes[j].bounds, b2.getBounds())) nodes[j].insert(b2);
 					}
 				}
 			}
 		} else {
 			for (int i = 0; i < 4; i++) {
-				if (nodes[i].bounds.contains(bc.bounds)) {
-					nodes[i].insert(bc);
+				if (nodes[i].bounds.contains(b.getBounds())) {
+					nodes[i].insert(b);
 					return;
 				}
 			}
 			for (int i = 0; i < 4; i++) {
-				if (RectF.intersects(nodes[i].bounds, bc.bounds)) nodes[i].insert(bc);
+				if (RectF.intersects(nodes[i].bounds, b.getBounds())) nodes[i].insert(b);
 			}
 		}
 	}
@@ -205,19 +206,19 @@ final class QuadTree<T extends BoundedComponent> {
 		return nodes[0] == null;
 	}
 
-	static class RayCollision<T extends BoundedComponent> {
-		T boundedComponent = null;
+	static class RayCollision<T extends Bounded> {
+		T bounded = null;
 		Vector2 point = null;
 		double distance = Double.MAX_VALUE;
 
 		void set(RayCollision<T> collision) {
-			boundedComponent = collision.boundedComponent;
+			bounded = collision.bounded;
 			point = collision.point;
 			distance = collision.distance;
 		}
 
-		void set(T boundedComponent, Vector2 point, double distance) {
-			this.boundedComponent = boundedComponent;
+		void set(T bounded, Vector2 point, double distance) {
+			this.bounded = bounded;
 			this.point = point;
 			this.distance = distance;
 		}

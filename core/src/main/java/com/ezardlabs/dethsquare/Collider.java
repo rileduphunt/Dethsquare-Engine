@@ -5,7 +5,7 @@ import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
 import java.util.ArrayList;
 
-public final class Collider extends BoundedComponent {
+public final class Collider extends Component implements Bounded {
 	static {
 		GameListeners.addUpdateListener(new UpdateListener() {
 			@Override
@@ -30,6 +30,8 @@ public final class Collider extends BoundedComponent {
 	ArrayList<Collider> possible = new ArrayList<>();
 	private Collider[] triggers = new Collider[0];
 	private boolean isTrigger = false;
+
+	private final RectF bounds = new RectF();
 
 	public enum CollisionLocation {
 		TOP,
@@ -230,9 +232,9 @@ public final class Collider extends BoundedComponent {
 		if (isTrigger) {
 			possible.clear();
 			QuadTree.retrieve(possible, qt, this);
-			for (BoundedComponent bc : possible) {
-				if (RectF.intersects(bounds, bc.bounds)) {
-					gameObject.onTriggerEnter((Collider) bc);
+			for (Collider c : possible) {
+				if (RectF.intersects(bounds, c.bounds)) {
+					gameObject.onTriggerEnter(c);
 				}
 			}
 			for (Collider c : normalColliders) {
@@ -253,5 +255,15 @@ public final class Collider extends BoundedComponent {
 				}
 			}
 		}
+	}
+
+	@Override
+	public RectF getBounds() {
+		return bounds;
+	}
+
+	@Override
+	public GameObject getGameObject() {
+		return gameObject;
 	}
 }

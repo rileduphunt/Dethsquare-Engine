@@ -2,7 +2,8 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
 
-public class GuiText extends BoundedComponent {
+public class GuiText extends Component implements Bounded {
+	private final RectF bounds = new RectF();
 	private String text;
 	private TextureAtlas font;
 	private float fontSize;
@@ -170,5 +171,15 @@ public class GuiText extends BoundedComponent {
 
 	public boolean hitTest(Vector2 position) {
 		return hitTest(position.x, position.y);
+	}
+
+	@Override
+	public RectF getBounds() {
+		return bounds;
+	}
+
+	@Override
+	public GameObject getGameObject() {
+		return gameObject;
 	}
 }

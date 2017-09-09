@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
-public class Renderer extends BoundedComponent {
+public class Renderer extends Component implements Bounded {
 	// Add hook into game loop
 	static {
 		GameListeners.addRenderListener(Renderer::renderAll);
@@ -38,6 +38,7 @@ public class Renderer extends BoundedComponent {
 	public float height;
 	private int zIndex = 0;
 	private final float[] tint = new float[3];
+	private final RectF bounds = new RectF();
 
 	public int textureName = -1;
 	public Mode mode = Mode.NONE;
@@ -310,5 +311,15 @@ public class Renderer extends BoundedComponent {
 		colours[i * 3] = r.tint[0];
 		colours[i * 3 + 1] = r.tint[1];
 		colours[i * 3 + 2] = r.tint[2];
+	}
+
+	@Override
+	public RectF getBounds() {
+		return null;
+	}
+
+	@Override
+	public GameObject getGameObject() {
+		return gameObject;
 	}
 }

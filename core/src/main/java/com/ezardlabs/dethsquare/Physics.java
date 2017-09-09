@@ -19,7 +19,7 @@ public class Physics {
 			  .parallel()
 			  .filter(collider -> tags.size() == 0 || tags.contains(collider.gameObject.getTag()))
 			  .forEach(collider -> {
-				  Vector2 intersect = collider.bounds.intersect(origin, end);
+				  Vector2 intersect = collider.getBounds().intersect(origin, end);
 				  if (intersect != null) {
 					  double dist = Vector2.distance(origin, intersect);
 					  if (dist < collision.distance) {
@@ -28,8 +28,8 @@ public class Physics {
 				  }
 			  });
 		if (collision.distance != Double.MAX_VALUE) {
-			return new RaycastHit(collision.point, collision.distance, collision.boundedComponent.transform,
-					collision.boundedComponent.gameObject.collider);
+			return new RaycastHit(collision.point, collision.distance, collision.bounded.transform,
+					collision.bounded.gameObject.collider);
 		} else {
 			return null;
 		}
