@@ -59,6 +59,10 @@ public final class GameObject implements Serializable {
 	 */
 	private int layer = 0;
 	/**
+	 * Equivalent to {@code 1 << }{@link #layer}
+	 */
+	private int layerMask = 1;
+	/**
 	 * Whether or not the {@link GameObject} is static, i.e. whether or not it will ever move.
 	 * Static {@link GameObject GameObjects} can have their rendering and collision optimised
 	 */
@@ -348,6 +352,7 @@ public final class GameObject implements Serializable {
 			throw new IllegalArgumentException("Layer must be in the range [0..31]");
 		}
 		this.layer = layer;
+		this.layerMask = 1 << layer;
 	}
 
 	/**
@@ -356,6 +361,14 @@ public final class GameObject implements Serializable {
 	 */
 	public int getLayer() {
 		return layer;
+	}
+
+	/**
+	 * Gets the layer mask for this {@link GameObject}
+	 * @return This {@link GameObject}'s layer mask
+	 */
+	public int getLayerMask() {
+		return layerMask;
 	}
 
 	/**
