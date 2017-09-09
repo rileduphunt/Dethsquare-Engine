@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.QuadTree.RayCollision;
+
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -10,28 +12,38 @@ public class Physics {
 		tags.addAll(Arrays.asList(targetTags));
 		direction.normalise();
 		Vector2 end = new Vector2(origin.x + direction.x * distance, origin.y + direction.y * distance);
-		RaycastHit raycastHit = null;
-		HashSet<Collider> temp = new HashSet<>(
-				Collider.staticColliders.size() + Collider.normalColliders.size() + Collider.triggerColliders.size());
-		temp.addAll(Collider.staticColliders);
-		temp.addAll(Collider.normalColliders);
-		temp.addAll(Collider.triggerColliders);
-		for (Collider c : temp) {
-			if (tags.contains(c.gameObject.getTag())) {
-				Vector2 hit = c.bounds.intersect(origin, end);
-				if (hit != null) {
-					if (raycastHit == null) {
-						raycastHit = new RaycastHit(hit, Vector2.distance(origin, hit), c.transform, c);
-					} else if (Vector2.distance(origin, hit) < raycastHit.distance) {
-						raycastHit.point = hit;
-						raycastHit.distance = Vector2.distance(origin, hit);
-						raycastHit.transform = c.transform;
-						raycastHit.collider = c;
+
+		RayCollision<Collider> collision = QuadTree.getRayCollision(Collider.qt, origin, end, targetTags);
+		Vector2 intersect;
+		double dist;
+		for (Collider collider : Collider.normalColliders) {
+			if (tags.contains(collider.gameObject.getTag())) {
+				intersect = collider.bounds.intersect(origin, end);
+				if (intersect != null) {
+					dist = Vector2.distance(origin, intersect);
+					if (dist < collision.distance) {
+						collision.set(collider, intersect, dist);
 					}
 				}
 			}
 		}
-		return raycastHit;
+		for (Collider collider : Collider.triggerColliders) {
+			if (tags.contains(collider.gameObject.getTag())) {
+				intersect = collider.bounds.intersect(origin, end);
+				if (intersect != null) {
+					dist = Vector2.distance(origin, intersect);
+					if (dist < collision.distance) {
+						collision.set(collider, intersect, dist);
+					}
+				}
+			}
+		}
+		if (collision.distance != Double.MAX_VALUE) {
+			return new RaycastHit(collision.point, collision.distance, collision.boundedComponent.transform,
+					collision.boundedComponent.gameObject.collider);
+		} else {
+			return null;
+		}
 	}
 
 	public static class RaycastHit {
