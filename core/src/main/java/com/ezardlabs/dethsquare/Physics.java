@@ -4,6 +4,7 @@ import com.ezardlabs.dethsquare.QuadTree.RayCollision;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.stream.Stream;
 
 public class Physics {
 
@@ -14,30 +15,18 @@ public class Physics {
 		Vector2 end = new Vector2(origin.x + direction.x * distance, origin.y + direction.y * distance);
 
 		RayCollision<Collider> collision = QuadTree.getRayCollision(Collider.qt, origin, end, targetTags);
-		Vector2 intersect;
-		double dist;
-		for (Collider collider : Collider.normalColliders) {
-			if (tags.contains(collider.gameObject.getTag())) {
-				intersect = collider.bounds.intersect(origin, end);
-				if (intersect != null) {
-					dist = Vector2.distance(origin, intersect);
-					if (dist < collision.distance) {
-						collision.set(collider, intersect, dist);
-					}
-				}
-			}
-		}
-		for (Collider collider : Collider.triggerColliders) {
-			if (tags.contains(collider.gameObject.getTag())) {
-				intersect = collider.bounds.intersect(origin, end);
-				if (intersect != null) {
-					dist = Vector2.distance(origin, intersect);
-					if (dist < collision.distance) {
-						collision.set(collider, intersect, dist);
-					}
-				}
-			}
-		}
+		Stream.concat(Collider.normalColliders.stream(), Collider.triggerColliders.stream())
+			  .parallel()
+			  .filter(collider -> tags.size() == 0 || tags.contains(collider.gameObject.getTag()))
+			  .forEach(collider -> {
+				  Vector2 intersect = collider.bounds.intersect(origin, end);
+				  if (intersect != null) {
+					  double dist = Vector2.distance(origin, intersect);
+					  if (dist < collision.distance) {
+						  collision.set(collider, intersect, dist);
+					  }
+				  }
+			  });
 		if (collision.distance != Double.MAX_VALUE) {
 			return new RaycastHit(collision.point, collision.distance, collision.boundedComponent.transform,
 					collision.boundedComponent.gameObject.collider);
