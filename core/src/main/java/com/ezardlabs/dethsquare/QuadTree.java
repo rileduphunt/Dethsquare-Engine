@@ -1,6 +1,7 @@
 package com.ezardlabs.dethsquare;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 @SuppressWarnings("unchecked")
 final class QuadTree<T extends BoundedComponent> {
@@ -8,6 +9,7 @@ final class QuadTree<T extends BoundedComponent> {
 	private RectF bounds;
 	private ArrayList<T> objects = new ArrayList<>();
 	private QuadTree[] nodes = new QuadTree[4];
+	private TreeMap<Double, Integer> map = new TreeMap<>();
 
 	public QuadTree(int maxObjects) {
 		this.maxObjects = maxObjects;
@@ -70,6 +72,60 @@ final class QuadTree<T extends BoundedComponent> {
 		}
 		returnObjects.addAll(qt.objects);
 		return returnObjects;
+	}
+
+	static <T extends BoundedComponent> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start, Vector2 end,
+			String targetTags[]) {
+		return getRayCollision(qt, start, end, targetTags, new RayCollision<>());
+	}
+
+	private static <T extends BoundedComponent> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start,
+			Vector2 end, String[] targetTags, RayCollision<T> collision) {
+		if (qt.bounds.intersect(start, end) != null) {
+			if (qt.isLeaf()) {
+				Vector2 temp;
+				double dist;
+				for (T object : qt.objects) {
+					temp = object.bounds.intersect(start, end);
+					if (temp != null) {
+						dist = Vector2.distance(start, temp);
+						if ("player".equals(object.gameObject.getTag())) {
+							System.out.println("Found player");
+						}
+						if (dist < collision.distance && arrayContains(targetTags, object.gameObject.getTag())) {
+							collision.set(object, temp, dist);
+						}
+					}
+				}
+				return collision;
+			} else {
+				qt.map.clear();
+				Vector2 intersect;
+				for (int i = 0; i < qt.nodes.length; i++) {
+					intersect = qt.nodes[i].bounds.intersect(start, end);
+					qt.map.put(intersect == null ? Double.MAX_VALUE : Vector2.distance(start, intersect), i);
+				}
+				for (Double d : qt.map.keySet()) {
+					if (d < collision.distance) {
+						RayCollision<T> temp = getRayCollision(qt.nodes[qt.map.get(d)], start, end, targetTags,
+								collision);
+						collision.set(temp);
+					}
+				}
+				return collision;
+			}
+		} else {
+			return collision;
+		}
+	}
+
+	private static boolean arrayContains(String[] array, String value) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i].equals(value)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	final void addAllChildren(ArrayList<T> returnObjects, QuadTree qt) {
@@ -147,5 +203,23 @@ final class QuadTree<T extends BoundedComponent> {
 
 	public boolean isLeaf() {
 		return nodes[0] == null;
+	}
+
+	static class RayCollision<T extends BoundedComponent> {
+		T boundedComponent = null;
+		Vector2 point = null;
+		double distance = Double.MAX_VALUE;
+
+		void set(RayCollision<T> collision) {
+			boundedComponent = collision.boundedComponent;
+			point = collision.point;
+			distance = collision.distance;
+		}
+
+		void set(T boundedComponent, Vector2 point, double distance) {
+			this.boundedComponent = boundedComponent;
+			this.point = point;
+			this.distance = distance;
+		}
 	}
 }
