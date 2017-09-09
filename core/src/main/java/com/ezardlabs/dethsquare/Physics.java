@@ -8,16 +8,14 @@ import java.util.stream.Stream;
 
 public class Physics {
 
-	public static RaycastHit raycast(Vector2 origin, Vector2 direction, float distance, String... targetTags) {
-		HashSet<String> tags = new HashSet<>();
-		tags.addAll(Arrays.asList(targetTags));
+	public static RaycastHit raycast(Vector2 origin, Vector2 direction, float distance, int layerMask) {
 		direction.normalise();
 		Vector2 end = new Vector2(origin.x + direction.x * distance, origin.y + direction.y * distance);
 
-		RayCollision<Collider> collision = QuadTree.getRayCollision(Collider.qt, origin, end, targetTags);
+		RayCollision<Collider> collision = QuadTree.getRayCollision(Collider.qt, origin, end, layerMask);
 		Stream.concat(Collider.normalColliders.stream(), Collider.triggerColliders.stream())
 			  .parallel()
-			  .filter(collider -> tags.size() == 0 || tags.contains(collider.gameObject.getTag()))
+			  .filter(collider -> (collider.gameObject.getLayer() & layerMask) == collider.gameObject.getLayer())
 			  .forEach(collider -> {
 				  Vector2 intersect = collider.getBounds().intersect(origin, end);
 				  if (intersect != null) {

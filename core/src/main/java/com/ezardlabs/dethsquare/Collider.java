@@ -109,7 +109,6 @@ public final class Collider extends Component implements Bounded {
 		}
 		if (isTrigger) addTrigger();
 		if (!gameObject.isStatic && !isTrigger) normalColliders.add(this);
-		if (gameObject.isStatic && !isTrigger) gameObject.setTag("solid");
 		recalculateBounds();
 	}
 

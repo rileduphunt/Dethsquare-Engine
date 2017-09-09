@@ -20,17 +20,6 @@ final class QuadTree<T extends Bounded> {
 		this.bounds = bounds;
 	}
 
-	public static int getCount(QuadTree qt) {
-		if (!qt.isLeaf()) {
-			int count = 0;
-			for (QuadTree qt2 : qt.nodes) {
-				count += getCount(qt2);
-			}
-			return count;
-		}
-		return qt.objects.size();
-	}
-
 	public final void init(Bounded[] items) {
 		float x = 0;
 		float y = 0;
@@ -76,12 +65,12 @@ final class QuadTree<T extends Bounded> {
 	}
 
 	static <T extends Bounded> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start, Vector2 end,
-			String targetTags[]) {
-		return getRayCollision(qt, start, end, targetTags, new RayCollision<>());
+			int layerMask) {
+		return getRayCollision(qt, start, end, layerMask, new RayCollision<>());
 	}
 
-	private static <T extends Bounded> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start,
-			Vector2 end, String[] targetTags, RayCollision<T> collision) {
+	private static <T extends Bounded> RayCollision<T> getRayCollision(QuadTree<T> qt, Vector2 start, Vector2 end,
+			int layerMask, RayCollision<T> collision) {
 		if (qt.bounds.intersect(start, end) != null) {
 			if (qt.isLeaf()) {
 				Vector2 temp;
@@ -90,10 +79,8 @@ final class QuadTree<T extends Bounded> {
 					temp = object.getBounds().intersect(start, end);
 					if (temp != null) {
 						dist = Vector2.distance(start, temp);
-						if ("player".equals(object.getGameObject().getTag())) {
-							System.out.println("Found player");
-						}
-						if (dist < collision.distance && arrayContains(targetTags, object.getGameObject().getTag())) {
+						if (dist < collision.distance &&
+								(object.getGameObject().getLayer() & layerMask) == object.getGameObject().getLayer()) {
 							collision.set(object, temp, dist);
 						}
 					}
@@ -108,7 +95,7 @@ final class QuadTree<T extends Bounded> {
 				}
 				for (Double d : qt.map.keySet()) {
 					if (d < collision.distance) {
-						RayCollision<T> temp = getRayCollision(qt.nodes[qt.map.get(d)], start, end, targetTags,
+						RayCollision<T> temp = getRayCollision(qt.nodes[qt.map.get(d)], start, end, layerMask,
 								collision);
 						collision.set(temp);
 					}
@@ -117,25 +104,6 @@ final class QuadTree<T extends Bounded> {
 			}
 		} else {
 			return collision;
-		}
-	}
-
-	private static boolean arrayContains(String[] array, String value) {
-		for (int i = 0; i < array.length; i++) {
-			if (array[i].equals(value)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	final void addAllChildren(ArrayList<T> returnObjects, QuadTree qt) {
-		if (qt.isLeaf()) {
-			returnObjects.addAll(qt.objects);
-		} else {
-			for (QuadTree qt2 : qt.nodes) {
-				addAllChildren(returnObjects, qt2);
-			}
 		}
 	}
 
@@ -154,10 +122,7 @@ final class QuadTree<T extends Bounded> {
 		}
 	}
 
-	public int insertCount = 0;
-
 	private void insert(Bounded b) {
-		insertCount++;
 		if (isLeaf()) {
 			objects.add((T) b);
 			if (objects.size() > maxObjects) {
