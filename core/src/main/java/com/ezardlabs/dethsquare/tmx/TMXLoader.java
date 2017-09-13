@@ -6,6 +6,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -20,10 +22,10 @@ public class TMXLoader {
 	private String fileName;
 	private Map map;
 
-	public TMXLoader(String fileName) {
+	public TMXLoader(String fileName, boolean external) {
 		this.fileName = fileName;
 		this.map = null;
-		loadMap(this.fileName);
+		loadMap(this.fileName, external);
 	}
 
 	public Map getMap() {
@@ -31,6 +33,10 @@ public class TMXLoader {
 	}
 
 	public void loadMap(String filePath) {
+		loadMap(filePath, false);
+	}
+
+	public void loadMap(String filePath, boolean external) {
 		try {
 			int lastSlash = filePath.lastIndexOf("/");
 			String folder = "";
@@ -42,7 +48,12 @@ public class TMXLoader {
 
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath));
+			Document doc;
+			if (external) {
+				doc = dBuilder.parse(new FileInputStream(new File(filePath)));
+			} else {
+				doc = dBuilder.parse(Thread.currentThread().getContextClassLoader().getResourceAsStream(filePath));
+			}
 			doc.getDocumentElement().normalize();
 			Element root = doc.getDocumentElement();
 			if (!root.getNodeName().equals("map")) {
