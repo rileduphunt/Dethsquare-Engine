@@ -305,6 +305,10 @@ public final class RectF {
 				&& left <= r.left && top <= r.top && right >= r.right && bottom >= r.bottom;
 	}
 
+	public boolean contains(Vector2 a, Vector2 b) {
+		return contains(a.x, a.y) && contains(b.x, b.y);
+	}
+
 	/**
 	 * If the rectangle specified by left,top,right,bottom intersects this
 	 * rectangle, return true and set this rectangle to that intersection,
