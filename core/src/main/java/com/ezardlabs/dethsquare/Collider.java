@@ -1,11 +1,12 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.debug.Debug;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
 import java.util.ArrayList;
 
-public final class Collider extends Component implements Bounded {
+public final class Collider extends Script implements Bounded {
 	static {
 		GameListeners.addUpdateListener(new UpdateListener() {
 			@Override
@@ -30,6 +31,7 @@ public final class Collider extends Component implements Bounded {
 	ArrayList<Collider> possible = new ArrayList<>();
 	private Collider[] triggers = new Collider[0];
 	private boolean isTrigger = false;
+	private final Vector2 offset = new Vector2();
 
 	private final RectF bounds = new RectF();
 
@@ -78,12 +80,21 @@ public final class Collider extends Component implements Bounded {
 	}
 
 	public Collider(float width, float height) {
-		this(width, height, false);
+		this(width, height, 0, 0, false);
 	}
 
 	public Collider(float width, float height, boolean isTrigger) {
+		this(width, height, 0, 0, isTrigger);
+	}
+
+	public Collider(float width, float height, float offsetX, float offsetY) {
+		this(width, height, offsetX, offsetY, false);
+	}
+
+	public Collider(float width, float height, float offsetX, float offsetY, boolean isTrigger) {
 		this.width = width;
 		this.height = height;
+		this.offset.set(offsetX, offsetY);
 		this.isTrigger = isTrigger;
 	}
 
@@ -110,6 +121,13 @@ public final class Collider extends Component implements Bounded {
 		if (isTrigger) addTrigger();
 		if (!gameObject.isStatic && !isTrigger) normalColliders.add(this);
 		recalculateBounds();
+	}
+
+	@Override
+	public void update() {
+		if (!gameObject.isStatic && !isTrigger) {
+			Debug.drawRect(new Vector2(bounds.left, bounds.top), bounds.width(), bounds.height(), 1, 0, 0);
+		}
 	}
 
 	private void addTrigger() {
@@ -175,11 +193,11 @@ public final class Collider extends Component implements Bounded {
 				c = possible.get(i);
 				if (c != this && c != null && !c.isTrigger && RectF.intersects(bounds, c.bounds)) {
 					if (y > 0 && bounds.bottom > c.bounds.top) {
-						transform.position.y = Math.round(c.bounds.top - bounds.height());
+						transform.position.y = c.bounds.top - bounds.height() - offset.y;
 						gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
 								CollisionLocation.BOTTOM, y));
 					} else if (y < 0 && bounds.top < c.bounds.bottom) {
-						transform.position.y = Math.round(c.bounds.bottom);
+						transform.position.y = c.bounds.bottom - offset.y;
 						if (transform.position.y != lastBounds.top) {
 							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
 									CollisionLocation.TOP, y));
@@ -197,13 +215,13 @@ public final class Collider extends Component implements Bounded {
 				c = possible.get(i);
 				if (c != this && c != null && !c.isTrigger && RectF.intersects(bounds, c.bounds)) {
 					if (x > 0 && bounds.right > c.bounds.left) {
-						transform.position.x = Math.round(c.bounds.left - bounds.width());
+						transform.position.x = c.bounds.left - bounds.width() - offset.x;
 						if (transform.position.x != lastBounds.left) {
 							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
 									CollisionLocation.RIGHT, x));
 						}
 					} else if (x < 0 && bounds.left < c.bounds.right) {
-						transform.position.x = Math.round(c.bounds.right);
+						transform.position.x = c.bounds.right - offset.x;
 						if (transform.position.x != lastBounds.left) {
 							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
 									CollisionLocation.LEFT, x));
@@ -221,10 +239,10 @@ public final class Collider extends Component implements Bounded {
 	}
 
 	public void recalculateBounds() {
-		bounds.left = transform.position.x;
-		bounds.top = transform.position.y;
-		bounds.right = transform.position.x + width;
-		bounds.bottom = transform.position.y + height;
+		bounds.left = transform.position.x + offset.x;
+		bounds.top = transform.position.y + offset.y;
+		bounds.right = transform.position.x + offset.x + width;
+		bounds.bottom = transform.position.y + offset.y + height;
 	}
 
 	public void triggerCheck() {
