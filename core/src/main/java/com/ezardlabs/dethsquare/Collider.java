@@ -1,12 +1,11 @@
 package com.ezardlabs.dethsquare;
 
-import com.ezardlabs.dethsquare.debug.Debug;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
 import java.util.ArrayList;
 
-public final class Collider extends Script implements Bounded {
+public final class Collider extends Component implements Bounded {
 	static {
 		GameListeners.addUpdateListener(new UpdateListener() {
 			@Override
@@ -121,13 +120,6 @@ public final class Collider extends Script implements Bounded {
 		if (isTrigger) addTrigger();
 		if (!gameObject.isStatic && !isTrigger) normalColliders.add(this);
 		recalculateBounds();
-	}
-
-	@Override
-	public void update() {
-		if (!gameObject.isStatic && !isTrigger) {
-			Debug.drawRect(new Vector2(bounds.left, bounds.top), bounds.width(), bounds.height(), 1, 0, 0);
-		}
 	}
 
 	private void addTrigger() {
