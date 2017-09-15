@@ -33,7 +33,7 @@ public class Renderer extends Component implements Bounded {
 	private static int uvsLength = 0;
 	private static int coloursLength = 0;
 
-	Sprite sprite = new Sprite(0, 0, 1, 1);
+	Sprite sprite = new Sprite(0, 0, 0, 0);
 	public float width;
 	public float height;
 	private int zIndex = 0;
