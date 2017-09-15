@@ -58,12 +58,12 @@ public abstract class AnimationType implements Cloneable {
 	public abstract int update(int currentFrame, int numFrames);
 
 	@Override
-	public Object clone() {
+	public AnimationType clone() {
 		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
+			return (AnimationType) super.clone();
+		} catch (CloneNotSupportedException | ClassCastException e) {
 			e.printStackTrace();
-			return this;
+			return null;
 		}
 	}
 }
