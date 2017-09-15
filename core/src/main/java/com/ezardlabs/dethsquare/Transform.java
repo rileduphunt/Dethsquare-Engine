@@ -61,6 +61,8 @@ public final class Transform extends Component {
 	public void translate(float x, float y) {
 		if (gameObject.isStatic) throw new StaticObjectMovedError(gameObject);
 		if (x == 0 && y == 0) return;
+		float startX = position.x;
+		float startY = position.y;
 		if (gameObject.collider == null) {
 			position.x += x;
 			position.y += y;
@@ -68,7 +70,7 @@ public final class Transform extends Component {
 			gameObject.collider.move(x, y);
 		}
 		for (int i = 0; i < children.size(); i++) {
-			children.get(i).translate(x, y);
+			children.get(i).translate(position.x - startX, position.y - startY);
 		}
 	}
 
