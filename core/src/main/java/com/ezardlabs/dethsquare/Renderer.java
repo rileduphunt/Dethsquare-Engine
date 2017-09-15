@@ -33,7 +33,7 @@ public class Renderer extends Component implements Bounded {
 	private static int uvsLength = 0;
 	private static int coloursLength = 0;
 
-	Sprite sprite;
+	Sprite sprite = new Sprite(0, 0, 1, 1);
 	public float width;
 	public float height;
 	private int zIndex = 0;
@@ -63,6 +63,10 @@ public class Renderer extends Component implements Bounded {
 		this.sprite = sprite;
 	}
 
+	public Renderer(TextureAtlas textureAtlas) {
+		setTextureAtlas(textureAtlas);
+	}
+
 	public void setImage(String imagePath, float width, float height) {
 		mode = Mode.IMAGE;
 		int[] data = RENDER.loadImage(imagePath);
@@ -88,6 +92,11 @@ public class Renderer extends Component implements Bounded {
 	public void setData(FrameData data) {
 		setSize(data.width, data.height);
 		setOffsets(data.getOffset(transform.scale.x).x, data.getOffset(transform.scale.x).y);
+	}
+
+	public void setTextureAtlas(TextureAtlas textureAtlas) {
+		textureName = textureAtlas.textureName;
+		mode = Mode.SPRITE;
 	}
 
 	public void setTextureAtlas(TextureAtlas textureAtlas, float spriteWidth, float spriteHeight) {
