@@ -2,9 +2,9 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.util.Dethsquare;
 
-public final class Camera extends Script {
-	public final RectF bounds = new RectF();
+public final class Camera extends Script implements Bounded {
 	public static Camera main;
+	private final RectF bounds = new RectF();
 	private boolean isMain = false;
 
 	public Camera(boolean main) {
@@ -25,5 +25,15 @@ public final class Camera extends Script {
 		if (main == this) {
 			Dethsquare.RENDER.setCameraPosition(transform.position.x, transform.position.y);
 		}
+	}
+
+	@Override
+	public RectF getBounds() {
+		return bounds;
+	}
+
+	@Override
+	public GameObject getGameObject() {
+		return gameObject;
 	}
 }
