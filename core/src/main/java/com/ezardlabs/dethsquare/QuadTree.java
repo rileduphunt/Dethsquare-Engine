@@ -110,7 +110,7 @@ public final class QuadTree<T extends Bounded> {
 		return nodes[0] == null;
 	}
 
-	void retrieve(ArrayList<T> returnObjects, Bounded b) {
+	public void retrieve(ArrayList<T> returnObjects, Bounded b) {
 		retrieve(returnObjects, b.getBounds());
 	}
 
