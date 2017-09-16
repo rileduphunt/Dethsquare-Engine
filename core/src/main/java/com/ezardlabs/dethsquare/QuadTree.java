@@ -5,62 +5,130 @@ import java.util.TreeMap;
 
 @SuppressWarnings("unchecked")
 final class QuadTree<T extends Bounded> {
+	private final RectF bounds;
 	private final int maxObjects;
-	private RectF bounds;
-	private ArrayList<T> objects = new ArrayList<>();
-	private QuadTree[] nodes = new QuadTree[4];
-	private TreeMap<Double, Integer> map = new TreeMap<>();
+	private final QuadTree[] nodes = new QuadTree[4];
+	private final ArrayList<T> objects;
+	private final TreeMap<Double, Integer> map = new TreeMap<>();
 
-	public QuadTree(int maxObjects) {
-		this.maxObjects = maxObjects;
+	QuadTree(int maxObjects) {
+		this(maxObjects, new RectF());
 	}
 
-	QuadTree(int maxObjects, RectF bounds) {
-		this(maxObjects);
+	private QuadTree(int maxObjects, RectF bounds) {
 		this.bounds = bounds;
+		this.maxObjects = maxObjects;
+		this.objects = new ArrayList<>(maxObjects);
 	}
 
-	public final void init(Bounded[] items) {
-		float x = 0;
-		float y = 0;
-		for (Bounded b : items) {
-			if (b.getGameObject() == null || b.getGameObject().isStatic && b.getBounds().right > x)
-				x = b.getBounds().right;
-			if (b.getGameObject() == null || b.getGameObject().isStatic && b.getBounds().bottom > y)
-				y = b.getBounds().bottom;
+	void build(ArrayList<T> objects) {
+		float left = 0;
+		float top = 0;
+		float right = 0;
+		float bottom = 0;
+		for (Bounded b : objects) {
+			if (b.getBounds().left < left) {
+				left = b.getBounds().left;
+			}
+			if (b.getBounds().left > right) {
+				right = b.getBounds().right;
+			}
+			if (b.getBounds().top < top) {
+				top = b.getBounds().top;
+			}
+			if (b.getBounds().left > right) {
+				bottom = b.getBounds().bottom;
+			}
 		}
-		if (x >= y) {
-			bounds = new RectF(0, 0, (int) x, (int) x);
-		} else if (y > x) {
-			bounds = new RectF(0, 0, (int) y, (int) y);
+		float width = right - left;
+		float height = bottom - top;
+		if (width > height) {
+			bounds.set(left, top, left + width, top + width);
+		} else if (top > left) {
+			bounds.set(left, top, left + height, top + height);
 		}
-		for (Bounded b : items) {
+		for (T b : objects) {
 			if (b.getGameObject() == null || b.getGameObject().isStatic) {
 				insert(b);
 			}
 		}
-		finalise(items);
 	}
 
-	static <T extends Bounded> void retrieve(ArrayList<T> returnObjects, QuadTree<T> qt, Bounded b) {
-		retrieve(returnObjects, qt, b.getBounds());
-	}
-
-	static <T extends Bounded> ArrayList<T> retrieve(ArrayList<T> returnObjects, QuadTree<T> qt, RectF bounds) {
-		if (!qt.isLeaf()) {
-			for (QuadTree qt2 : qt.nodes) {
-				if (qt2.bounds.contains(bounds)) {
-					return retrieve(returnObjects, qt2, bounds);
+	private void insert(T object) {
+		if (isLeaf()) {
+			objects.add(object);
+			if (objects.size() > maxObjects) {
+				split();
+				loop:
+				while (!objects.isEmpty()) {
+					T item = objects.remove(0);
+					for (QuadTree node : nodes) {
+						if (node.bounds.contains(item.getBounds())) {
+							node.insert(item);
+							continue loop;
+						}
+					}
+					for (QuadTree node : nodes) {
+						if (node.bounds.intersects(item.getBounds())) {
+							node.insert(item);
+						}
+					}
 				}
 			}
-			for (QuadTree qt2 : qt.nodes) {
-				if (RectF.intersects(qt2.bounds, bounds)) {
-					retrieve(returnObjects, qt2, bounds);
+		} else {
+			for (QuadTree node : nodes) {
+				if (node.bounds.contains(object.getBounds())) {
+					node.insert(object);
+					return;
+				}
+			}
+			for (QuadTree node : nodes) {
+				if (node.bounds.intersects(object.getBounds())) {
+					node.insert(object);
+				}
+			}
+		}
+	}
+
+	private void split() {
+		float subWidth = bounds.width() / 2f;
+		float subHeight = bounds.height() / 2f;
+		float x = bounds.left;
+		float y = bounds.top;
+		// top left
+		nodes[0] = new QuadTree(maxObjects, new RectF(x, y, x + subWidth, y + subHeight));
+		// top right
+		nodes[1] = new QuadTree(maxObjects, new RectF(x + subWidth, y, x + (subWidth * 2), y + subHeight));
+		// bottom left
+		nodes[2] = new QuadTree(maxObjects, new RectF(x, y + subHeight, x + subWidth, y + (subHeight * 2)));
+		// bottom right
+		nodes[3] = new QuadTree(maxObjects,
+				new RectF(x + subWidth, y + subHeight, x + (subWidth * 2), y + (subHeight * 2)));
+	}
+
+	private boolean isLeaf() {
+		return nodes[0] == null;
+	}
+
+	void retrieve(ArrayList<T> returnObjects, Bounded b) {
+		retrieve(returnObjects, b.getBounds());
+	}
+
+	ArrayList<T> retrieve(ArrayList<T> returnObjects, RectF bounds) {
+		if (!isLeaf()) {
+			for (QuadTree qt : nodes) {
+				if (qt.bounds.contains(bounds)) {
+					return qt.retrieve(returnObjects, bounds);
+				}
+			}
+			for (QuadTree qt : nodes) {
+				if (RectF.intersects(qt.bounds, bounds)) {
+					qt.retrieve(returnObjects, bounds);
 				}
 			}
 			if (!returnObjects.isEmpty()) return returnObjects;
 		}
-		returnObjects.addAll(qt.objects);
+		returnObjects.addAll(objects);
 		return returnObjects;
 	}
 
@@ -105,70 +173,6 @@ final class QuadTree<T extends Bounded> {
 		} else {
 			return collision;
 		}
-	}
-
-	private void finalise(Bounded[] items) {
-		objects.clear();
-		if (isLeaf()) {
-			for (Bounded b : items) {
-				if (bounds.contains(b.getBounds()) || RectF.intersects(bounds, b.getBounds())) {
-					objects.add((T) b);
-				}
-			}
-		} else {
-			for (QuadTree qt2 : nodes) {
-				qt2.finalise(items);
-			}
-		}
-	}
-
-	private void insert(Bounded b) {
-		if (isLeaf()) {
-			objects.add((T) b);
-			if (objects.size() > maxObjects) {
-				if (isLeaf()) split();
-				outer:
-				while (!objects.isEmpty()) {
-					for (int j = 0; j < 4; j++) {
-						if (nodes[j].bounds.contains(b.getBounds())) {
-							nodes[j].insert(objects.remove(0));
-							continue outer;
-						}
-					}
-					Bounded b2 = objects.remove(0);
-					for (int j = 0; j < 4; j++) {
-						if (RectF.intersects(nodes[j].bounds, b2.getBounds())) nodes[j].insert(b2);
-					}
-				}
-			}
-		} else {
-			for (int i = 0; i < 4; i++) {
-				if (nodes[i].bounds.contains(b.getBounds())) {
-					nodes[i].insert(b);
-					return;
-				}
-			}
-			for (int i = 0; i < 4; i++) {
-				if (RectF.intersects(nodes[i].bounds, b.getBounds())) nodes[i].insert(b);
-			}
-		}
-	}
-
-	private void split() {
-		float subWidth = bounds.width() / 2f;
-		float subHeight = bounds.height() / 2f;
-		float x = bounds.left;
-		float y = bounds.top;
-		nodes[0] = new QuadTree(maxObjects, new RectF(x, y, x + subWidth, y + subHeight)); // top left
-		nodes[1] = new QuadTree(maxObjects, new RectF(x + subWidth, y, x + (subWidth * 2), y + subHeight)); // top right
-		nodes[2] = new QuadTree(maxObjects,
-				new RectF(x, y + subHeight, x + subWidth, y + (subHeight * 2))); // bottom left
-		nodes[3] = new QuadTree(maxObjects,
-				new RectF(x + subWidth, y + subHeight, x + (subWidth * 2), y + (subHeight * 2))); // bottom right
-	}
-
-	public boolean isLeaf() {
-		return nodes[0] == null;
 	}
 
 	static class RayCollision<T extends Bounded> {

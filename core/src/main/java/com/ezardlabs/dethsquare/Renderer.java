@@ -165,7 +165,7 @@ public class Renderer extends Component implements Bounded {
 				renderers.remove(r);
 			}
 		}
-		qt.init(staticRenderers.toArray(new Renderer[staticRenderers.size()]));
+		qt.build(staticRenderers);
 	}
 
 	static void clearAll() {
@@ -183,7 +183,7 @@ public class Renderer extends Component implements Bounded {
 
 	private static void renderAll() {
 		visible.clear();
-		QuadTree.retrieve(visible, qt, Camera.main.bounds);
+		qt.retrieve(visible, Camera.main);
 
 		visible.addAll(renderers); // TODO only add renderers that are visible
 

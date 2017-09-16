@@ -11,7 +11,7 @@ public final class Collider extends Component implements Bounded {
 			@Override
 			public void onUpdate() {
 				if (rebuildQuadTree) {
-					qt.init(staticColliders.toArray(new Collider[staticColliders.size()]));
+					qt.build(staticColliders);
 					rebuildQuadTree = false;
 				}
 			}
@@ -98,7 +98,7 @@ public final class Collider extends Component implements Bounded {
 	}
 
 	public static void init() {
-		qt.init(staticColliders.toArray(new Collider[staticColliders.size()]));
+		qt.build(staticColliders);
 		inited = true;
 	}
 
@@ -167,7 +167,7 @@ public final class Collider extends Component implements Bounded {
 		if (y > 0) bounds.bottom += y;
 		if (y < 0) bounds.top += y;
 
-		QuadTree.retrieve(possible, qt, this);
+		qt.retrieve(possible, this);
 
 		bounds.left = lastBounds.left;
 		bounds.top = lastBounds.top;
@@ -240,7 +240,7 @@ public final class Collider extends Component implements Bounded {
 	public void triggerCheck() {
 		if (isTrigger) {
 			possible.clear();
-			QuadTree.retrieve(possible, qt, this);
+			qt.retrieve(possible, this);
 			for (Collider c : possible) {
 				if (RectF.intersects(bounds, c.bounds)) {
 					gameObject.onTriggerEnter(c);
