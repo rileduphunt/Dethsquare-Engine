@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.TreeMap;
 
 @SuppressWarnings("unchecked")
-final class QuadTree<T extends Bounded> {
+public final class QuadTree<T extends Bounded> {
 	private final RectF bounds;
 	private final int maxObjects;
 	private final QuadTree[] nodes = new QuadTree[4];
 	private final ArrayList<T> objects;
 	private final TreeMap<Double, Integer> map = new TreeMap<>();
 
-	QuadTree(int maxObjects) {
+	public QuadTree(int maxObjects) {
 		this(maxObjects, new RectF());
 	}
 
@@ -21,7 +21,7 @@ final class QuadTree<T extends Bounded> {
 		this.objects = new ArrayList<>(maxObjects);
 	}
 
-	void build(ArrayList<T> objects) {
+	public void build(ArrayList<T> objects) {
 		float left = 0;
 		float top = 0;
 		float right = 0;
