@@ -1,6 +1,7 @@
 package com.ezardlabs.dethsquare;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.TreeMap;
 
 @SuppressWarnings("unchecked")
@@ -52,6 +53,12 @@ public final class QuadTree<T extends Bounded> {
 				insert(b);
 			}
 		}
+	}
+
+	public void reset() {
+		Arrays.fill(nodes, null);
+		objects.clear();
+		map.clear();
 	}
 
 	private void insert(T object) {
