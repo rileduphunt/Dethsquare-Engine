@@ -41,15 +41,8 @@ public class Renderer extends Component implements Bounded {
 	private final RectF bounds = new RectF();
 
 	public int textureName = -1;
-	public Mode mode = Mode.NONE;
 	public float xOffset;
 	public float yOffset;
-
-	private enum Mode {
-		NONE,
-		IMAGE,
-		SPRITE
-	}
 
 	public Renderer() {
 	}
@@ -68,11 +61,12 @@ public class Renderer extends Component implements Bounded {
 	}
 
 	public void setImage(String imagePath, float width, float height) {
-		mode = Mode.IMAGE;
 		int[] data = RENDER.loadImage(imagePath);
 		textureName = data[0];
 		this.width = width;
 		this.height = height;
+		sprite.u = sprite.v = 0;
+		sprite.w = sprite.h = 1;
 	}
 
 	public void setSprite(Sprite sprite) {
@@ -96,12 +90,10 @@ public class Renderer extends Component implements Bounded {
 
 	public void setTextureAtlas(TextureAtlas textureAtlas) {
 		textureName = textureAtlas.textureName;
-		mode = Mode.SPRITE;
 	}
 
 	public void setTextureAtlas(TextureAtlas textureAtlas, float spriteWidth, float spriteHeight) {
 		textureName = textureAtlas.textureName;
-		mode = Mode.SPRITE;
 		width = spriteWidth;
 		height = spriteHeight;
 	}
@@ -252,64 +244,42 @@ public class Renderer extends Component implements Bounded {
 		if (uvs.length != uvsLength) {
 			uvs = new float[uvsLength];
 		}
-		float u;
-		float v;
-		float w;
-		float h;
-		switch (r.mode) {
-			case IMAGE:
-				u = 0;
-				v = 0;
-				w = 1;
-				h = 1;
-				break;
-			case SPRITE:
-				u = r.sprite.u;
-				v = r.sprite.v;
-				w = r.sprite.w;
-				h = r.sprite.h;
-				break;
-			case NONE:
-			default:
-				u = v = w = h = 0;
-				break;
-		}
 		if (r.transform.scale.x < 0 && r.transform.scale.y < 0) {
-			uvs[(i * 8) + 6] = u;
-			uvs[(i * 8) + 7] = v;
-			uvs[(i * 8) + 4] = u;
-			uvs[(i * 8) + 5] = v + h;
-			uvs[(i * 8) + 2] = u + w;
-			uvs[(i * 8) + 3] = v + h;
-			uvs[(i * 8)] = u + w;
-			uvs[(i * 8) + 1] = v;
+			uvs[(i * 8) + 6] = r.sprite.u;
+			uvs[(i * 8) + 7] = r.sprite.v;
+			uvs[(i * 8) + 4] = r.sprite.u;
+			uvs[(i * 8) + 5] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8) + 2] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 3] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8)] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 1] = r.sprite.v;
 		} else if (r.transform.scale.x < 0) {
-			uvs[(i * 8) + 4] = u;
-			uvs[(i * 8) + 5] = v;
-			uvs[(i * 8) + 6] = u;
-			uvs[(i * 8) + 7] = v + h;
-			uvs[(i * 8)] = u + w;
-			uvs[(i * 8) + 1] = v + h;
-			uvs[(i * 8) + 2] = u + w;
-			uvs[(i * 8) + 3] = v;
+			uvs[(i * 8) + 4] = r.sprite.u;
+			uvs[(i * 8) + 5] = r.sprite.v;
+			uvs[(i * 8) + 6] = r.sprite.u;
+			uvs[(i * 8) + 7] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8)] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 1] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8) + 2] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 3] = r.sprite.v;
 		} else if (r.transform.scale.y < 0) {
-			uvs[(i * 8)] = u;
-			uvs[(i * 8) + 1] = v;
-			uvs[(i * 8) + 2] = u;
-			uvs[(i * 8) + 3] = v + h;
-			uvs[(i * 8) + 4] = u + w;
-			uvs[(i * 8) + 5] = v + h;
-			uvs[(i * 8) + 6] = u + w;
-			uvs[(i * 8) + 7] = v;
+			uvs[(i * 8)] = r.sprite.u;
+			uvs[(i * 8) + 1] = r.sprite.v;
+			uvs[(i * 8) + 2] = r.sprite.u;
+			uvs[(i * 8) + 3] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8) + 4] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 5] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8) + 6] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 7] = r.sprite.v;
 		} else {
-			uvs[(i * 8) + 2] = u;
-			uvs[(i * 8) + 3] = v;
-			uvs[(i * 8)] = u;
-			uvs[(i * 8) + 1] = v + h;
-			uvs[(i * 8) + 6] = u + w;
-			uvs[(i * 8) + 7] = v + h;
-			uvs[(i * 8) + 4] = u + w;
-			uvs[(i * 8) + 5] = v;
+			uvs[(i * 8) + 2] = r.sprite.u;
+			uvs[(i * 8) + 3] = r.sprite.v;
+			uvs[(i * 8)] = r.sprite.u;
+			uvs[(i * 8) + 1] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8) + 6] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 7] = r.sprite.v + r.sprite.h;
+			uvs[(i * 8) + 4] = r.sprite.u + r.sprite.w;
+			uvs[(i * 8) + 5] = r.sprite.v;
 		}
 	}
 
