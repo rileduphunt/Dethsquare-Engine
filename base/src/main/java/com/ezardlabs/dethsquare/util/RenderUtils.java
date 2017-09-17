@@ -7,7 +7,9 @@ import java.util.ArrayList;
 public interface RenderUtils {
 	int[] loadImage(String path);
 
-	int loadShaderProgram(String path);
+	int loadShaderProgram(String vertexPath, String fragmentPath);
+
+	int loadShaderProgram(String directory);
 
 	void render(int textureName, float[] vertices, float[] uvs, short[] indices, float[] colours, int num);
 

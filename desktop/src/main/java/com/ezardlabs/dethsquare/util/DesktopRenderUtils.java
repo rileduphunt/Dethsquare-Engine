@@ -5,6 +5,7 @@ import com.ezardlabs.dethsquare.debug.DebugGraphic;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -166,23 +167,29 @@ public class DesktopRenderUtils implements RenderUtils {
 	}
 
 	@Override
-	public int loadShaderProgram(String path) {
+	public int loadShaderProgram(String vertexPath, String fragmentPath) {
+		String key = vertexPath + fragmentPath;
 		int program;
-		if (programCache.containsKey(path)) {
-			program =  programCache.get(path);
+		if (programCache.containsKey(key)) {
+			program =  programCache.get(key);
 		} else {
-			int vert = loadShader(path + "/vert.glsl", GL_VERTEX_SHADER);
-			int frag = loadShader(path + "/frag.glsl", GL_FRAGMENT_SHADER);
+			int vert = loadShader(vertexPath, GL_VERTEX_SHADER);
+			int frag = loadShader(fragmentPath, GL_FRAGMENT_SHADER);
 
 			program = glCreateProgram();
 			glAttachShader(program, vert);
 			glAttachShader(program, frag);
 			glLinkProgram(program);
 
-			programCache.put(path, program);
+			programCache.put(key, program);
 		}
 		glUseProgram(program);
 		return program;
+	}
+
+	@Override
+	public int loadShaderProgram(String path) {
+		return loadShaderProgram(path + File.separator + "vert.glsl", path + File.separator + "frag.glsl");
 	}
 
 	private int loadShader(String path, int type) {
