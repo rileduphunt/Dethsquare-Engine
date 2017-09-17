@@ -1,6 +1,7 @@
-package com.ezardlabs.dethsquare;
+package com.ezardlabs.dethsquare.animation;
 
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
+import com.ezardlabs.dethsquare.Vector2;
 
 public final class Animation {
 	public final String name;
@@ -50,7 +51,15 @@ public final class Animation {
 			this.duration = duration;
 		}
 
-		Vector2 getOffset(float scale) {
+		public int getWidth() {
+			return width;
+		}
+
+		public int getHeight() {
+			return height;
+		}
+
+		public Vector2 getOffset(float scale) {
 			if (offsets.length == 1) return offsets[0];
 			if (scale > 0) {
 				return offsets[0];

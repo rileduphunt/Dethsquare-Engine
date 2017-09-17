@@ -1,4 +1,4 @@
-package com.ezardlabs.dethsquare;
+package com.ezardlabs.dethsquare.animation;
 
 public abstract class AnimationType implements Cloneable {
 	/**

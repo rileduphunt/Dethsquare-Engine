@@ -1,8 +1,6 @@
 package com.ezardlabs.dethsquare.animation;
 
-import com.ezardlabs.dethsquare.Animation;
-import com.ezardlabs.dethsquare.Animation.FrameData;
-import com.ezardlabs.dethsquare.AnimationType;
+import com.ezardlabs.dethsquare.animation.Animation.FrameData;
 import com.ezardlabs.dethsquare.TextureAtlas;
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
 import com.ezardlabs.dethsquare.Vector2;
