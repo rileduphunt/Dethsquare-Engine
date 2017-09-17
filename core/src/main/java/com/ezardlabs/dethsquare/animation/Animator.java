@@ -34,11 +34,18 @@ public final class Animator extends Script implements Iterable<Animation> {
 		if (frame != this.frame) {
 			this.frame = frame;
 			if (frame != -1) {
-				this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].duration;
-				gameObject.renderer.setSprite(animations[index].frames[frame]);
-				gameObject.renderer.setData(animations[index].frameData[frame]);
+				this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].getDuration();
+				setRendererData(animations[index], frame);
+//				gameObject.renderer.setSprite(animations[index].frames[frame]);
+//				gameObject.renderer.setData(animations[index].frameData[frame]);
 			}
 		}
+	}
+
+	private void setRendererData(Animation animation, int frame) {
+		gameObject.renderer.setSprite(animation.frames[frame]);
+		gameObject.renderer.setSize(animation.frameData[frame].getWidth(), animation.frameData[frame].getHeight());
+		gameObject.renderer.setOffset(animation.frameData[frame].getOffset(transform.scale.x));
 	}
 
 	public void update() {
@@ -50,7 +57,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 		if (index == -1 || frame == -1) return;
 		int tempFrame;
 		if (System.currentTimeMillis() >= nextFrameTime) {
-			nextFrameTime += animations[index].frameData[frame].duration;
+			nextFrameTime += animations[index].frameData[frame].getDuration();
 			tempFrame = animations[index].type.update(frame, animations[index].frames.length);
 			if (tempFrame == -1) {
 				if (!finished) {

@@ -1,6 +1,5 @@
 package com.ezardlabs.dethsquare;
 
-import com.ezardlabs.dethsquare.animation.Animation.FrameData;
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
@@ -78,14 +77,14 @@ public class Renderer extends Component implements Bounded {
 		this.height = height;
 	}
 
+	public void setOffset(Vector2 offset) {
+		this.xOffset = offset.x;
+		this.yOffset = offset.y;
+	}
+
 	public void setOffsets(float xOffset, float yOffset) {
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
-	}
-
-	public void setData(FrameData data) {
-		setSize(data.getWidth(), data.getHeight());
-		setOffsets(data.getOffset(transform.scale.x).x, data.getOffset(transform.scale.x).y);
 	}
 
 	public void setTextureAtlas(TextureAtlas textureAtlas) {

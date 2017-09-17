@@ -31,41 +31,45 @@ public final class Animation {
 		this.listener = listener;
 	}
 
-	public static class FrameData {
-		final int width;
-		final int height;
-		final Vector2[] offsets;
-		final long duration;
+	static class FrameData {
+		private final int width;
+		private final int height;
+		private final Vector2[] offsets;
+		private final long duration;
 
-		public FrameData(int width, int height, Vector2 offset, long duration) {
+		FrameData(int width, int height, Vector2 offset, long duration) {
 			this.width = width;
 			this.height = height;
 			this.offsets = new Vector2[]{offset};
 			this.duration = duration;
 		}
 
-		public FrameData(int width, int height, Vector2[] offsets, long duration) {
+		FrameData(int width, int height, Vector2[] offsets, long duration) {
 			this.width = width;
 			this.height = height;
 			this.offsets = offsets;
 			this.duration = duration;
 		}
 
-		public int getWidth() {
+		int getWidth() {
 			return width;
 		}
 
-		public int getHeight() {
+		int getHeight() {
 			return height;
 		}
 
-		public Vector2 getOffset(float scale) {
+		Vector2 getOffset(float scale) {
 			if (offsets.length == 1) return offsets[0];
 			if (scale > 0) {
 				return offsets[0];
 			} else {
 				return offsets[1];
 			}
+		}
+
+		long getDuration() {
+			return duration;
 		}
 	}
 
