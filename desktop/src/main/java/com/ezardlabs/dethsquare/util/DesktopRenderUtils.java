@@ -192,6 +192,16 @@ public class DesktopRenderUtils implements RenderUtils {
 		return loadShaderProgram(path + File.separator + "vert.glsl", path + File.separator + "frag.glsl");
 	}
 
+	@Override
+	public int getUniformLocation(int program, String name) {
+		return glGetUniformLocation(program, name);
+	}
+
+	@Override
+	public int getAttributeLocation(int program, String name) {
+		return glGetAttribLocation(program, name);
+	}
+
 	private int loadShader(String path, int type) {
 		String key = path + "||" + type;
 		if (shaderCache.containsKey(key)) {

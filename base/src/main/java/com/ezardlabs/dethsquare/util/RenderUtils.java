@@ -11,6 +11,10 @@ public interface RenderUtils {
 
 	int loadShaderProgram(String directory);
 
+	int getUniformLocation(int program, String name);
+
+	int getAttributeLocation(int program, String name);
+
 	void render(int textureName, float[] vertices, float[] uvs, short[] indices, float[] colours, int num);
 
 	void render(ArrayList<DebugGraphic> debugGraphics);
