@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.graphics.GraphicsEngine;
+
 import java.util.HashMap;
 
 public class LevelManager {
@@ -24,7 +26,7 @@ public class LevelManager {
 		level.onLoad();
 
 		GameObject.startAll();
-		Renderer.init();
+		GraphicsEngine.init();
 		Collider.init();
 		loadingLevel = false;
 
