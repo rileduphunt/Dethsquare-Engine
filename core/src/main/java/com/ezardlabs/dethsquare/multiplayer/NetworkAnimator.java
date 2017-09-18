@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare.multiplayer;
 
-import com.ezardlabs.dethsquare.Animator;
+import com.ezardlabs.dethsquare.animation.Animator;
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
 
 import java.nio.ByteBuffer;
