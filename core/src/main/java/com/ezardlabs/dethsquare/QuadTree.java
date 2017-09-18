@@ -11,6 +11,7 @@ public final class QuadTree<T extends Bounded> {
 	private final QuadTree[] nodes = new QuadTree[4];
 	private final ArrayList<T> objects;
 	private final TreeMap<Double, Integer> map = new TreeMap<>();
+	private boolean built = false;
 
 	public QuadTree(int maxObjects) {
 		this(maxObjects, new RectF());
@@ -53,6 +54,11 @@ public final class QuadTree<T extends Bounded> {
 				insert(b);
 			}
 		}
+		built = true;
+	}
+
+	public boolean isBuilt() {
+		return built;
 	}
 
 	public void reset() {
