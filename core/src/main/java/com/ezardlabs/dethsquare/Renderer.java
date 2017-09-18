@@ -74,6 +74,11 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 		this.yOffset = yOffset;
 	}
 
+	public void setOffsets(Vector2 offsets) {
+		xOffset = offsets.x;
+		yOffset = offsets.y;
+	}
+
 	public void setTextureAtlas(TextureAtlas textureAtlas) {
 		textureName = textureAtlas.textureName;
 	}
