@@ -5,7 +5,22 @@ import com.ezardlabs.dethsquare.graphics.GraphicsEngine;
 
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
-public class Renderer extends Component implements Bounded {
+public class Renderer extends Component implements Bounded, Comparable<Renderer> {
+	/**
+	 * 0 - 1 (2 bits):		layer:
+	 * 							game = 0
+	 * 							game fullscreen effect = 1
+	 * 							HUD = 2
+	 * 							total fullscreen effect = 3
+	 * 2 - 5 (4 bits):		viewport
+	 * 6 - 7 (2 bits): 		translucency type (opaque, translucent (space for normal/additive/subtractive subtypes)):
+	 * 							opaque = 0
+	 * 							translucent = 1
+	 * 8 - 39 (32 bits):	depth
+	 * 40 - 63 (24 bits):	material ID
+	 */
+	private long key = 0;
+
 	public Sprite sprite = new Sprite(0, 0, 0, 0);
 	public float width;
 	public float height;
@@ -107,5 +122,10 @@ public class Renderer extends Component implements Bounded {
 	@Override
 	public GameObject getGameObject() {
 		return gameObject;
+	}
+
+	@Override
+	public int compareTo(Renderer r) {
+		return Long.compare(key, r.key);
 	}
 }
