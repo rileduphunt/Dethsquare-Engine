@@ -27,7 +27,7 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	public Sprite sprite = new Sprite(0, 0, 0, 0);
 	public float width;
 	public float height;
-	private int zIndex = 0;
+	private int depth = 0;
 	private final float[] tint = new float[3];
 	private final RectF bounds = new RectF();
 
@@ -90,9 +90,12 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 		tint[2] = blue;
 	}
 
-	public Renderer setzIndex(int zIndex) {
-		this.zIndex = zIndex;
-		return this;
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	public int getDepth() {
+		return depth;
 	}
 
 	protected float getXPos() {
@@ -101,10 +104,6 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 
 	protected float getYPos() {
 		return transform.position.y + yOffset;
-	}
-
-	protected int getZIndex() {
-		return zIndex;
 	}
 
 	@Override
