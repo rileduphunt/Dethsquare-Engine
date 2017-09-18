@@ -1,6 +1,6 @@
 package com.ezardlabs.dethsquare;
 
-interface Bounded {
+public interface Bounded {
 
 	RectF getBounds();
 
