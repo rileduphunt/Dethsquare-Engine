@@ -18,6 +18,9 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	 * 							translucent = 1
 	 * 8 - 39 (32 bits):	depth
 	 * 40 - 63 (24 bits):	material ID
+	 *
+	 * 00   	0000		00				00000000000000000000000000000000	000000000000000000000000
+	 * layer	viewport	translucency	depth								material ID
 	 */
 	private long key = 0;
 
