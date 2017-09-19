@@ -22,10 +22,10 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	 * 							opaque = 0
 	 * 							translucent = 1
 	 * 8 - 39 (32 bits):	depth
-	 * 40 - 63 (24 bits):	material ID
+	 * 40 - 63 (24 bits):	texture ID
 	 *
 	 * 00   	0000		00				00000000000000000000000000000000	000000000000000000000000
-	 * layer	viewport	translucency	depth								material ID
+	 * layer	viewport	translucency	depth								texture ID
 	 */
 	private long key = 0;
 
@@ -56,9 +56,17 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 		setTextureAtlas(textureAtlas);
 	}
 
+	public void setTextureName(int textureName) {
+		this.textureName = textureName;
+		// clear material section id key
+		key = key &~ 16777215L;
+		// set material section of key
+		key |= textureName;
+	}
+
 	public void setImage(String imagePath, float width, float height) {
 		int[] data = RENDER.loadImage(imagePath);
-		textureName = data[0];
+		setTextureName(data[0]);
 		this.width = width;
 		this.height = height;
 		sprite.u = sprite.v = 0;
@@ -85,11 +93,11 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	}
 
 	public void setTextureAtlas(TextureAtlas textureAtlas) {
-		textureName = textureAtlas.textureName;
+		setTextureName(textureAtlas.textureName);
 	}
 
 	public void setTextureAtlas(TextureAtlas textureAtlas, float spriteWidth, float spriteHeight) {
-		textureName = textureAtlas.textureName;
+		setTextureName(textureAtlas.textureName);
 		width = spriteWidth;
 		height = spriteHeight;
 	}
