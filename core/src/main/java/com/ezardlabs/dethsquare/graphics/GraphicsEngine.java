@@ -19,7 +19,6 @@ public class GraphicsEngine {
 	}
 
 	private static final TreeSet<Renderer> renderers = new TreeSet<>();
-	private static final ArrayList<Renderer> staticRenderers = new ArrayList<>();
 	private static final QuadTree<Renderer> qt = new QuadTree<>(30);
 
 	private static float[] vertices = new float[0];
