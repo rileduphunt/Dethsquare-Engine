@@ -136,11 +136,11 @@ public class GraphicsEngine {
 		if (vertices.length != verticesLength) {
 			vertices = new float[verticesLength];
 		}
-		/*vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos();
+		vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos();
 		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() + r.height;
-		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[(i * 12) + 11] = r.zIndex;
+		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[(i * 12) + 11] = r.getDepth();
 		vertices[(i * 12) + 4] = vertices[(i * 12) + 7] = r.getYPos();
-		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() + r.width;*/
+		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() + r.width;
 	}
 
 	private static void setupIndices(int i, int last) {
@@ -157,7 +157,7 @@ public class GraphicsEngine {
 		if (uvs.length != uvsLength) {
 			uvs = new float[uvsLength];
 		}
-		/*if (r.transform.scale.x < 0 && r.transform.scale.y < 0) {
+		if (r.transform.scale.x < 0 && r.transform.scale.y < 0) {
 			uvs[(i * 8) + 6] = r.sprite.u;
 			uvs[(i * 8) + 7] = r.sprite.v;
 			uvs[(i * 8) + 4] = r.sprite.u;
@@ -193,15 +193,15 @@ public class GraphicsEngine {
 			uvs[(i * 8) + 7] = r.sprite.v + r.sprite.h;
 			uvs[(i * 8) + 4] = r.sprite.u + r.sprite.w;
 			uvs[(i * 8) + 5] = r.sprite.v;
-		}*/
+		}
 	}
 
 	private static void setupColours(Renderer r, int i) {
 		if (colours.length != coloursLength) {
 			colours = new float[coloursLength];
 		}
-		/*colours[i * 3] = r.tint[0];
-		colours[i * 3 + 1] = r.tint[1];
-		colours[i * 3 + 2] = r.tint[2];*/
+		colours[i * 3] = r.getTint()[0];
+		colours[i * 3 + 1] = r.getTint()[1];
+		colours[i * 3 + 2] = r.getTint()[2];
 	}
 }
