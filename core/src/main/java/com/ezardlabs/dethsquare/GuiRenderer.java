@@ -20,4 +20,9 @@ public class GuiRenderer extends Renderer {
 	public boolean hitTest(Vector2 position) {
 		return hitTest(position.x, position.y);
 	}
+
+	@Override
+	protected byte getLayer() {
+		return 2;
+	}
 }
