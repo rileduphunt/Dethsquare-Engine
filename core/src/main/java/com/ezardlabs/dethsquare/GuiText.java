@@ -142,10 +142,11 @@ public class GuiText extends Component implements Bounded {
 
 			float width = (s.w / s.h) * fontSize;
 
+			GuiRenderer guiRenderer = new GuiRenderer(font, s, width, fontSize);
+			guiRenderer.setDepth(zIndex);
 			characters[i] = GameObject.instantiate(
-					new GameObject(String.valueOf(text.charAt(i)), new GuiRenderer(font, s, width, fontSize)),
+					new GameObject(String.valueOf(text.charAt(i)), guiRenderer),
 					new Vector2(transform.position.x + xOffset, transform.position.y));
-			characters[i].renderer.setDepth(zIndex);
 			characters[i].transform.setParent(transform);
 
 			xOffset += width + Screen.scale * 6.25f;
