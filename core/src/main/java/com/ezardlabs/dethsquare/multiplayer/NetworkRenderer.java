@@ -1,7 +1,7 @@
 package com.ezardlabs.dethsquare.multiplayer;
 
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
-import com.ezardlabs.dethsquare.Renderer;
+import com.ezardlabs.dethsquare.graphics.Renderer;
 
 import java.nio.ByteBuffer;
 

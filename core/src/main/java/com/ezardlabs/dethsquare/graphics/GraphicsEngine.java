@@ -2,7 +2,6 @@ package com.ezardlabs.dethsquare.graphics;
 
 import com.ezardlabs.dethsquare.Camera;
 import com.ezardlabs.dethsquare.QuadTree;
-import com.ezardlabs.dethsquare.Renderer;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.util.ArrayList;

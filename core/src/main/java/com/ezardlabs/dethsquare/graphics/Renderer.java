@@ -1,7 +1,12 @@
-package com.ezardlabs.dethsquare;
+package com.ezardlabs.dethsquare.graphics;
 
+import com.ezardlabs.dethsquare.Bounded;
+import com.ezardlabs.dethsquare.Component;
+import com.ezardlabs.dethsquare.GameObject;
+import com.ezardlabs.dethsquare.RectF;
+import com.ezardlabs.dethsquare.TextureAtlas;
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
-import com.ezardlabs.dethsquare.graphics.GraphicsEngine;
+import com.ezardlabs.dethsquare.Vector2;
 
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 

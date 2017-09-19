@@ -1,7 +1,7 @@
 package com.ezardlabs.dethsquare.animation;
 
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
-import com.ezardlabs.dethsquare.Renderer;
+import com.ezardlabs.dethsquare.graphics.Renderer;
 import com.ezardlabs.dethsquare.Script;
 
 import java.util.Iterator;

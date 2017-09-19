@@ -3,6 +3,7 @@ package com.ezardlabs.dethsquare;
 import com.ezardlabs.dethsquare.Collider.Collision;
 import com.ezardlabs.dethsquare.animation.Animator;
 import com.ezardlabs.dethsquare.graphics.GraphicsEngine;
+import com.ezardlabs.dethsquare.graphics.Renderer;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.io.Serializable;

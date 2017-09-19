@@ -1,5 +1,7 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.graphics.Renderer;
+
 public class GuiRenderer extends Renderer {
 
 	public GuiRenderer(String imagePath, float width, float height) {
