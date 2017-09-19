@@ -56,7 +56,7 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 		setTextureAtlas(textureAtlas);
 	}
 
-	public void setTextureName(int textureName) {
+	private void setTextureName(int textureName) {
 		this.textureName = textureName;
 		// clear material section id key
 		key = key &~ 16777215L;
