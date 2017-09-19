@@ -2,6 +2,7 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.Collider.Collision;
 import com.ezardlabs.dethsquare.animation.Animator;
+import com.ezardlabs.dethsquare.graphics.GraphicsEngine;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.io.Serializable;
@@ -474,9 +475,9 @@ public final class GameObject implements Serializable {
 		destroyedObjects.clear();
 		objectsWithChangedComponents.clear();
 		scripts.clear();
-		Renderer.clearAll();
-		Renderer.clearQuadTree();
-		Renderer.destroyAllTextures();
+		GraphicsEngine.clearAll();
+		GraphicsEngine.clearQuadTree();
+		GraphicsEngine.destroyAllTextures();
 		Collider.clearAll();
 		AUDIO.destroyAll();
 	}
