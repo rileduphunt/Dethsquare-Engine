@@ -5,7 +5,6 @@ import com.ezardlabs.dethsquare.QuadTree;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -30,8 +29,6 @@ public class GraphicsEngine {
 	private static int indicesLength = 0;
 	private static int uvsLength = 0;
 	private static int coloursLength = 0;
-
-	private static HashMap<Integer, ArrayList<Renderer>> map = new HashMap<>();
 
 	private static ArrayList<Renderer> visible = new ArrayList<>();
 
@@ -102,7 +99,6 @@ public class GraphicsEngine {
 	private static void render(ArrayList<Renderer> renderers, boolean gui) {
 		RENDER.setGuiRenderMode(gui);
 
-		map.clear();
 		renderers.parallelStream()
 				 .collect(Collectors.groupingBy(Renderer::getKey, TreeMap::new, Collectors.toList()))
 				 .forEach((key, renderersList) -> {
