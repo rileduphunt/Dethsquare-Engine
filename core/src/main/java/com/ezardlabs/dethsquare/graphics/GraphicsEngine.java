@@ -7,6 +7,7 @@ import com.ezardlabs.dethsquare.util.GameListeners;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -103,19 +104,15 @@ public class GraphicsEngine {
 		RENDER.setGuiRenderMode(gui);
 
 		map.clear();
-		for (int i = 0; i < renderers.size(); i++) {
-			if (map.size() == 0 || !map.containsKey(renderers.get(i).textureName)) {
-				map.put(renderers.get(i).textureName, new ArrayList<>());
-			}
-			map.get(renderers.get(i).textureName).add(renderers.get(i));
-		}
-		for (int i : map.keySet()) {
-			setupRenderData(map.get(i));
-			RENDER.render(i, vertices, uvs, indices, colours, map.get(i).size());
-		}
+		renderers.parallelStream()
+				 .collect(Collectors.groupingBy(Renderer::getKey, TreeMap::new, Collectors.toList()))
+				 .forEach((key, renderersList) -> {
+					 setupRenderData(renderersList);
+					 RENDER.render((int) (key & 16777215L), vertices, uvs, indices, colours, renderersList.size());
+				 });
 	}
 
-	private static void setupRenderData(ArrayList<Renderer> renderers) {
+	private static void setupRenderData(List<Renderer> renderers) {
 		int i = 0;
 		int last = 0;
 		Renderer r;
