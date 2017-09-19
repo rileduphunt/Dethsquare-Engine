@@ -45,7 +45,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 	private void setRendererData(Animation animation, int frame) {
 		gameObject.renderer.setSprite(animation.frames[frame]);
 		gameObject.renderer.setSize(animation.frameData[frame].getWidth(), animation.frameData[frame].getHeight());
-		gameObject.renderer.setOffset(animation.frameData[frame].getOffset(transform.scale.x));
+		gameObject.renderer.setOffsets(animation.frameData[frame].getOffset(transform.scale.x));
 	}
 
 	public void update() {
