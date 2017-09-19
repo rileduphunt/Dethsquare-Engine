@@ -2,6 +2,7 @@ package com.ezardlabs.dethsquare;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.TreeMap;
 
 @SuppressWarnings("unchecked")
@@ -23,7 +24,7 @@ public final class QuadTree<T extends Bounded> {
 		this.objects = new ArrayList<>(maxObjects);
 	}
 
-	public void build(ArrayList<T> objects) {
+	public void build(List<T> objects) {
 		float left = 0;
 		float top = 0;
 		float right = 0;
