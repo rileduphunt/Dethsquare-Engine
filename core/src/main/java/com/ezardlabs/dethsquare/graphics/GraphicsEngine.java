@@ -67,16 +67,16 @@ public class GraphicsEngine {
 		qt.build(staticRenderers);
 	}
 
-	static void clearAll() {
+	public static void clearAll() {
 		renderers.clear();
 //		guiRenderers.clear();
 	}
 
-	static void destroyAllTextures() {
+	public static void destroyAllTextures() {
 		RENDER.destroyAllTextures();
 	}
 
-	static void clearQuadTree() {
+	public static void clearQuadTree() {
 		qt.reset();
 	}
 
