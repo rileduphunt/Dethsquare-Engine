@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
@@ -19,7 +18,7 @@ public class GraphicsEngine {
 		GameListeners.addRenderListener(GraphicsEngine::render);
 	}
 
-	private static final TreeSet<Renderer> renderers = new TreeSet<>();
+	private static final ArrayList<Renderer> renderers = new ArrayList<>();
 	private static final QuadTree<Renderer> qt = new QuadTree<>(30);
 
 	private static float[] vertices = new float[0];
