@@ -112,6 +112,10 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 		return depth;
 	}
 
+	public float[] getTint() {
+		return tint;
+	}
+
 	protected float getXPos() {
 		return transform.position.x + xOffset;
 	}
