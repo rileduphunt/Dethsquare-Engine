@@ -45,15 +45,18 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 
 	public Renderer(String imagePath, float width, float height) {
 		setImage(imagePath, width, height);
+		setKeyLayer();
 	}
 
 	public Renderer(TextureAtlas textureAtlas, Sprite sprite, float width, float height) {
 		setTextureAtlas(textureAtlas, width, height);
 		this.sprite = sprite;
+		setKeyLayer();
 	}
 
 	public Renderer(TextureAtlas textureAtlas) {
 		setTextureAtlas(textureAtlas);
+		setKeyLayer();
 	}
 
 	public long getKey() {
@@ -134,6 +137,23 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 
 	protected float getYPos() {
 		return transform.position.y + yOffset;
+	}
+
+	private void setKeyLayer() {
+		byte layer = getLayer();
+		if (layer < 0 || layer > 3) {
+			throw new IllegalArgumentException("Layer must be between 0 and 3 inclusive");
+		} else {
+			// clear layer section of key
+			key = key &~ 0xC000000000000000L;
+			// set layer section of key
+			//noinspection NumericOverflow
+			key |= (long) layer << 62;
+		}
+	}
+
+	protected byte getLayer() {
+		return 0;
 	}
 
 	@Override
