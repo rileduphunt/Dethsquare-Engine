@@ -10,11 +10,6 @@ public class GuiRenderer extends Renderer {
 		super(textureAtlas, sprite, width, height);
 	}
 
-	@Override
-	protected int getZIndex() {
-		return super.getZIndex() + 1000000;
-	}
-
 	public boolean hitTest(float x, float y) {
 		return x > super.getXPos() * Screen.scale && x < (super.getXPos() + width) * Screen.scale &&
 				y > super.getYPos() * Screen.scale && y < (super.getYPos() + height) * Screen.scale;
