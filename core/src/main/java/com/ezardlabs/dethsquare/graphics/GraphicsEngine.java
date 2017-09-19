@@ -36,9 +36,7 @@ public class GraphicsEngine {
 	private static ArrayList<Renderer> visible = new ArrayList<>();
 
 	public static void register(Renderer renderer) {
-		if (renderer.gameObject.isStatic && !qt.isBuilt()) {
-			staticRenderers.add(renderer);
-		}
+		renderers.add(renderer);
 
 		verticesLength += 12;
 		indicesLength += 6;
@@ -47,6 +45,7 @@ public class GraphicsEngine {
 	}
 
 	public static void deregister(Renderer renderer) {
+		renderers.remove(renderer);
 
 		verticesLength -= 12;
 		indicesLength -= 6;
