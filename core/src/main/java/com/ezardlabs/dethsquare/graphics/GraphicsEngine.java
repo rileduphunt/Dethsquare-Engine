@@ -60,22 +60,10 @@ public class GraphicsEngine {
 												  .collect(Collectors.toList());
 		qt.build(staticRenderers);
 		renderers.removeAll(staticRenderers);
-		/*ArrayList<Renderer> staticRenderers = new ArrayList<>();
-		for (Renderer r : renderers.toArray(new Renderer[renderers.size()])) {
-			r.getBounds()
-			 .set(r.transform.position.x, r.transform.position.y, r.transform.position.x + r.width,
-					 r.transform.position.y + r.height);
-			if (r.gameObject.isStatic) {
-				staticRenderers.add(r);
-				renderers.remove(r);
-			}
-		}
-		qt.build(staticRenderers);*/
 	}
 
 	public static void clearAll() {
 		renderers.clear();
-//		guiRenderers.clear();
 	}
 
 	public static void destroyAllTextures() {
