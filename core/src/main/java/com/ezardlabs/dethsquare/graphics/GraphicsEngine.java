@@ -6,6 +6,7 @@ import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -53,12 +54,15 @@ public class GraphicsEngine {
 	}
 
 	public static void init() {
-		qt.build(renderers.parallelStream()
-						  .peek(r -> r.getBounds()
-									  .set(r.transform.position.x, r.transform.position.y,
-											  r.transform.position.x + r.width, r.transform.position.y + r.height))
-						  .filter(renderer -> renderer.gameObject.isStatic)
-						  .collect(Collectors.toList()));
+		List<Renderer> staticRenderers = renderers.parallelStream()
+												  .peek(r -> r.getBounds()
+															  .set(r.transform.position.x, r.transform.position.y,
+																	  r.transform.position.x + r.width,
+																	  r.transform.position.y + r.height))
+												  .filter(renderer -> renderer.gameObject.isStatic)
+												  .collect(Collectors.toList());
+		qt.build(staticRenderers);
+		renderers.removeAll(staticRenderers);
 		/*ArrayList<Renderer> staticRenderers = new ArrayList<>();
 		for (Renderer r : renderers.toArray(new Renderer[renderers.size()])) {
 			r.getBounds()
