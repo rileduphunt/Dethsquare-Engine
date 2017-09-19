@@ -113,7 +113,7 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 		// clear depth section of key
 		key = key &~ 72057594021150720L;
 		// set depth section
-		key &= ((long) depth) << 24;
+		key |= ((long) depth) << 24;
 	}
 
 	public int getDepth() {
