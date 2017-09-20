@@ -80,13 +80,10 @@ public class GraphicsEngine {
 
 		visible.addAll(renderers); // TODO only add renderers that are visible
 
-		render(visible, false);
-//		render(guiRenderers, true);
+		render(visible);
 	}
 
-	private static void render(ArrayList<Renderer> renderers, boolean gui) {
-		RENDER.setGuiRenderMode(gui);
-
+	private static void render(ArrayList<Renderer> renderers) {
 		renderers.parallelStream()
 				 .collect(Collectors.groupingBy(Renderer::getKey, TreeMap::new, Collectors.toList()))
 				 .forEach((key, renderersList) -> {
