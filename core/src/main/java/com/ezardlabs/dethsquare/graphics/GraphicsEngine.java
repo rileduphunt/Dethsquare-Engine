@@ -91,7 +91,7 @@ public class GraphicsEngine {
 				 .collect(Collectors.groupingBy(Renderer::getKey, TreeMap::new, Collectors.toList()))
 				 .forEach((key, renderersList) -> {
 					 setupRenderData(renderersList);
-					 RENDER.setGuiRenderMode(key >>> 62 > 1);
+					 RENDER.setGuiRenderMode(key >>> 61 > 1);
 					 RENDER.render((int) (key & 16777215L), vertices, uvs, indices, colours, renderersList.size());
 				 });
 	}

@@ -11,21 +11,25 @@ import com.ezardlabs.dethsquare.Vector2;
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
 public class Renderer extends Component implements Bounded, Comparable<Renderer> {
+	private static final int DEPTH_OFFSET = 100000;
+	private static final int MIN_DEPTH = -DEPTH_OFFSET;
+	private static final int MAX_DEPTH = DEPTH_OFFSET;
 	/**
-	 * 0 - 1 (2 bits):		layer:
+	 * 0 (1 bit):			ignored
+	 * 1 - 2 (2 bits):		layer:
 	 * 							game = 0
 	 * 							game fullscreen effect = 1
 	 * 							HUD = 2
 	 * 							total fullscreen effect = 3
-	 * 2 - 5 (4 bits):		viewport
+	 * 3 - 5 (3 bits):		viewport
 	 * 6 - 7 (2 bits): 		translucency type (opaque, translucent (space for normal/additive/subtractive subtypes)):
 	 * 							opaque = 0
 	 * 							translucent = 1
 	 * 8 - 39 (32 bits):	depth
 	 * 40 - 63 (24 bits):	texture ID
 	 *
-	 * 00   	0000		00				00000000000000000000000000000000	000000000000000000000000
-	 * layer	viewport	translucency	depth								texture ID
+	 * 0		00   	000			00				00000000000000000000000000000000	000000000000000000000000
+	 * ignored	layer	viewport	translucency	depth								texture ID
 	 */
 	private long key = 0;
 
@@ -116,11 +120,14 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	}
 
 	public void setDepth(int depth) {
-		this.depth = depth;
+		if (depth < MIN_DEPTH || depth > MAX_DEPTH) {
+			throw new IllegalArgumentException("Depth must be between " + MIN_DEPTH + " and " + MAX_DEPTH);
+		}
+		this.depth = depth + DEPTH_OFFSET;
 		// clear depth section of key
 		key = key &~ 72057594021150720L;
 		// set depth section
-		key |= Integer.toUnsignedLong(depth) << 24;
+		key |= Integer.toUnsignedLong(this.depth) << 24;
 	}
 
 	public int getDepth() {
@@ -145,10 +152,10 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 			throw new IllegalArgumentException("Layer must be between 0 and 3 inclusive");
 		} else {
 			// clear layer section of key
-			key = key &~ 0xC000000000000000L;
+			key = key &~ 6917529027641081856L;
 			// set layer section of key
 			//noinspection NumericOverflow
-			key |= (long) layer << 62;
+			key |= (long) layer << 61;
 		}
 	}
 
