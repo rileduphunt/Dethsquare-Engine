@@ -15,21 +15,71 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	private static final int MIN_DEPTH = -DEPTH_OFFSET;
 	private static final int MAX_DEPTH = DEPTH_OFFSET;
 	/**
-	 * 0 (1 bit):			ignored
-	 * 1 - 2 (2 bits):		layer:
-	 * 							game = 0
-	 * 							game fullscreen effect = 1
-	 * 							HUD = 2
-	 * 							total fullscreen effect = 3
-	 * 3 - 5 (3 bits):		viewport
-	 * 6 - 7 (2 bits): 		translucency type (opaque, translucent (space for normal/additive/subtractive subtypes)):
-	 * 							opaque = 0
-	 * 							translucent = 1
-	 * 8 - 39 (32 bits):	depth
-	 * 40 - 63 (24 bits):	texture ID
-	 *
-	 * 0		00   	000			00				00000000000000000000000000000000	000000000000000000000000
-	 * ignored	layer	viewport	translucency	depth								texture ID
+	 * <table cellspacing="10">
+	 *     <tr>
+	 *         <td>0 (1 bit):</td>
+	 *         <td>ignored</td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>1 - 2 (2 bits):</td>
+	 *         <td>layer:</td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td></td>
+	 *         <td>
+	 *             <ul style="list-style:none">
+	 *                 <li>game = 0</li>
+	 *                 <li>game fullscreen effect = 1</li>
+	 *                 <li>HUD = 2</li>
+	 *                 <li>total fullscreen effect = 3</li>
+	 *             </ul>
+	 *         </td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>3 - 5 (3 bits):</td>
+	 *         <td>viewport</td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>6 - 7 (2 bits):</td>
+	 *         <td>translucency type (opaque, translucent (space for normal/additive/subtractive subtypes)):</td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td></td>
+	 *         <td>
+	 *             <ul>
+	 *                 <li>opaque = 0</li>
+	 *                 <li>translucent = 1</li>
+	 *             </ul>
+	 *         </td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>8 - 39 (32 bits):</td>
+	 *         <td>depth</td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>40 - 63 (24 bits):</td>
+	 *         <td>texture ID</td>
+	 *     </tr>
+	 * </table>
+	 * <br/><br/>
+	 * <table cellspacing="10">
+	 *     <tr>
+	 *         <td>0</td>
+	 *         <td>00</td>
+	 *         <td>000</td>
+	 *         <td>00</td>
+	 *         <td>00000000000000000000000000000000</td>
+	 *         <td>000000000000000000000000</td>
+	 *     </tr>
+	 *     <tr>
+	 *         <td>ignored</td>
+	 *         <td>layer</td>
+	 *         <td>viewport</td>
+	 *         <td>translucency</td>
+	 *         <td>depth</td>
+	 *         <td>texture ID</td>
+	 *     </tr>
+	 * </table>
 	 */
 	private long key = 0;
 
