@@ -85,6 +85,7 @@ public class GraphicsEngine {
 
 	private static void render(ArrayList<Renderer> renderers) {
 		renderers.parallelStream()
+				 .filter(renderer -> renderer.gameObject.isActive())
 				 .collect(Collectors.groupingBy(Renderer::getKey, TreeMap::new, Collectors.toList()))
 				 .forEach((key, renderersList) -> {
 					 setupRenderData(renderersList);
