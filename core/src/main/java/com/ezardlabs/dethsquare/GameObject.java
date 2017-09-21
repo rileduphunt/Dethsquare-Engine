@@ -37,11 +37,6 @@ public final class GameObject implements Serializable {
 	 */
 	private static final ArrayList<GameObject> objects = new ArrayList<>();
 	/**
-	 * List of all {@link Script Scripts} (interactive {@link Component Components}) in the
-	 * game world
-	 */
-//	private static final ArrayList<Script> scripts = new ArrayList<>();
-	/**
 	 * Structure containing all tags currently in use in the game world
 	 */
 	private static final HashMap<String, ArrayList<GameObject>> tags = new HashMap<>();
