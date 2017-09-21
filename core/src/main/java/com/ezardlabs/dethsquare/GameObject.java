@@ -356,6 +356,7 @@ public final class GameObject implements Serializable {
 
 	/**
 	 * Sets the layer that this {@link GameObject} is in
+	 *
 	 * @param layer The layer that this {@link GameObject} should be in. Must be in the range [0..31]
 	 */
 	public void setLayer(int layer) {
@@ -368,6 +369,7 @@ public final class GameObject implements Serializable {
 
 	/**
 	 * Gets the layer that this {@link GameObject} is in
+	 *
 	 * @return The layer that this {@link GameObject} is in
 	 */
 	public int getLayer() {
@@ -376,6 +378,7 @@ public final class GameObject implements Serializable {
 
 	/**
 	 * Gets the layer mask for this {@link GameObject}
+	 *
 	 * @return This {@link GameObject}'s layer mask
 	 */
 	public int getLayerMask() {
@@ -384,6 +387,7 @@ public final class GameObject implements Serializable {
 
 	/**
 	 * Activates/deactivates this {@link GameObject}
+	 *
 	 * @param active Whether to activate or deactivate this {@link GameObject}
 	 */
 	public void setActive(boolean active) {
@@ -393,6 +397,7 @@ public final class GameObject implements Serializable {
 	/**
 	 * Whether or not this {@link GameObject} is active. Note that the {@link GameObject} will only be treated as
 	 * active in the game world iff it is active and all parent {@link GameObject GameObjects} are active
+	 *
 	 * @return Whether or not this {@link GameObject} is active
 	 */
 	public boolean isActiveSelf() {
@@ -403,6 +408,7 @@ public final class GameObject implements Serializable {
 	 * Whether or not this {@link GameObject} is active and all of its parent {@link GameObject GameObjects} are
 	 * active. Note that the {@link GameObject} will only be treated as active in the game world iff it is active and
 	 * all parent {@link GameObject GameObjects} are active
+	 *
 	 * @return Whether or not this {@link GameObject} is active and all of its parent {@link GameObject GameObjects}
 	 * are active
 	 */
