@@ -12,7 +12,7 @@ public final class Transform extends Component {
 	public Vector2 scale = new Vector2(1, 1);
 
 	private Transform parent;
-	private ArrayList<Transform> children = new ArrayList<>();
+	ArrayList<Transform> children = new ArrayList<>();
 
 	Transform() {
 		position.setVector2ChangeListener(new Vector2ChangeListener() {

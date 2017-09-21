@@ -40,7 +40,7 @@ public final class GameObject implements Serializable {
 	 * List of all {@link Script Scripts} (interactive {@link Component Components}) in the
 	 * game world
 	 */
-	private static final ArrayList<Script> scripts = new ArrayList<>();
+//	private static final ArrayList<Script> scripts = new ArrayList<>();
 	/**
 	 * Structure containing all tags currently in use in the game world
 	 */
@@ -74,6 +74,10 @@ public final class GameObject implements Serializable {
 	 * List of {@link Component Components} currently attached to this {@link GameObject}
 	 */
 	private final ArrayList<Component> components = new ArrayList<>();
+	/**
+	 * List of {@link Script Scripts} currently attached to this {@link GameObject}
+	 */
+	private final ArrayList<Script> scripts = new ArrayList<>();
 	/**
 	 * List of {@link Component Components} that have been added to this {@link GameObject} since last frame
 	 */
@@ -111,6 +115,10 @@ public final class GameObject implements Serializable {
 	 * Whether or not this {@link GameObject} has been instantiated yet
 	 */
 	private boolean instantiated = false;
+	/**
+	 * Whether or not this {@link GameObject} is active
+	 */
+	private boolean active = true;
 
 	public GameObject() {
 		this(null);
@@ -375,6 +383,38 @@ public final class GameObject implements Serializable {
 	}
 
 	/**
+	 * Activates/deactivates this {@link GameObject}
+	 * @param active Whether to activate or deactivate this {@link GameObject}
+	 */
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	/**
+	 * Whether or not this {@link GameObject} is active. Note that the {@link GameObject} will only be treated as
+	 * active in the game world iff it is active and all parent {@link GameObject GameObjects} are active
+	 * @return Whether or not this {@link GameObject} is active
+	 */
+	public boolean isActiveSelf() {
+		return active;
+	}
+
+	/**
+	 * Whether or not this {@link GameObject} is active and all of its parent {@link GameObject GameObjects} are
+	 * active. Note that the {@link GameObject} will only be treated as active in the game world iff it is active and
+	 * all parent {@link GameObject GameObjects} are active
+	 * @return Whether or not this {@link GameObject} is active and all of its parent {@link GameObject GameObjects}
+	 * are active
+	 */
+	public boolean isActive() {
+		if (transform.getParent() != null) {
+			return active && transform.getParent().gameObject.isActive();
+		} else {
+			return active;
+		}
+	}
+
+	/**
 	 * Called when another {@link Collider} has entered this {@link GameObject GameObject's} trigger {@link Collider}
 	 *
 	 * @param collider The other {@link Collider} that has entered this {@link GameObject GameObject's} trigger {@link Collider}
@@ -389,6 +429,14 @@ public final class GameObject implements Serializable {
 		for (int i = 0; i < components.size(); i++) {
 			components.get(i).onCollision(collision);
 		}
+	}
+
+	private void update() {
+		scripts.forEach(Script::update);
+		transform.children.stream()
+						  .filter(child -> child.gameObject.active)
+						  .map(child -> child.gameObject)
+						  .forEachOrdered(GameObject::update);
 	}
 
 	/**
@@ -465,9 +513,7 @@ public final class GameObject implements Serializable {
 	private static void updateAll() {
 		handleCreationDestruction();
 
-		for (int i = 0; i < scripts.size(); i++) {
-			scripts.get(i).update();
-		}
+		objects.stream().filter(gameObject -> gameObject.active).forEach(GameObject::update);
 	}
 
 	static void destroyAll() {
@@ -475,7 +521,6 @@ public final class GameObject implements Serializable {
 		newObjects.clear();
 		destroyedObjects.clear();
 		objectsWithChangedComponents.clear();
-		scripts.clear();
 		GraphicsEngine.clearAll();
 		GraphicsEngine.clearQuadTree();
 		GraphicsEngine.destroyAllTextures();
@@ -502,9 +547,6 @@ public final class GameObject implements Serializable {
 			if (gameObject != null) {
 				for (Component c : gameObject.components) {
 					c.destroy();
-					if (c instanceof Script) {
-						scripts.remove(c);
-					}
 				}
 			}
 		}
@@ -518,9 +560,6 @@ public final class GameObject implements Serializable {
 		for (Class clazz : go.removedComponents) {
 			for (Component c : go.components.toArray(new Component[go.components.size()])) {
 				if (c.getClass().equals(clazz)) {
-					if (c instanceof Script) {
-						scripts.remove(c);
-					}
 					if (c instanceof Renderer) {
 						go.renderer = null;
 					} else if (c instanceof Animator) {
@@ -532,6 +571,9 @@ public final class GameObject implements Serializable {
 					}
 					go.components.remove(c);
 				}
+				if (c instanceof Script) {
+					go.scripts.remove(c);
+				}
 			}
 		}
 		go.removedComponents.clear();
@@ -540,9 +582,6 @@ public final class GameObject implements Serializable {
 	private static ArrayList<Component> handleNewComponents(GameObject go) {
 		ArrayList<Component> temp = new ArrayList<>();
 		for (Component component : go.newComponents) {
-			if (component instanceof Script) {
-				scripts.add((Script) component);
-			}
 			if (component instanceof Transform) {
 				go.transform = (Transform) component;
 			} else if (component instanceof Renderer) {
@@ -553,6 +592,9 @@ public final class GameObject implements Serializable {
 				go.collider = (Collider) component;
 			} else if (component instanceof Rigidbody) {
 				go.rigidbody = (Rigidbody) component;
+			}
+			if (component instanceof Script) {
+				go.scripts.add((Script) component);
 			}
 			component.gameObject = go;
 			component.transform = go.transform;
