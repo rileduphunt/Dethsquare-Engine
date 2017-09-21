@@ -9,9 +9,7 @@ import java.util.ArrayList;
 public class DesktopIOUtils implements IOUtils {
 
 	public BufferedReader getReader(String path) {
-		InputStream is = getInputStream(path);
-		if (is == null) throw new NullPointerException("InputStream for path " + path + " is null");
-		return new BufferedReader(new InputStreamReader(is));
+		return new BufferedReader(new InputStreamReader(getInputStream(path)));
 	}
 
 	public String[] listFileNames(String dirPath) {
