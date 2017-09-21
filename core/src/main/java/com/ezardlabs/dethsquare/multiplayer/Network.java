@@ -175,16 +175,7 @@ public class Network {
 		networkIdCounter = playerId * (Integer.MAX_VALUE / 4) + 1;
 		for (MatchmakingPlayer player : game.getPlayers()) {
 			if (player.getId() != playerId) {
-				udpAddresses[player.getId()] = new InetSocketAddress(player.getIp(), player.getUdpPort());
-				udpOut.setAddresses(udpAddresses);
-				try {
-					System.out.println("Attempting to connect to TCP port " + player.getTcpPort());
-					tcpOut[player.getId()] = new TCPWriter(new Socket(player.getIp(), player.getTcpPort()));
-					tcpOut[player.getId()].start();
-				} catch (IOException e) {
-					// TODO add proper error handling
-					e.printStackTrace();
-				}
+				addPlayer(player);
 			}
 		}
 		GameListeners.addUpdateListener(Network::update);
