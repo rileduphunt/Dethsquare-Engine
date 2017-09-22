@@ -32,7 +32,7 @@ project(':core') {
 
     dependencies {
         compile project(":$platform")
-        compile group: 'org.json', name: 'json', version: '20160810'
+        compile group: 'org.json', name: 'json', version: '20170516'
     }
 }
 
