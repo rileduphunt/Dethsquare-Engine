@@ -571,9 +571,9 @@ public final class GameObject implements Serializable {
 						go.rigidbody = null;
 					}
 					go.components.remove(c);
-				}
-				if (c instanceof Script) {
-					go.scripts.remove(c);
+					if (c instanceof Script) {
+						go.scripts.remove(c);
+					}
 				}
 			}
 		}
