@@ -33,9 +33,9 @@ public final class GameObject implements Serializable {
 	 */
 	private static final ArrayList<GameObject> destroyedObjects = new ArrayList<>();
 	/**
-	 * List of all {@link GameObject GameObjects} currently in the game world
+	 * Root of all {@link GameObject GameObjects} currently in the game world
 	 */
-	private static final ArrayList<GameObject> objects = new ArrayList<>();
+	static final GameObject rootObject = new GameObject("<root>");
 	/**
 	 * Structure containing all tags currently in use in the game world
 	 */
@@ -497,6 +497,16 @@ public final class GameObject implements Serializable {
 		}.start();
 	}
 
+	private void searchDestroyNetworked(int networkId) {
+		if (this.networkId == networkId) {
+			destroy(this);
+		} else if (!transform.children.isEmpty()) {
+			for (Transform child : transform.children) {
+				child.gameObject.searchDestroyNetworked(networkId);
+			}
+		}
+	}
+
 	/**
 	 * Removes the {@link GameObject} with the given network ID from the game world
 	 *
@@ -504,7 +514,7 @@ public final class GameObject implements Serializable {
 	 */
 	public static void destroy(int networkId) {
 		if (networkId < 0) return;
-		objects.stream().filter(go -> go.networkId == networkId).forEach(GameObject::destroy);
+		rootObject.searchDestroyNetworked(networkId);
 	}
 
 	static void startAll() {
@@ -514,11 +524,11 @@ public final class GameObject implements Serializable {
 	private static void updateAll() {
 		handleCreationDestruction();
 
-		objects.stream().filter(gameObject -> gameObject.active).forEach(GameObject::update);
+		rootObject.update();
 	}
 
 	static void destroyAll() {
-		objects.clear();
+		rootObject.transform.children.clear();
 		newObjects.clear();
 		destroyedObjects.clear();
 		objectsWithChangedComponents.clear();
@@ -549,9 +559,9 @@ public final class GameObject implements Serializable {
 				for (Component c : gameObject.components) {
 					c.destroy();
 				}
+				gameObject.transform.parent.children.remove(gameObject.transform);
 			}
 		}
-		objects.removeAll(destroyedObjects);
 		newObjects.removeAll(destroyedObjects);
 		objectsWithChangedComponents.removeAll(destroyedObjects);
 		destroyedObjects.clear();
@@ -609,7 +619,9 @@ public final class GameObject implements Serializable {
 	private static void handleCreationDestruction() {
 		handleDestruction();
 
-		objects.addAll(newObjects);
+		newObjects.parallelStream()
+				  .filter(gameObject -> gameObject.transform.parent == null)
+				  .forEachOrdered(gameObject -> gameObject.transform.setParent(rootObject.transform));
 
 		ArrayList<Component> temp = new ArrayList<>();
 

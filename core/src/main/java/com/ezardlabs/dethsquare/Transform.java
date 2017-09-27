@@ -11,7 +11,7 @@ public final class Transform extends Component {
 	public Vector2 position = new Vector2();
 	public Vector2 scale = new Vector2(1, 1);
 
-	private Transform parent;
+	Transform parent;
 	ArrayList<Transform> children = new ArrayList<>();
 
 	Transform(GameObject gameObject) {
@@ -37,7 +37,7 @@ public final class Transform extends Component {
 	}
 
 	public Transform getParent() {
-		return parent;
+		return parent == null || parent.gameObject == GameObject.rootObject ? null : parent;
 	}
 
 	public void addChild(Transform child) {
