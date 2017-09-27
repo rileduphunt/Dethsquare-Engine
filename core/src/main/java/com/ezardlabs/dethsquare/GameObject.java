@@ -433,7 +433,11 @@ public final class GameObject implements Serializable {
 	}
 
 	private void update() {
-		scripts.forEach(Script::update);
+		if (Time.isPaused()) {
+			scripts.stream().filter(script -> script.runWhenPaused).forEach(Script::update);
+		} else {
+			scripts.forEach(Script::update);
+		}
 		transform.children.stream()
 						  .filter(child -> child.gameObject.active)
 						  .map(child -> child.gameObject)

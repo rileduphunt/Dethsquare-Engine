@@ -20,6 +20,10 @@ public final class Time {
 	}
 
 	/**
+	 * Whether or not the game is paused
+	 */
+	private static boolean paused = false;
+	/**
 	 * The time in seconds it took to complete the last frame
 	 */
 	public static float deltaTime;
@@ -31,4 +35,26 @@ public final class Time {
 	 * The time at the beginning of this frame. This is the time in seconds since the start of the game
 	 */
 	public static float time;
+
+	/**
+	 * Pause the game
+	 */
+	public static void pause() {
+		paused = true;
+	}
+
+	/**
+	 * Resume the game
+	 */
+	public static void resume() {
+		paused = false;
+	}
+
+	/**
+	 * Returns whether or not the game is currently paused
+	 * @return whether or not the game is currently paused
+	 */
+	public static boolean isPaused() {
+		return paused;
+	}
 }
