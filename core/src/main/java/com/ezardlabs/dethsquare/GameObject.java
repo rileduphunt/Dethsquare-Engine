@@ -630,6 +630,7 @@ public final class GameObject implements Serializable {
 
 	private GameObject copy() {
 		GameObject gameObject = new GameObject(name, isStatic, transform);
+		transform.gameObject = gameObject;
 		Stream.concat(components.stream(), newComponents.stream()).forEach(c -> {
 			if (!(c instanceof Transform)) gameObject.addComponent(c);
 		});
