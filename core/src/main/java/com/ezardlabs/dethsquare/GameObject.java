@@ -620,12 +620,11 @@ public final class GameObject implements Serializable {
 		}
 
 		objectsWithChangedComponents.clear();
+		newObjects.clear();
 
 		for (Component component : temp) {
 			component.internalStart();
 		}
-
-		newObjects.clear();
 	}
 
 	private GameObject copy() {
