@@ -14,7 +14,8 @@ public final class Transform extends Component {
 	private Transform parent;
 	ArrayList<Transform> children = new ArrayList<>();
 
-	Transform() {
+	Transform(GameObject gameObject) {
+		this.gameObject = gameObject;
 		position.setVector2ChangeListener(new Vector2ChangeListener() {
 			@Override
 			public void onVector2Changed(float xDiff, float yDiff) {

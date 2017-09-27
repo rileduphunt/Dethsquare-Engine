@@ -84,7 +84,7 @@ public final class GameObject implements Serializable {
 	/**
 	 * Fast access to this {@link GameObject}'s {@link Transform} component
 	 */
-	public Transform transform = new Transform();
+	public Transform transform = new Transform(this);
 	/**
 	 * Fast access to this {@link GameObject}'s {@link Animator} component
 	 */
