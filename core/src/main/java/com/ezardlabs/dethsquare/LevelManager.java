@@ -17,6 +17,7 @@ public class LevelManager {
 		if (loadingLevel) {
 			throw new IllegalStateException("Cannot load a level whilst another level is being loaded");
 		}
+		Time.pause();
 		loadingLevel = true;
 		currentLevelName = name;
 
@@ -31,6 +32,7 @@ public class LevelManager {
 		loadingLevel = false;
 
 		Input.clearAll();
+		Time.resume();
 	}
 
 	public static Level getCurrentLevel() {
