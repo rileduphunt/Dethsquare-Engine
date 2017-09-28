@@ -31,7 +31,8 @@ public final class GameObject implements Serializable {
 	/**
 	 * List of all {@link GameObject GameObjects} to be destroyed at the end of the current frame
 	 */
-	private static final ArrayList<GameObject> destroyedObjects = new ArrayList<>();
+	private static final HashMap<Long, GameObject> destroyedObjects = new HashMap<>();
+//	private static final ArrayList<GameObject> destroyedObjects = new ArrayList<>();
 	/**
 	 * Root of all {@link GameObject GameObjects} currently in the game world
 	 */
@@ -114,6 +115,10 @@ public final class GameObject implements Serializable {
 	 * Whether or not this {@link GameObject} is active
 	 */
 	private boolean active = true;
+	/**
+	 * Method that is run when this {@link GameObject} is destroyed
+	 */
+	private Runnable destructionCallback = null;
 
 	public GameObject() {
 		this(null);
@@ -479,7 +484,7 @@ public final class GameObject implements Serializable {
 	 * @param gameObject The {@link GameObject} to remove from the game world
 	 */
 	public static void destroy(GameObject gameObject) {
-		destroyedObjects.add(gameObject);
+		destroy(gameObject, 0);
 	}
 
 	/**
@@ -488,17 +493,13 @@ public final class GameObject implements Serializable {
 	 * @param gameObject The {@link GameObject} to remove from the game world
 	 * @param delay      The time period to wait before the given {@link GameObject} is destroyed
 	 */
-	public static void destroy(final GameObject gameObject, final long delay) {
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(delay);
-				} catch (InterruptedException ignored) {
-				}
-				destroyedObjects.add(gameObject);
-			}
-		}.start();
+	public static void destroy(GameObject gameObject, long delay) {
+		destroy(gameObject, delay, null);
+	}
+
+	public static void destroy(GameObject gameObject, long delay, Runnable callback) {
+		gameObject.destructionCallback = callback;
+		destroyedObjects.put(System.nanoTime() + delay * 1000000L, gameObject);
 	}
 
 	private void searchDestroyNetworked(int networkId) {
@@ -558,17 +559,25 @@ public final class GameObject implements Serializable {
 	}
 
 	private static void handleDestruction() {
-		for (GameObject gameObject : destroyedObjects.toArray(new GameObject[destroyedObjects.size()])) {
-			if (gameObject != null) {
-				for (Component c : gameObject.components) {
-					c.destroy();
-				}
-				gameObject.transform.parent.children.remove(gameObject.transform);
-			}
-		}
-		newObjects.removeAll(destroyedObjects);
-		objectsWithChangedComponents.removeAll(destroyedObjects);
-		destroyedObjects.clear();
+		destroyedObjects.entrySet()
+						.stream()
+						.filter(entry -> entry.getKey() <= System.nanoTime())
+						.forEachOrdered(entry -> {
+							GameObject gameObject = entry.getValue();
+							if (gameObject != null) {
+								for (Component c : gameObject.components) {
+									c.destroy();
+								}
+								gameObject.transform.parent.children.remove(gameObject.transform);
+								newObjects.remove(gameObject);
+								objectsWithChangedComponents.remove(gameObject);
+								if (gameObject.destructionCallback != null) {
+									gameObject.destructionCallback.run();
+								}
+								entry.setValue(null);
+							}
+						});
+		destroyedObjects.entrySet().removeIf(entry -> entry.getValue() == null);
 	}
 
 	private static void handleRemovedComponents(GameObject go) {
