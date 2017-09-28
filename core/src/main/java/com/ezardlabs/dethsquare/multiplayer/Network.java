@@ -22,8 +22,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.regex.Pattern;
 
 public class Network {
@@ -457,21 +455,20 @@ public class Network {
 
 	public static void destroy(GameObject gameObject) {
 		GameObject.destroy(gameObject);
+		handleGameObjectDestruction(gameObject);
+	}
+
+	public static void destroy(GameObject gameObject, long delay) {
+		GameObject.destroy(gameObject, delay, () -> handleGameObjectDestruction(gameObject));
+	}
+
+	private static void handleGameObjectDestruction(GameObject gameObject) {
 		networkObjects.remove(gameObject.networkId);
 		for (TCPWriter writer : tcpOut) {
 			if (writer != null) {
 				writer.sendMessage(DESTROY, String.valueOf(gameObject.networkId));
 			}
 		}
-	}
-
-	public static void destroy(GameObject gameObject, long delay) {
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				destroy(gameObject);
-			}
-		}, delay);
 	}
 
 	private static void processDestruction(String message) throws IOException {
