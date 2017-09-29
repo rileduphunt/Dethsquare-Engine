@@ -5,7 +5,6 @@ import com.ezardlabs.dethsquare.debug.DebugGraphic;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -189,7 +188,7 @@ public class DesktopRenderUtils implements RenderUtils {
 
 	@Override
 	public int loadShaderProgram(String path) {
-		return loadShaderProgram(path + File.separator + "vert.glsl", path + File.separator + "frag.glsl");
+		return loadShaderProgram(path + "/vert.glsl", path + "/frag.glsl");
 	}
 
 	@Override
