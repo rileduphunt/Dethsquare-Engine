@@ -13,12 +13,17 @@ public final class Time {
 			public void onUpdate() {
 				long now = System.currentTimeMillis();
 				deltaTime = now - last;
+				fpsScaling60 = frameTime60fps / deltaTime;
 				last = now;
 				frameCount++;
 			}
 		});
 	}
 
+	/**
+	 * Amount of time that a single frame of a game running at 60fps should take
+	 */
+	private static final float frameTime60fps = 1000f / 60f;
 	/**
 	 * Whether or not the game is paused
 	 */
@@ -27,6 +32,10 @@ public final class Time {
 	 * The time in seconds it took to complete the last frame
 	 */
 	public static float deltaTime;
+	/**
+	 * Multiply movement quantities by this amount so that it scales with a variable frame rate
+	 */
+	public static float fpsScaling60;
 	/**
 	 * The total number of frames that have passed
 	 */
@@ -52,6 +61,7 @@ public final class Time {
 
 	/**
 	 * Returns whether or not the game is currently paused
+	 *
 	 * @return whether or not the game is currently paused
 	 */
 	public static boolean isPaused() {
