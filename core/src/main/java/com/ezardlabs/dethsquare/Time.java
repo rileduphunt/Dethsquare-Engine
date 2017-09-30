@@ -7,13 +7,13 @@ public final class Time {
 	static {
 		// Add hook into game loop
 		GameListeners.addUpdateListener(new UpdateListener() {
-			long last = 0;
+			long last = System.currentTimeMillis();
 
 			@Override
 			public void onUpdate() {
 				long now = System.currentTimeMillis();
 				deltaTime = now - last;
-				fpsScaling60 = frameTime60fps / deltaTime;
+				fpsScaling60 = deltaTime / frameTime60fps;
 				last = now;
 				frameCount++;
 			}
@@ -31,11 +31,11 @@ public final class Time {
 	/**
 	 * The time in seconds it took to complete the last frame
 	 */
-	public static float deltaTime;
+	public static float deltaTime = frameTime60fps;
 	/**
 	 * Multiply movement quantities by this amount so that it scales with a variable frame rate
 	 */
-	public static float fpsScaling60;
+	public static float fpsScaling60 = deltaTime / frameTime60fps;
 	/**
 	 * The total number of frames that have passed
 	 */

@@ -6,9 +6,13 @@ public final class Rigidbody extends Script {
 
 	@Override
 	public void update() {
-		velocity.y += gravity;
-		if (velocity.y > 78.125f) velocity.y = 78.125f;
+		if (Time.frameCount > 5) {
+			velocity.y += gravity * Time.fpsScaling60;
+			if (velocity.y > 78.125f) velocity.y = 78.125f;
 
-		transform.translate(velocity.x, velocity.y);
+//			if ("Player".equals(gameObject.name)) System.out.println(velocity.y + ", " + Time.deltaTime + ", " + Time.fpsScaling60);
+
+			transform.translate(velocity.x * Time.fpsScaling60, velocity.y * Time.fpsScaling60);
+		}
 	}
 }

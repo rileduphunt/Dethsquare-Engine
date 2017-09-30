@@ -187,12 +187,12 @@ public final class Collider extends Component implements Bounded {
 					if (y > 0 && bounds.bottom > c.bounds.top) {
 						transform.position.y = c.bounds.top - bounds.height() - offset.y;
 						gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
-								CollisionLocation.BOTTOM, y));
+								CollisionLocation.BOTTOM, y / Time.fpsScaling60));
 					} else if (y < 0 && bounds.top < c.bounds.bottom) {
 						transform.position.y = c.bounds.bottom - offset.y;
 						if (transform.position.y != lastBounds.top) {
 							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
-									CollisionLocation.TOP, y));
+									CollisionLocation.TOP, y / Time.fpsScaling60));
 						}
 					}
 					if (gameObject.rigidbody != null) {
@@ -210,13 +210,13 @@ public final class Collider extends Component implements Bounded {
 						transform.position.x = c.bounds.left - bounds.width() - offset.x;
 						if (transform.position.x != lastBounds.left) {
 							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
-									CollisionLocation.RIGHT, x));
+									CollisionLocation.RIGHT, x / Time.fpsScaling60));
 						}
 					} else if (x < 0 && bounds.left < c.bounds.right) {
 						transform.position.x = c.bounds.right - offset.x;
 						if (transform.position.x != lastBounds.left) {
 							gameObject.onCollision(new Collision(c, c.gameObject, c.transform, c.gameObject.rigidbody,
-									CollisionLocation.LEFT, x));
+									CollisionLocation.LEFT, x / Time.fpsScaling60));
 						}
 					}
 					if (gameObject.rigidbody != null) {
