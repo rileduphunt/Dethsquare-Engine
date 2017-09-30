@@ -40,6 +40,10 @@ public class StateMachine<T extends Enum> {
 		return state;
 	}
 
+	public void setState(T state) {
+		this.state = state;
+	}
+
 	public static class Transition<T> {
 		private final T targetState;
 		private final Condition condition;
