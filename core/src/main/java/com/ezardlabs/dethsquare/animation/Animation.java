@@ -18,7 +18,7 @@ public final class Animation {
 			AnimationListener listener) {
 		this.name = name;
 		this.frames = frames;
-		this.type = (AnimationType) type.clone();
+		this.type = type.clone();
 		this.frameData = frameData;
 		this.listener = listener;
 	}
