@@ -26,6 +26,11 @@ public abstract class Launcher implements GameListeners {
 				((UpdateListener) o).onUpdate();
 			}
 		}
+		if (!postUpdateListeners.isEmpty()) {
+			for (Object o : postUpdateListeners.toArray()) {
+				((PostUpdateListener) o).onPostUpdate();
+			}
+		}
 	}
 
 	protected final void render() {

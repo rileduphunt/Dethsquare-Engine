@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public interface GameListeners {
 	ArrayList<UpdateListener> updateListeners = new ArrayList<>();
+	ArrayList<PostUpdateListener> postUpdateListeners = new ArrayList<>();
 	ArrayList<RenderListener> renderListeners = new ArrayList<>();
 	ArrayList<ResizeListener> resizeListeners = new ArrayList<>();
 	ArrayList<MouseListener> mouseListeners = new ArrayList<>();
@@ -28,6 +29,14 @@ public interface GameListeners {
 
 	static void removeUpdateListener(UpdateListener updateListener) {
 		updateListeners.remove(updateListener);
+	}
+
+	static void addPostUpdateListener(PostUpdateListener postUpdateListener) {
+		postUpdateListeners.add(postUpdateListener);
+	}
+
+	static void removePostUpdateListener(PostUpdateListener postUpdateListener) {
+		postUpdateListeners.remove(postUpdateListener);
 	}
 
 	static void addRenderListener(RenderListener renderListener) {
@@ -72,6 +81,10 @@ public interface GameListeners {
 
 	interface UpdateListener {
 		void onUpdate();
+	}
+
+	interface PostUpdateListener {
+		void onPostUpdate();
 	}
 
 	interface RenderListener {
