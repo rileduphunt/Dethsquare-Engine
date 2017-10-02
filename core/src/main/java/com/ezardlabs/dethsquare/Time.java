@@ -12,7 +12,8 @@ public final class Time {
 			@Override
 			public void onUpdate() {
 				long now = System.currentTimeMillis();
-				deltaTime = now - last;
+				deltaTime = now - last - pauseTime;
+				pauseTime = 0;
 				fpsScaling60 = deltaTime / frameTime60fps;
 				last = now;
 				frameCount++;
@@ -28,6 +29,14 @@ public final class Time {
 	 * Whether or not the game is paused
 	 */
 	private static boolean paused = false;
+	/**
+	 * The time at which the game was paused
+	 */
+	private static long pauseStartTime = 0;
+	/**
+	 * The amount of time that the game has been paused for
+	 */
+	private static long pauseTime = 0;
 	/**
 	 * The time in seconds it took to complete the last frame
 	 */
@@ -50,6 +59,7 @@ public final class Time {
 	 */
 	public static void pause() {
 		paused = true;
+		pauseStartTime = System.currentTimeMillis();
 	}
 
 	/**
@@ -57,6 +67,7 @@ public final class Time {
 	 */
 	public static void resume() {
 		paused = false;
+		pauseTime = System.currentTimeMillis() - pauseStartTime;
 	}
 
 	/**
