@@ -87,7 +87,11 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	public float width;
 	public float height;
 	private int depth = 0;
-	private final float[] tint = new float[3];
+	private final float[] tint = {
+			1,
+			1,
+			1
+	};
 	private final RectF bounds = new RectF();
 
 	public int textureName = -1;
