@@ -38,7 +38,7 @@ public class GraphicsEngine {
 		verticesLength += 12;
 		indicesLength += 6;
 		uvsLength += 8;
-		coloursLength += 3;
+		coloursLength += 48;
 	}
 
 	public static void deregister(Renderer renderer) {
@@ -47,7 +47,7 @@ public class GraphicsEngine {
 		verticesLength -= 12;
 		indicesLength -= 6;
 		uvsLength -= 8;
-		coloursLength -= 3;
+		coloursLength -= 12;
 	}
 
 	public static void init() {
@@ -182,8 +182,8 @@ public class GraphicsEngine {
 		if (colours.length != coloursLength) {
 			colours = new float[coloursLength];
 		}
-		colours[i * 3] = r.getTint()[0];
-		colours[i * 3 + 1] = r.getTint()[1];
-		colours[i * 3 + 2] = r.getTint()[2];
+		colours[i * 12] = colours[i * 12 + 3] = colours[i * 12 + 6] = colours[i * 12 + 9] = r.getTint()[0];
+		colours[i * 12 + 1] = colours[i * 12 + 4] = colours[i * 12 + 7] = colours[i * 12 + 10] = r.getTint()[1];
+		colours[i * 12 + 2] = colours[i * 12 + 5] = colours[i * 12 + 8] = colours[i * 12 + 11] = r.getTint()[2];
 	}
 }
