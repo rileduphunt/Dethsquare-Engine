@@ -7,7 +7,7 @@ public class GuiText extends Component implements Bounded {
 	private String text;
 	private TextureAtlas font;
 	private float fontSize;
-	private int zIndex;
+	private int depth;
 	private float spaceWidth;
 	private float letterSpacing = -1;
 	private float totalWidth = -1;
@@ -19,20 +19,20 @@ public class GuiText extends Component implements Bounded {
 		this(text, font, fontSize, -1, 0);
 	}
 
-	public GuiText(String text, TextureAtlas font, float fontSize, int zIndex) {
-		this(text, font, fontSize, -1, zIndex);
+	public GuiText(String text, TextureAtlas font, float fontSize, int depth) {
+		this(text, font, fontSize, -1, depth);
 	}
 
 	public GuiText(String text, TextureAtlas font, float fontSize, float letterSpacing) {
 		this(text, font, fontSize, letterSpacing, 0);
 	}
 
-	public GuiText(String text, TextureAtlas font, float fontSize, float letterSpacing, int zIndex) {
+	public GuiText(String text, TextureAtlas font, float fontSize, float letterSpacing, int depth) {
 		this.text = text;
 		this.font = font;
 		this.fontSize = fontSize;
 		this.letterSpacing = letterSpacing;
-		this.zIndex = zIndex;
+		this.depth = depth;
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class GuiText extends Component implements Bounded {
 
 			if (characters[i] == null) {
 				GuiRenderer guiRenderer = new GuiRenderer(font, s, width, fontSize);
-				guiRenderer.setDepth(zIndex);
+				guiRenderer.setDepth(depth);
 				characters[i] = GameObject.instantiate(new GameObject(String.valueOf(text.charAt(i)), guiRenderer),
 						new Vector2(transform.position.x + xOffset, transform.position.y));
 				characters[i].transform.setParent(transform);
