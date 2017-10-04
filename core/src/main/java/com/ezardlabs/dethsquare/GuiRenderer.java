@@ -13,8 +13,7 @@ public class GuiRenderer extends Renderer {
 	}
 
 	public boolean hitTest(float x, float y) {
-		return x > super.getXPos() * Screen.scale && x < (super.getXPos() + width) * Screen.scale &&
-				y > super.getYPos() * Screen.scale && y < (super.getYPos() + height) * Screen.scale;
+		return getBounds().contains(x, y);
 	}
 
 	public boolean hitTest(Vector2 position) {

@@ -40,6 +40,9 @@ public class GuiText extends Component implements Bounded {
 		started = true;
 		calculateSpaceWidth();
 		generateRenderers();
+		if ("Menu Option".equals(gameObject.name)) {
+			System.out.println(bounds);
+		}
 	}
 
 	@Override
@@ -200,8 +203,7 @@ public class GuiText extends Component implements Bounded {
 	}
 
 	public boolean hitTest(float x, float y) {
-		return x > transform.position.x * Screen.scale && x < (transform.position.x + totalWidth) * Screen.scale &&
-				y > transform.position.y * Screen.scale && y < (transform.position.y + fontSize) * Screen.scale;
+		return bounds.contains(x, y);
 	}
 
 	public boolean hitTest(Vector2 position) {
