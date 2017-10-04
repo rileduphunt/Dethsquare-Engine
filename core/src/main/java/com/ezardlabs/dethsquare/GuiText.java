@@ -9,19 +9,29 @@ public class GuiText extends Component implements Bounded {
 	private float fontSize;
 	private int zIndex;
 	private float spaceWidth;
+	private float letterSpacing = -1;
 	private float totalWidth = -1;
 	public GameObject[] characters = new GameObject[0];
 
 	private boolean started = false;
 
 	public GuiText(String text, TextureAtlas font, float fontSize) {
-		this(text, font, fontSize, 0);
+		this(text, font, fontSize, -1, 0);
 	}
 
 	public GuiText(String text, TextureAtlas font, float fontSize, int zIndex) {
+		this(text, font, fontSize, -1, zIndex);
+	}
+
+	public GuiText(String text, TextureAtlas font, float fontSize, float letterSpacing) {
+		this(text, font, fontSize, letterSpacing, 0);
+	}
+
+	public GuiText(String text, TextureAtlas font, float fontSize, float letterSpacing, int zIndex) {
 		this.text = text;
 		this.font = font;
 		this.fontSize = fontSize;
+		this.letterSpacing = letterSpacing;
 		this.zIndex = zIndex;
 	}
 
@@ -97,9 +107,9 @@ public class GuiText extends Component implements Bounded {
 			}
 			if (shouldContinue || s == null) continue;
 
-			width += (s.w / s.h) * fontSize + Screen.scale * 6.25f;
+			width += (s.w / s.h) * fontSize + getLetterSpacing();
 		}
-		width -= Screen.scale * 6.25f;
+		width -= getLetterSpacing();
 		totalWidth = width;
 		return width;
 	}
@@ -164,9 +174,9 @@ public class GuiText extends Component implements Bounded {
 			}
 			characters[i].setActive(true);
 
-			xOffset += width + Screen.scale * 6.25f;
+			xOffset += width + getLetterSpacing();
 		}
-		totalWidth = xOffset - Screen.scale * 6.25f;
+		totalWidth = xOffset - getLetterSpacing();
 
 		bounds.set(transform.position.x, transform.position.y, transform.position.x + xOffset,
 				transform.position.y + fontSize);
@@ -179,6 +189,14 @@ public class GuiText extends Component implements Bounded {
 			total += (s.w / s.h) * fontSize;
 		}
 		spaceWidth = total / chars.length;
+	}
+
+	private float getLetterSpacing() {
+		if (letterSpacing >= 0) {
+			return letterSpacing;
+		} else {
+			return Screen.scale * 6.25f;
+		}
 	}
 
 	public boolean hitTest(float x, float y) {
