@@ -91,6 +91,10 @@ public final class TextureAtlas {
 		return mapPath;
 	}
 
+	public static void clearCache() {
+		cache.clear();
+	}
+
 	public static class Sprite {
 		public float u;
 		public float v;

@@ -540,6 +540,7 @@ public final class GameObject implements Serializable {
 		GraphicsEngine.clearAll();
 		GraphicsEngine.clearQuadTree();
 		GraphicsEngine.destroyAllTextures();
+		TextureAtlas.clearCache();
 		Collider.clearAll();
 		AUDIO.destroyAll();
 	}
