@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
@@ -173,7 +174,9 @@ public class DesktopLauncher extends Launcher {
 
 	private void setIcon() {
 		try {
-			BufferedImage image = ImageIO.read(ClassLoader.getSystemResourceAsStream("icon.png"));
+			InputStream is = ClassLoader.getSystemResourceAsStream("icon.png");
+			if (is == null) return;
+			BufferedImage image = ImageIO.read(is);
 
 			ByteBuffer buffer = ByteBuffer.allocateDirect(image.getWidth() * image.getHeight() * 4);
 			int counter = 0;
