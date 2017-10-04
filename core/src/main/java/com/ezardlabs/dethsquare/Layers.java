@@ -86,7 +86,7 @@ public class Layers {
 	public static int getLayer(String name) {
 		if (name == null) return -1;
 		for (int i = 0; i < LAYERS.length; i++) {
-			if (name.equals(LAYERS[i])) {
+			if (name.equalsIgnoreCase(LAYERS[i])) {
 				return i;
 			}
 		}
