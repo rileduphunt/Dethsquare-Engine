@@ -8,7 +8,7 @@ import static com.ezardlabs.dethsquare.util.Dethsquare.IO;
 import static com.ezardlabs.dethsquare.util.Dethsquare.RENDER;
 
 public final class TextureAtlas {
-	private static final HashMap<String, TextureAtlas> mapping = new HashMap<>();
+	private static final HashMap<String, TextureAtlas> cache = new HashMap<>();
 	private final String imagePath;
 	private final String mapPath;
 	private final HashMap<String, Sprite> atlas = new HashMap<>();
@@ -30,11 +30,11 @@ public final class TextureAtlas {
 
 	private static TextureAtlas load(String imagePath, String mapPath, int tileWidth, int tileHeight) {
 		String key = imagePath + mapPath;
-		if (mapping.containsKey(key)) {
-			return mapping.get(key);
+		if (cache.containsKey(key)) {
+			return cache.get(key);
 		} else {
 			TextureAtlas ta = new TextureAtlas(imagePath, mapPath, tileWidth, tileHeight);
-			mapping.put(key, ta);
+			cache.put(key, ta);
 			return ta;
 		}
 	}
