@@ -90,6 +90,7 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 	private final float[] tint = {
 			1,
 			1,
+			1,
 			1
 	};
 	private final RectF bounds = new RectF();
@@ -171,6 +172,13 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 		tint[0] = red;
 		tint[1] = green;
 		tint[2] = blue;
+	}
+
+	public void setTint(float red, float green, float blue, float alpha) {
+		tint[0] = red;
+		tint[1] = green;
+		tint[2] = blue;
+		tint[3] = alpha;
 	}
 
 	public void setDepth(int depth) {

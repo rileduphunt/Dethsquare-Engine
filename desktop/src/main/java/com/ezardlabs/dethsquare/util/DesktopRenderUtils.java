@@ -260,7 +260,7 @@ public class DesktopRenderUtils implements RenderUtils {
 
 		glBindBuffer(GL_ARRAY_BUFFER, colourBuffer);
 		glBufferData(GL_ARRAY_BUFFER, colours, GL_DYNAMIC_DRAW);
-		glVertexAttribPointer(colourLoc, 3, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(colourLoc, 4, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(colourLoc);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
