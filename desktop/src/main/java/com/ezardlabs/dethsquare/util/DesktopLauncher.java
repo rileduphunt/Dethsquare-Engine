@@ -2,10 +2,16 @@ package com.ezardlabs.dethsquare.util;
 
 import com.ezardlabs.dethsquare.util.Dethsquare.Platform;
 
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 import static org.lwjgl.glfw.GLFW.GLFW_DECORATED;
 import static org.lwjgl.glfw.GLFW.GLFW_DOUBLEBUFFER;
@@ -81,6 +87,7 @@ import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowCloseCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowIcon;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwShowWindow;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -126,6 +133,8 @@ public class DesktopLauncher extends Launcher {
 			}
 		});
 
+		setIcon();
+
 		glfwSetCursorPosCallback(window, (window, xPos, yPos) -> {
 			mouseListeners.forEach(mouseListener -> mouseListener.onMove((int) xPos, (int) yPos));
 		});
@@ -160,6 +169,38 @@ public class DesktopLauncher extends Launcher {
 		init();
 
 		setupCompleted = true;
+	}
+
+	private void setIcon() {
+		try {
+			BufferedImage image = ImageIO.read(ClassLoader.getSystemResourceAsStream("icon.png"));
+
+			ByteBuffer buffer = ByteBuffer.allocateDirect(image.getWidth() * image.getHeight() * 4);
+			int counter = 0;
+			for (int i = 0; i < image.getHeight(); i++) {
+				for (int j = 0; j < image.getWidth(); j++) {
+					final int c = image.getRGB(j, i);
+					buffer.put(counter, (byte) (c << 8 >> 24));
+					buffer.put(counter, (byte) (c << 8 >> 24));
+					buffer.put(counter + 1, (byte) (c << 16 >> 24));
+					buffer.put(counter + 2, (byte) (c << 24 >> 24));
+					buffer.put(counter + 3, (byte) (c >> 24));
+					counter += 4;
+				}
+			}
+
+			GLFWImage icon = GLFWImage.malloc();
+			icon.set(image.getWidth(), image.getHeight(), buffer);
+			GLFWImage.Buffer images = GLFWImage.malloc(1);
+			images.put(0, icon);
+
+			glfwSetWindowIcon(window, images);
+
+			icon.free();
+			images.free();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void initKeyMap() {
