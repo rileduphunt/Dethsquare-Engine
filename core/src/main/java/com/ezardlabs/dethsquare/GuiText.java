@@ -107,13 +107,23 @@ public class GuiText extends Component implements Bounded {
 	private void generateRenderers() {
 		if (text == null) text = "";
 
-		for (GameObject go : characters) {
+		if (text.length() < characters.length) {
+			for (int i = text.length(); i < characters.length; i++) {
+				characters[i].setActive(false);
+			}
+		} else if (text.length() > characters.length) {
+			GameObject[] temp = new GameObject[text.length()];
+			System.arraycopy(characters, 0, temp, 0, characters.length);
+			characters = temp;
+		}
+
+		/*for (GameObject go : characters) {
 			if (go != null) {
 				GameObject.destroy(go);
 			}
-		}
+		}*/
 
-		characters = new GameObject[text.length()];
+//		characters = new GameObject[text.length()];
 
 		Sprite s;
 		float xOffset = 0;
@@ -142,12 +152,17 @@ public class GuiText extends Component implements Bounded {
 
 			float width = (s.w / s.h) * fontSize;
 
-			GuiRenderer guiRenderer = new GuiRenderer(font, s, width, fontSize);
-			guiRenderer.setDepth(zIndex);
-			characters[i] = GameObject.instantiate(
-					new GameObject(String.valueOf(text.charAt(i)), guiRenderer),
-					new Vector2(transform.position.x + xOffset, transform.position.y));
-			characters[i].transform.setParent(transform);
+			if (characters[i] == null) {
+				GuiRenderer guiRenderer = new GuiRenderer(font, s, width, fontSize);
+				guiRenderer.setDepth(zIndex);
+				characters[i] = GameObject.instantiate(new GameObject(String.valueOf(text.charAt(i)), guiRenderer),
+						new Vector2(transform.position.x + xOffset, transform.position.y));
+				characters[i].transform.setParent(transform);
+			} else {
+				//noinspection ConstantConditions
+				characters[i].getComponent(GuiRenderer.class).setSprite(s);
+			}
+			characters[i].setActive(true);
 
 			xOffset += width + Screen.scale * 6.25f;
 		}
