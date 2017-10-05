@@ -40,9 +40,6 @@ public class GuiText extends Component implements Bounded {
 		started = true;
 		calculateSpaceWidth();
 		generateRenderers();
-		if ("Menu Option".equals(gameObject.name)) {
-			System.out.println(bounds);
-		}
 	}
 
 	@Override
