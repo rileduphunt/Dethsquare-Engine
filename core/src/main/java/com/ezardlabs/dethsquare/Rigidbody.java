@@ -10,8 +10,6 @@ public final class Rigidbody extends Script {
 			velocity.y += gravity * Time.fpsScaling60;
 			if (velocity.y > 78.125f) velocity.y = 78.125f;
 
-//			if ("Player".equals(gameObject.name)) System.out.println(velocity.y + ", " + Time.deltaTime + ", " + Time.fpsScaling60);
-
 			transform.translate(velocity.x * Time.fpsScaling60, velocity.y * Time.fpsScaling60);
 		}
 	}
