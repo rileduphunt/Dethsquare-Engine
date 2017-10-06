@@ -4,6 +4,7 @@ import com.ezardlabs.dethsquare.Bounded;
 import com.ezardlabs.dethsquare.Component;
 import com.ezardlabs.dethsquare.GameObject;
 import com.ezardlabs.dethsquare.RectF;
+import com.ezardlabs.dethsquare.Screen;
 import com.ezardlabs.dethsquare.TextureAtlas;
 import com.ezardlabs.dethsquare.TextureAtlas.Sprite;
 import com.ezardlabs.dethsquare.Vector2;
@@ -237,7 +238,8 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 
 	@Override
 	public RectF getBounds() {
-		bounds.set(getXPos(), getYPos(), getXPos() + width, getYPos() + height);
+		bounds.set(getXPos() * Screen.scale, getYPos() * Screen.scale, (getXPos() + width) * Screen.scale,
+				(getYPos() + height) * Screen.scale);
 		return bounds;
 	}
 
