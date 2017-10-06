@@ -178,7 +178,7 @@ public class GuiText extends Component implements Bounded {
 		}
 		totalWidth = xOffset - getLetterSpacing();
 
-		bounds.set(transform.position.x, transform.position.y, transform.position.x + xOffset,
+		bounds.set(transform.position.x, transform.position.y, transform.position.x + totalWidth,
 				transform.position.y + fontSize);
 	}
 
