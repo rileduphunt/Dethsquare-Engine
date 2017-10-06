@@ -93,7 +93,7 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 			1,
 			1
 	};
-	private final RectF bounds = new RectF();
+	protected final RectF bounds = new RectF();
 
 	public int textureName = -1;
 	public float xOffset;
@@ -237,6 +237,7 @@ public class Renderer extends Component implements Bounded, Comparable<Renderer>
 
 	@Override
 	public RectF getBounds() {
+		bounds.set(getXPos(), getYPos(), getXPos() + width, getYPos() + height);
 		return bounds;
 	}
 

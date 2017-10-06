@@ -2,6 +2,7 @@ package com.ezardlabs.dethsquare.graphics;
 
 import com.ezardlabs.dethsquare.Camera;
 import com.ezardlabs.dethsquare.QuadTree;
+import com.ezardlabs.dethsquare.RectF;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.util.ArrayList;
@@ -118,11 +119,12 @@ public class GraphicsEngine {
 		if (vertices.length != verticesLength) {
 			vertices = new float[verticesLength];
 		}
-		vertices[(i * 12)] = vertices[(i * 12) + 3] = r.getXPos();
-		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = r.getYPos() + r.height;
+		RectF bounds = r.getBounds();
+		vertices[(i * 12)] = vertices[(i * 12) + 3] = bounds.left;
+		vertices[(i * 12) + 1] = vertices[(i * 12) + 10] = bounds.bottom;
 		vertices[(i * 12) + 2] = vertices[(i * 12) + 5] = vertices[(i * 12) + 8] = vertices[(i * 12) + 11] = r.getDepth();
-		vertices[(i * 12) + 4] = vertices[(i * 12) + 7] = r.getYPos();
-		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = r.getXPos() + r.width;
+		vertices[(i * 12) + 4] = vertices[(i * 12) + 7] = bounds.top;
+		vertices[(i * 12) + 6] = vertices[(i * 12) + 9] = bounds.right;
 	}
 
 	private static void setupIndices(int i, int last) {

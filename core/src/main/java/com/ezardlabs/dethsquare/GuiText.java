@@ -200,7 +200,7 @@ public class GuiText extends Component implements Bounded {
 	}
 
 	public boolean hitTest(float x, float y) {
-		return bounds.contains(x, y);
+		return getBounds().contains(x, y);
 	}
 
 	public boolean hitTest(Vector2 position) {
@@ -209,6 +209,10 @@ public class GuiText extends Component implements Bounded {
 
 	@Override
 	public RectF getBounds() {
+		bounds.set(transform.position.x * GuiRenderer.referenceScreenScale,
+				transform.position.y * GuiRenderer.referenceScreenScale,
+				(transform.position.x + totalWidth) * GuiRenderer.referenceScreenScale,
+				(transform.position.y + fontSize) * GuiRenderer.referenceScreenScale);
 		return bounds;
 	}
 
