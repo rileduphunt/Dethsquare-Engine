@@ -248,7 +248,7 @@ public class TMXLoader {
 					gid = childNodes.item(i).getAttributes().getNamedItem("id");
 				}
 //				mapTiles[i / 2] = new Tile(Integer.parseInt(gid.getNodeValue()));
-				arrTiles.add(new Tile(Integer.parseUnsignedInt(gid.getNodeValue())));
+				arrTiles.add(new Tile(gid == null ? 0 : Integer.parseUnsignedInt(gid.getNodeValue())));
 			}
 		}
 		return arrTiles.toArray(new Tile[layerWidth * layerHeight]);
