@@ -439,9 +439,9 @@ public final class GameObject implements Serializable {
 
 	private void update() {
 		if (Time.isPaused()) {
-			scripts.stream().filter(script -> script.runWhenPaused).forEach(Script::update);
+			scripts.stream().filter(script -> script.enabled && script.runWhenPaused).forEach(Script::update);
 		} else {
-			scripts.forEach(Script::update);
+			scripts.stream().filter(script -> script.enabled).forEach(Script::update);
 		}
 		transform.children.stream()
 						  .filter(child -> child.gameObject.active)

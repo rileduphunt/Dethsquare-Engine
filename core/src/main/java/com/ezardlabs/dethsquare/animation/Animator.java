@@ -13,7 +13,6 @@ public final class Animator extends Script implements Iterable<Animation> {
 	private int frame = -2;
 	private long nextFrameTime = 0;
 	private boolean finished = false;
-	public boolean shouldUpdate = true;
 
 	public Animator(Animation... animations) {
 		this.animations = animations;
@@ -49,10 +48,6 @@ public final class Animator extends Script implements Iterable<Animation> {
 	}
 
 	public void update() {
-		if (!shouldUpdate) {
-			if (index == -1 || frame == -1) return;
-			return;
-		}
 		int startFrame = frame;
 		if (index == -1 || frame == -1) return;
 		int tempFrame;
