@@ -129,28 +129,40 @@ public class DesktopAudioUtils implements AudioUtils {
 	}
 
 	public void play(int id) {
-		alSourcePlay(audio.get(id));
+		if (audio.containsKey(id)) {
+			alSourcePlay(audio.get(id));
+		}
 	}
 
 	public void pause(int id) {
-		alSourcePause(audio.get(id));
+		if (audio.containsKey(id)) {
+			alSourcePause(audio.get(id));
+		}
 	}
 
 	public void stop(int id) {
-		alSourceStop(audio.get(id));
+		if (audio.containsKey(id)) {
+			alSourceStop(audio.get(id));
+		}
 	}
 
 	public void setLoop(int id, boolean loop) {
-		alSourcei(audio.get(id), AL_LOOPING, loop ? 1 : 0);
+		if (audio.containsKey(id)) {
+			alSourcei(audio.get(id), AL_LOOPING, loop ? 1 : 0);
+		}
 	}
 
 	public void setVolume(int id, float volume) {
-		alSourcef(audio.get(id), AL_GAIN, volume);
+		if (audio.containsKey(id)) {
+			alSourcef(audio.get(id), AL_GAIN, volume);
+		}
 	}
 
 	@Override
 	public void setAudioPosition(int id, float x, float y) {
-		alSource3f(audio.get(id), AL_POSITION, x, y, 0);
+		if (audio.containsKey(id)) {
+			alSource3f(audio.get(id), AL_POSITION, x, y, 0);
+		}
 	}
 
 	@Override
@@ -159,7 +171,9 @@ public class DesktopAudioUtils implements AudioUtils {
 	}
 
 	public void destroy(int id) {
-		alDeleteSources(audio.remove(id));
+		if (audio.containsKey(id)) {
+			alDeleteSources(audio.remove(id));
+		}
 	}
 
 	public void destroyAll() {
