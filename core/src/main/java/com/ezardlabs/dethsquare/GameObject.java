@@ -543,6 +543,7 @@ public final class GameObject implements Serializable {
 		TextureAtlas.clearCache();
 		Collider.clearAll();
 		AUDIO.destroyAll();
+		AudioManager.clearAll();
 	}
 
 	/**

@@ -67,4 +67,8 @@ public class AudioManager {
 			throw new IllegalArgumentException("Volume must be between 0 and 1 inclusive");
 		}
 	}
+
+	static void clearAll() {
+		audioSources.clear();
+	}
 }
