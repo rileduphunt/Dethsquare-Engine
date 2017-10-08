@@ -71,7 +71,9 @@ public final class AudioSource extends Script {
 
 	@Override
 	public void update() {
-		Dethsquare.AUDIO.setAudioPosition(current, transform.position.x, transform.position.y);
+		if (current != -1) {
+			Dethsquare.AUDIO.setAudioPosition(current, transform.position.x, transform.position.y);
+		}
 	}
 
 	@Override
