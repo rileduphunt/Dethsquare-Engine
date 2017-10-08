@@ -13,6 +13,9 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_HIDDEN;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
 import static org.lwjgl.glfw.GLFW.GLFW_DECORATED;
 import static org.lwjgl.glfw.GLFW.GLFW_DOUBLEBUFFER;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
@@ -83,6 +86,7 @@ import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowCloseCallback;
@@ -100,11 +104,14 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class DesktopLauncher extends Launcher {
+	private static DesktopLauncher instance;
 	private final long window;
 	private final HashMap<Integer, String> keyMap = new HashMap<>();
 	private boolean setupCompleted = false;
 
 	public DesktopLauncher() {
+		instance = this;
+
 		glfwInit();
 
 		glfwSetErrorCallback(
@@ -331,5 +338,9 @@ public class DesktopLauncher extends Launcher {
 
 			glfwSwapBuffers(window);
 		}
+	}
+
+	public static void setCursorVisible(boolean visible) {
+		glfwSetInputMode(instance.window, GLFW_CURSOR, visible ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 	}
 }

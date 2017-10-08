@@ -1,6 +1,8 @@
 package com.ezardlabs.dethsquare;
 
+import com.ezardlabs.dethsquare.util.DesktopLauncher;
 import com.ezardlabs.dethsquare.util.Dethsquare;
+import com.ezardlabs.dethsquare.util.Dethsquare.Platform;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 public final class Screen {
@@ -31,5 +33,11 @@ public final class Screen {
 		Screen.scale = (float) Screen.width / 1920f;
 		Dethsquare.RENDER.setScreenSize(Screen.width, Screen.height);
 		Dethsquare.RENDER.setScale(Screen.scale);
+	}
+
+	public static void setCursorVisible(boolean visible) {
+		if (Dethsquare.PLATFORM == Platform.DESKTOP) {
+			DesktopLauncher.setCursorVisible(visible);
+		}
 	}
 }
