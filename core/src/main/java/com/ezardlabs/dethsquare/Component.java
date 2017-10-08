@@ -22,6 +22,10 @@ public class Component {
 	 * attached to (null if there is none attached)
 	 */
 	public Transform transform;
+	/**
+	 * Whether or not this {@link Component} is enabled
+	 */
+	public boolean enabled = true;
 
 	void internalStart() {
 		for (Annotation a : getClass().getAnnotations()) {
