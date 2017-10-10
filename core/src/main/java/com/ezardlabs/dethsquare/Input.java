@@ -168,7 +168,7 @@ public final class Input {
 		ALPHA_8,
 		ALPHA_9,
 		SPACE,
-		RETURN,
+		ENTER,
 		ESCAPE,
 		BACKSPACE,
 		DELETE,
