@@ -153,8 +153,7 @@ public class DesktopLauncher extends Launcher {
 			}
 		});
 
-		glfwSetWindowSizeCallback(window, (window, width, height) -> resizeListeners
-				.forEach(resizeListener -> resizeListener.onResize(width, height)));
+		glfwSetWindowSizeCallback(window, (window, width, height) -> onResize(width, height));
 
 		glfwSetWindowCloseCallback(window, window -> Dethsquare.AUDIO.shutdown());
 

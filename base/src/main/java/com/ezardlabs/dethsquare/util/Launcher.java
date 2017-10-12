@@ -38,10 +38,12 @@ public abstract class Launcher implements GameListeners {
 	}
 
 	protected final void onResize(int width, int height) {
-		screenSize.width = width;
-		screenSize.height = height;
-		for (ResizeListener resizeListener : resizeListeners) {
-			resizeListener.onResize(width, height);
+		if (width > 0 && height > 0) {
+			screenSize.width = width;
+			screenSize.height = height;
+			for (ResizeListener resizeListener : resizeListeners) {
+				resizeListener.onResize(width, height);
+			}
 		}
 	}
 }
