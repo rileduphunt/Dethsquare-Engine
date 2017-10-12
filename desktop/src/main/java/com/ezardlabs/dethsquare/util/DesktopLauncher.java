@@ -138,9 +138,8 @@ public class DesktopLauncher extends Launcher {
 
 		setIcon();
 
-		glfwSetCursorPosCallback(window, (window, xPos, yPos) -> {
-			mouseListeners.forEach(mouseListener -> mouseListener.onMove((int) xPos, (int) yPos));
-		});
+		glfwSetCursorPosCallback(window, (window, xPos, yPos) -> mouseListeners.forEach(
+				mouseListener -> mouseListener.onMove((int) xPos, (int) yPos)));
 
 		glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
 			int index = getMouseButtonIndex(button);
