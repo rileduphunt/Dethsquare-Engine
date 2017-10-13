@@ -41,7 +41,6 @@ class UPnPManager {
 	private static final String IP = "239.255.255.250";
 	private static final int PORT = 1900;
 	private static final String[] SEARCH_TYPES = {"urn:schemas-upnp-org:device:InternetGatewayDevice:1", "urn:schemas-upnp-org:service:WANIPConnection:1", "urn:schemas-upnp-org:service:WANPPPConnection:1"};
-	private static String location;
 	private static String baseUrl;
 	private static ArrayList<String[]> services = new ArrayList<>();
 
@@ -118,28 +117,7 @@ class UPnPManager {
 
 							String data = new String(receivedData);
 
-							StringTokenizer st = new StringTokenizer(data, "\n");
-
-							while (st.hasMoreTokens()) {
-								String line = st.nextToken().trim();
-
-								if (line.isEmpty()) continue;
-
-								if (line.startsWith("HTTP/1.") || line.startsWith("NOTIFY *")) continue;
-
-								String key = line.substring(0, line.indexOf(':'));
-								String value =
-										line.length() > key.length() + 1 ? line.substring(key.length() + 1) : null;
-
-								key = key.trim();
-								if (value != null) {
-									value = value.trim();
-								}
-
-								if (key.compareToIgnoreCase("location") == 0) {
-									location = value;
-								}
-							}
+							String location = getLocation(data);
 
 							URLConnection conn = new URL(location).openConnection();
 
@@ -168,6 +146,32 @@ class UPnPManager {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+
+		private String getLocation(String data) {
+			StringTokenizer st = new StringTokenizer(data, "\n");
+
+			while (st.hasMoreTokens()) {
+				String line = st.nextToken().trim();
+
+				if (line.isEmpty()) continue;
+
+				if (line.startsWith("HTTP/1.") || line.startsWith("NOTIFY *")) continue;
+
+				String key = line.substring(0, line.indexOf(':'));
+				String value =
+						line.length() > key.length() + 1 ? line.substring(key.length() + 1) : null;
+
+				key = key.trim();
+				if (value != null) {
+					value = value.trim();
+				}
+
+				if (key.compareToIgnoreCase("location") == 0) {
+					return value;
+				}
+			}
+			return null;
 		}
 	}
 
