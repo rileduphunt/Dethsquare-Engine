@@ -40,7 +40,11 @@ import javax.xml.parsers.ParserConfigurationException;
 class UPnPManager {
 	private static final String IP = "239.255.255.250";
 	private static final int PORT = 1900;
-	private static final String[] SEARCH_TYPES = {"urn:schemas-upnp-org:device:InternetGatewayDevice:1", "urn:schemas-upnp-org:service:WANIPConnection:1", "urn:schemas-upnp-org:service:WANPPPConnection:1"};
+	private static final String[] SEARCH_TYPES = {
+			"urn:schemas-upnp-org:device:InternetGatewayDevice:1",
+			"urn:schemas-upnp-org:service:WANIPConnection:1",
+			"urn:schemas-upnp-org:service:WANPPPConnection:1"
+	};
 	private static String baseUrl;
 	private static ArrayList<String[]> services = new ArrayList<>();
 
@@ -159,8 +163,7 @@ class UPnPManager {
 				if (line.startsWith("HTTP/1.") || line.startsWith("NOTIFY *")) continue;
 
 				String key = line.substring(0, line.indexOf(':'));
-				String value =
-						line.length() > key.length() + 1 ? line.substring(key.length() + 1) : null;
+				String value = line.length() > key.length() + 1 ? line.substring(key.length() + 1) : null;
 
 				key = key.trim();
 				if (value != null) {
@@ -239,7 +242,10 @@ class UPnPManager {
 						for (int j = 0; j < children.getLength(); j++) {
 							Node child2 = children.item(j);
 							if ("controlURL".equals(child2.getNodeName())) {
-								services.add(new String[]{child.getTextContent(), child2.getTextContent()});
+								services.add(new String[]{
+										child.getTextContent(),
+										child2.getTextContent()
+								});
 								breakOuterLoop = true;
 								break;
 							}
