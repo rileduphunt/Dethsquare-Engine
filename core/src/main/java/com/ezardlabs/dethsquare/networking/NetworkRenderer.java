@@ -1,4 +1,4 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
 import com.ezardlabs.dethsquare.graphics.Renderer;

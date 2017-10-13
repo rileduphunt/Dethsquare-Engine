@@ -1,4 +1,4 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
 public interface NetworkConstants {
 	String MATCHMAKING_JOIN = "matchmaking_join";

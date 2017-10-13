@@ -1,6 +1,6 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
-import com.ezardlabs.dethsquare.multiplayer.Network.Protocol;
+import com.ezardlabs.dethsquare.networking.Network.Protocol;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
