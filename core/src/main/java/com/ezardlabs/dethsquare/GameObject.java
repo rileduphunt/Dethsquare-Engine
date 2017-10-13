@@ -4,6 +4,7 @@ import com.ezardlabs.dethsquare.Collider.Collision;
 import com.ezardlabs.dethsquare.animation.Animator;
 import com.ezardlabs.dethsquare.graphics.GraphicsEngine;
 import com.ezardlabs.dethsquare.graphics.Renderer;
+import com.ezardlabs.dethsquare.networking.AutoNetworkBehaviour;
 import com.ezardlabs.dethsquare.util.GameListeners;
 
 import java.io.Serializable;
@@ -180,7 +181,7 @@ public final class GameObject implements Serializable {
 	 * @return The {@link Component} that has just been attached
 	 */
 	private <T extends Component> T addComponent(T component, boolean callStart) {
-		if (getComponent(component.getClass()) != null) {
+		if (component instanceof AutoNetworkBehaviour || getComponent(component.getClass()) != null) {
 			throw new ComponentAlreadyExistsError(component);
 		}
 		newComponents.add(component);
