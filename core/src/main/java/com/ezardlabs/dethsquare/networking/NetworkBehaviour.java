@@ -11,7 +11,7 @@ public abstract class NetworkBehaviour extends Component {
 	static int totalSize = 0;
 	private int networkId;
 	private int playerId = -1;
-	protected final ByteBuffer data = ByteBuffer.allocate(getSize());
+	protected ByteBuffer data;
 
 	public NetworkBehaviour() {
 		networkId = Network.getNewNetworkId();
@@ -20,6 +20,7 @@ public abstract class NetworkBehaviour extends Component {
 
 	@Override
 	public void start() {
+		data = ByteBuffer.allocate(getSize());
 		if (playerId == Network.getPlayerId()) {
 			myNetworkBehaviours.put(networkId, this);
 			totalSize += getSize();
