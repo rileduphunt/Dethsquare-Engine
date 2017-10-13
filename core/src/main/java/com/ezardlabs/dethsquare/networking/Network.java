@@ -4,7 +4,6 @@ import com.ezardlabs.dethsquare.GameObject;
 import com.ezardlabs.dethsquare.Vector2;
 import com.ezardlabs.dethsquare.prefabs.PrefabManager;
 import com.ezardlabs.dethsquare.util.GameListeners;
-import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,8 +24,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class Network {
-	private static UpdateListener updateListener;
-
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
 	private static final InetSocketAddress[] udpAddresses = new InetSocketAddress[4];
