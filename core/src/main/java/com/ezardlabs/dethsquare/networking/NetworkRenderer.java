@@ -1,12 +1,15 @@
 package com.ezardlabs.dethsquare.networking;
 
+import com.ezardlabs.dethsquare.Component;
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
 import com.ezardlabs.dethsquare.graphics.Renderer;
+import com.ezardlabs.dethsquare.networking.markers.Networked;
 
 import java.nio.ByteBuffer;
 
 @RequiredComponents(Renderer.class)
-public class NetworkRenderer extends NetworkBehaviour {
+public class NetworkRenderer extends Component implements Networked {
+	private final ByteBuffer data = ByteBuffer.allocate(getSize());
 
 	@Override
 	protected ByteBuffer onSend() {

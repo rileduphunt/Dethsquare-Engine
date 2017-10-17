@@ -4,13 +4,14 @@ import com.ezardlabs.dethsquare.NetworkScript.NetVarField.Type;
 import com.ezardlabs.dethsquare.networking.AutoNetworkBehaviour;
 import com.ezardlabs.dethsquare.networking.Network;
 import com.ezardlabs.dethsquare.networking.markers.NetVar;
+import com.ezardlabs.dethsquare.networking.markers.Networked;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-public class NetworkScript extends Script {
+public class NetworkScript extends Script implements Networked {
 	private int networkId = -1;
 	private int playerId = -1;
 
@@ -89,6 +90,7 @@ public class NetworkScript extends Script {
 		return size;
 	}
 
+	@Override
 	public final ByteBuffer onSend() {
 		data.position(0);
 		int pos = 0;
@@ -130,6 +132,7 @@ public class NetworkScript extends Script {
 		return data;
 	}
 
+	@Override
 	public final void onReceive(ByteBuffer data, int index) {
 		int pos = 0;
 		for (NetVarField field : fields) {
@@ -169,6 +172,7 @@ public class NetworkScript extends Script {
 		}
 	}
 
+	@Override
 	public final short getSize() {
 		return size;
 	}
@@ -177,7 +181,7 @@ public class NetworkScript extends Script {
 		return networkId;
 	}
 
-	void setNetworkId(int networkId) {
+	public void setNetworkId(int networkId) {
 		this.networkId = networkId;
 	}
 
@@ -185,7 +189,7 @@ public class NetworkScript extends Script {
 		return playerId;
 	}
 
-	void setPlayerId(int playerId) {
+	public void setPlayerId(int playerId) {
 		this.playerId = playerId;
 	}
 

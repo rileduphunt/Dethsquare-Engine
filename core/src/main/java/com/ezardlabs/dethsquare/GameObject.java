@@ -110,6 +110,11 @@ public final class GameObject implements Serializable {
 	 */
 	public int networkId = -1;
 	/**
+	 * The identifier for the player that this {@link GameObject} belongs to; only used when instantiated across the
+	 * network
+	 */
+	public int playerId = -1;
+	/**
 	 * Whether or not this {@link GameObject} has been instantiated yet
 	 */
 	private boolean instantiated = false;

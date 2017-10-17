@@ -423,10 +423,10 @@ public class Network implements NetworkConstants {
 	}
 
 	private static String getInstantiationMessage(InstantiationData data) {
-		List<NetworkBehaviour> networkBehaviours = data.gameObject.getComponentsOfType(NetworkBehaviour.class);
+		List<NetworkScript> networkScripts = data.gameObject.getComponentsOfType(NetworkScript.class);
 		HashMap<String, Integer> networkIds = new HashMap<>();
-		for (NetworkBehaviour nb : networkBehaviours) {
-			networkIds.put(nb.getClass().getCanonicalName(), nb.getNetworkId());
+		for (NetworkScript ns : networkScripts) {
+			networkIds.put(ns.getClass().getCanonicalName(), ns.getNetworkId());
 		}
 		StringBuilder sb = new StringBuilder();
 		if (PrefabManager.prefabExists(data.prefabName + "_other")) {
@@ -452,14 +452,15 @@ public class Network implements NetworkConstants {
 		gameObject.networkId = Integer.parseInt(split[1]);
 		Vector2 position = new Vector2(Float.parseFloat(split[2]), Float.parseFloat(split[3]));
 		int playerId = Integer.parseInt(split[4]);
-		List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
+		gameObject.playerId = playerId;
+		List<NetworkScript> networkScripts = gameObject.getComponentsOfType(NetworkScript.class);
 		HashMap<String, Integer> networkIds = new HashMap<>();
-		for (int i = 0; i < networkBehaviours.size(); i++) {
+		for (int i = 0; i < networkScripts.size(); i++) {
 			networkIds.put(split[5 + (i * 2)], Integer.parseInt(split[6 + (i * 2)]));
 		}
-		for (NetworkBehaviour nb : networkBehaviours) {
-			nb.setPlayerId(playerId);
-			nb.setNetworkId(networkIds.get(nb.getClass().getCanonicalName()));
+		for (NetworkScript ns : networkScripts) {
+			ns.setPlayerId(playerId);
+			ns.setNetworkId(networkIds.get(ns.getClass().getCanonicalName()));
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
 		NETWORK_OBJECTS.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
