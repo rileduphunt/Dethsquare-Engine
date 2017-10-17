@@ -1,6 +1,7 @@
 package com.ezardlabs.dethsquare.networking;
 
 import com.ezardlabs.dethsquare.GameObject;
+import com.ezardlabs.dethsquare.NetworkScript;
 import com.ezardlabs.dethsquare.Vector2;
 import com.ezardlabs.dethsquare.prefabs.PrefabManager;
 import com.ezardlabs.dethsquare.util.GameListeners;
@@ -37,6 +38,8 @@ public class Network implements NetworkConstants {
 
 	private static int networkIdCounter = 1;
 	private static HashMap<Integer, InstantiationData> networkObjects = new HashMap<>();
+	private static final HashMap<Integer, NetworkScript> localNetworkScripts = new HashMap<>();
+	private static final HashMap<Integer, NetworkScript> remoteNetworkScripts = new HashMap<>();
 
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
@@ -471,7 +474,7 @@ public class Network implements NetworkConstants {
 		GameObject.destroy(gameObject, delay, () -> handleGameObjectDestruction(gameObject));
 	}
 
-	static void sendMessage(NetworkScript object, String command, String message) {
+	public static void sendMessage(NetworkScript object, String command, String message) {
 		for (TCPWriter writer : tcpOut) {
 			if (writer != null) {
 				writer.sendMessage(MESSAGE, String.valueOf(object.gameObject.networkId), command, message);

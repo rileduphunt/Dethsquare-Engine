@@ -1,6 +1,6 @@
-package com.ezardlabs.dethsquare.networking;
+package com.ezardlabs.dethsquare;
 
-import com.ezardlabs.dethsquare.Script;
+import com.ezardlabs.dethsquare.networking.Network;
 
 public class NetworkScript extends Script {
 
