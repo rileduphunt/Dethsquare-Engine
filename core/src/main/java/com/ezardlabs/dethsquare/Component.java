@@ -1,7 +1,6 @@
 package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.Collider.Collision;
-import com.ezardlabs.dethsquare.networking.AutoNetworkBehaviour;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -27,10 +26,6 @@ public class Component {
 	 * Whether or not this {@link Component} is enabled
 	 */
 	public boolean enabled = true;
-	/**
-	 * The {@link AutoNetworkBehaviour} that relies on this {@link Component}
-	 */
-	private AutoNetworkBehaviour autoNetworkBehaviour;
 
 	void internalStart() {
 		for (Annotation a : getClass().getAnnotations()) {
@@ -79,14 +74,6 @@ public class Component {
 	 */
 	public void onCollision(Collision collision) {
 		// Only used in subclasses
-	}
-
-	void setAutoNetworkBehaviour(AutoNetworkBehaviour autoNetworkBehaviour) {
-		this.autoNetworkBehaviour = autoNetworkBehaviour;
-	}
-
-	AutoNetworkBehaviour getAutoNetworkBehaviour() {
-		return autoNetworkBehaviour;
 	}
 
 	@Target(ElementType.TYPE)
