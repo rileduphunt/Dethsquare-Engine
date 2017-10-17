@@ -11,7 +11,6 @@ public class NetworkAnimator extends NetworkBehaviour {
 	@Override
 	public void start() {
 		super.start();
-		assert gameObject.animator != null;
 		gameObject.animator.enabled = getPlayerId() == Network.getPlayerId();
 	}
 
