@@ -2,7 +2,7 @@ package com.ezardlabs.dethsquare.networking;
 
 import java.util.regex.Pattern;
 
-public interface NetworkConstants {
+interface NetworkConstants {
 	// matchmaking constants
 	String MATCHMAKING_JOIN = "matchmaking_join";
 	String MATCHMAKING_PING = "matchmaking_ping";
