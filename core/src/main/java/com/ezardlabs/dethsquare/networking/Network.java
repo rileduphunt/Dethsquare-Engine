@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class Network {
+public class Network implements NetworkConstants {
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
 	private static final InetSocketAddress[] udpAddresses = new InetSocketAddress[4];
@@ -43,13 +43,6 @@ public class Network {
 
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
-
-	private static final String DIVIDER = "|";
-	private static final String SPLIT_DIVIDER = Pattern.quote(DIVIDER);
-	private static final String INSTANTIATE = "instantiate";
-	private static final String DESTROY = "destroy";
-	private static final String REQUEST_STATE = "request_state";
-	private static final String MESSAGE = "message";
 
 	public enum Protocol {
 		UDP,
