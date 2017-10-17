@@ -410,6 +410,7 @@ public class Network implements NetworkConstants {
 	private static GameObject instantiate(String prefabName, Vector2 position, TCPWriter... tcpWriters) {
 		GameObject gameObject = PrefabManager.loadPrefab(prefabName);
 		gameObject.networkId = getNewNetworkId();
+		gameObject.playerId = playerId;
 		InstantiationData data = new InstantiationData(prefabName, position, playerId, gameObject);
 		String message = getInstantiationMessage(data);
 		for (TCPWriter writer : tcpWriters) {

@@ -671,6 +671,7 @@ public final class GameObject implements Serializable {
 		setTag(null);
 		gameObject.setTag(tag);
 		gameObject.networkId = networkId;
+		gameObject.playerId = playerId;
 		return gameObject;
 	}
 
