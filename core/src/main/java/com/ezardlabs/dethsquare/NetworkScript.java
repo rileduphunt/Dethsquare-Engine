@@ -1,7 +1,6 @@
 package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.NetworkScript.NetVarField.Type;
-import com.ezardlabs.dethsquare.networking.AutoNetworkBehaviour;
 import com.ezardlabs.dethsquare.networking.Network;
 import com.ezardlabs.dethsquare.networking.markers.NetVar;
 import com.ezardlabs.dethsquare.networking.markers.Networked;
