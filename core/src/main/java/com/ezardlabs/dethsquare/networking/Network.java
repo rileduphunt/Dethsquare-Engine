@@ -38,8 +38,8 @@ public class Network implements NetworkConstants {
 
 	private static int networkIdCounter = 1;
 	private static HashMap<Integer, InstantiationData> networkObjects = new HashMap<>();
-	private static final HashMap<Integer, NetworkScript> localNetworkScripts = new HashMap<>();
-	private static final HashMap<Integer, NetworkScript> remoteNetworkScripts = new HashMap<>();
+	private static final HashMap<Integer, NetworkScript> LOCAL_NETWORK_SCRIPTS = new HashMap<>();
+	private static final HashMap<Integer, NetworkScript> REMOTE_NETWORK_SCRIPTS = new HashMap<>();
 
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
@@ -128,11 +128,11 @@ public class Network implements NetworkConstants {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
 			ByteBuffer data = ByteBuffer.allocate(
-					NetworkBehaviour.totalSize + (NetworkBehaviour.myNetworkBehaviours.size() * 8));
-			for (NetworkBehaviour nb : NetworkBehaviour.myNetworkBehaviours.values()) {
-				data.putInt(nb.getNetworkId());
-				data.putShort(nb.getSize());
-				data.put(nb.onSend());
+					NetworkBehaviour.totalSize + (LOCAL_NETWORK_SCRIPTS.size() * 8));
+			for (NetworkScript ns : REMOTE_NETWORK_SCRIPTS.values()) {
+				data.putInt(ns.getNetworkId());
+				data.putShort(ns.getSize());
+				data.put(ns.onSend());
 			}
 			udpOut.sendMessage(data.array());
 		}
@@ -140,15 +140,15 @@ public class Network implements NetworkConstants {
 			while (!udpIn.udpMessages.isEmpty()) {
 				int count = 0;
 				ByteBuffer data = ByteBuffer.wrap(udpIn.udpMessages.remove(0));
-				NetworkBehaviour nb;
+				NetworkScript ns;
 				while (count < data.capacity()) {
 					data.position(count);
 					int networkId = data.getInt(count);
 					if (networkId == 0) break;
 					int size = data.getShort(count + 4);
-					nb = NetworkBehaviour.otherNetworkBehaviours.get(networkId);
-					if (nb != null) {
-						nb.onReceive(data, count + 6);
+					ns = REMOTE_NETWORK_SCRIPTS.get(networkId);
+					if (ns != null) {
+						ns.onReceive(data, count + 6);
 					}
 					count += size + 6;
 				}
@@ -463,6 +463,22 @@ public class Network implements NetworkConstants {
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
 		networkObjects.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
+	}
+
+	public static void registerNetworkScript(NetworkScript networkScript) {
+		if (networkScript.getPlayerId() == getPlayerId()) {
+			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
+		} else {
+			REMOTE_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
+		}
+	}
+
+	public static void deregisterNetworkScript(NetworkScript networkScript) {
+		if (networkScript.getPlayerId() == getPlayerId()) {
+			LOCAL_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
+		} else {
+			REMOTE_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
+		}
 	}
 
 	public static void destroy(GameObject gameObject) {
