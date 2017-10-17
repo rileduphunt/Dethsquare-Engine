@@ -37,7 +37,7 @@ public class Network implements NetworkConstants {
 	private static boolean host = true;
 
 	private static int networkIdCounter = 1;
-	private static HashMap<Integer, InstantiationData> networkObjects = new HashMap<>();
+	private static final HashMap<Integer, InstantiationData> NETWORK_OBJECTS = new HashMap<>();
 	private static final HashMap<Integer, NetworkScript> LOCAL_NETWORK_SCRIPTS = new HashMap<>();
 	private static final HashMap<Integer, NetworkScript> REMOTE_NETWORK_SCRIPTS = new HashMap<>();
 
@@ -418,7 +418,7 @@ public class Network implements NetworkConstants {
 			}
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
-		networkObjects.put(go.networkId, data);
+		NETWORK_OBJECTS.put(go.networkId, data);
 		return go;
 	}
 
@@ -462,7 +462,7 @@ public class Network implements NetworkConstants {
 			nb.setNetworkId(networkIds.get(nb.getClass().getCanonicalName()));
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
-		networkObjects.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
+		NETWORK_OBJECTS.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
 	}
 
 	public static void registerNetworkScript(NetworkScript networkScript) {
@@ -502,7 +502,7 @@ public class Network implements NetworkConstants {
 	}
 
 	private static void handleGameObjectDestruction(GameObject gameObject) {
-		networkObjects.remove(gameObject.networkId);
+		NETWORK_OBJECTS.remove(gameObject.networkId);
 		for (TCPWriter writer : tcpOut) {
 			if (writer != null) {
 				writer.sendMessage(DESTROY, String.valueOf(gameObject.networkId));
@@ -513,7 +513,7 @@ public class Network implements NetworkConstants {
 	private static void processDestruction(String message) throws IOException {
 		int networkId = Integer.parseInt(message);
 		GameObject.destroy(networkId);
-		networkObjects.remove(networkId);
+		NETWORK_OBJECTS.remove(networkId);
 	}
 
 	static void requestState() {
@@ -522,7 +522,7 @@ public class Network implements NetworkConstants {
 
 	private static void sendState(String in) {
 		int id = Integer.parseInt(in);
-		for (InstantiationData data : networkObjects.values()) {
+		for (InstantiationData data : NETWORK_OBJECTS.values()) {
 			if (data.playerId != id) {
 				System.out.println(playerId + ": Instantiation send: " + getInstantiationMessage(data));
 				tcpOut[id].sendMessage(INSTANTIATE, getInstantiationMessage(data));
