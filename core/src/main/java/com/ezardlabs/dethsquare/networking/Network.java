@@ -30,8 +30,6 @@ public class Network implements NetworkConstants {
 	private static final TCPWriter[] tcpOut = new TCPWriter[4];
 
 	private static final int START_PORT = 2828;
-	private static DatagramSocket datagramSocket;
-	private static ServerSocket serverSocket;
 	private static int udpPort = -1;
 	private static int tcpPort = -1;
 
@@ -50,9 +48,9 @@ public class Network implements NetworkConstants {
 	}
 
 	static void init() {
-		datagramSocket = getNewDatagramSocket();
+		DatagramSocket datagramSocket = getNewDatagramSocket();
 		udpPort = datagramSocket.getLocalPort();
-		serverSocket = getNewServerSocket(udpPort + 1);
+		ServerSocket serverSocket = getNewServerSocket(udpPort + 1);
 		tcpPort = serverSocket.getLocalPort();
 
 		UPnPManager.discover();
