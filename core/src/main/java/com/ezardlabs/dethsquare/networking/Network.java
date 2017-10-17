@@ -46,6 +46,9 @@ public class Network implements NetworkConstants {
 		TCP
 	}
 
+	private Network() {
+	}
+
 	static void init() {
 		DatagramSocket datagramSocket = getNewDatagramSocket();
 		udpPort = datagramSocket.getLocalPort();
@@ -362,7 +365,10 @@ public class Network implements NetworkConstants {
 				throw new IllegalArgumentException("Message cannot contain newline characters");
 			}
 			synchronized (messages) {
-				messages.add(new String[]{command, message});
+				messages.add(new String[]{
+						command,
+						message
+				});
 				messages.notify();
 			}
 		}
