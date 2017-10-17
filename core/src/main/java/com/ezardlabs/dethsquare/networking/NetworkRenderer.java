@@ -12,7 +12,7 @@ public class NetworkRenderer extends Component implements Networked {
 	private final ByteBuffer data = ByteBuffer.allocate(getSize());
 
 	@Override
-	protected ByteBuffer onSend() {
+	public ByteBuffer onSend() {
 		data.position(0);
 		data.putFloat(0, gameObject.renderer.width); // 0 - 3
 		data.putFloat(4, gameObject.renderer.height); // 4 - 7
@@ -22,7 +22,7 @@ public class NetworkRenderer extends Component implements Networked {
 	}
 
 	@Override
-	protected void onReceive(ByteBuffer data, int index) {
+	public void onReceive(ByteBuffer data, int index) {
 		gameObject.renderer.setSize(data.getFloat(index), data.getFloat(index + 4));
 		gameObject.renderer.setOffsets(data.getFloat(index + 8), data.getFloat(index + 12));
 	}

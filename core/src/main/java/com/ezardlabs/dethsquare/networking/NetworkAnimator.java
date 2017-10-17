@@ -18,7 +18,7 @@ public class NetworkAnimator extends Component implements Networked {
 	}
 
 	@Override
-	protected ByteBuffer onSend() {
+	public ByteBuffer onSend() {
 		data.position(0);
 		data.putShort(0, (short) gameObject.animator.getCurrentAnimationId()); // 0 - 1
 		data.putShort(2, (short) gameObject.animator.getCurrentAnimationFrame()); // 2 - 3
@@ -26,7 +26,7 @@ public class NetworkAnimator extends Component implements Networked {
 	}
 
 	@Override
-	protected void onReceive(ByteBuffer data, int index) {
+	public void onReceive(ByteBuffer data, int index) {
 		gameObject.animator.setCurrentAnimationId(data.getShort(index));
 		gameObject.animator.setCurrentAnimationFrame(data.getShort(index + 2));
 	}
