@@ -53,6 +53,10 @@ public class Component {
 		// Only used in subclasses
 	}
 
+	void internalDestroy() {
+		// only used in subclasses
+	}
+
 	/**
 	 * Called when this {@link Component} is destroyed
 	 */

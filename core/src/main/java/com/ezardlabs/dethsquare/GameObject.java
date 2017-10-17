@@ -575,6 +575,7 @@ public final class GameObject implements Serializable {
 							GameObject gameObject = entry.getValue();
 							if (gameObject != null) {
 								for (Component c : gameObject.components) {
+									c.internalDestroy();
 									c.destroy();
 								}
 								gameObject.transform.parent.children.remove(gameObject.transform);
