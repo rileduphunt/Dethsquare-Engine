@@ -49,6 +49,7 @@ public class Network {
 	private static final String INSTANTIATE = "instantiate";
 	private static final String DESTROY = "destroy";
 	private static final String REQUEST_STATE = "request_state";
+	private static final String MESSAGE = "message";
 
 	public enum Protocol {
 		UDP,
@@ -316,6 +317,9 @@ public class Network {
 							case REQUEST_STATE:
 								sendState(in.readLine());
 								break;
+							case MESSAGE:
+								processMessage(Integer.parseInt(in.readLine()), in.readLine(), in.readLine());
+								break;
 							default:
 								System.out.println("Unknown command:" + command);
 								break;
@@ -369,6 +373,18 @@ public class Network {
 			}
 			synchronized (messages) {
 				messages.add(new String[]{command, message});
+				messages.notify();
+			}
+		}
+
+		void sendMessage(String... data) {
+			for (String datum : data) {
+				if (datum.contains("\n") || datum.contains("\r")) {
+					throw new IllegalArgumentException("Message data cannot contain newline characters");
+				}
+			}
+			synchronized (messages) {
+				messages.add(data);
 				messages.notify();
 			}
 		}
@@ -457,6 +473,17 @@ public class Network {
 
 	public static void destroy(GameObject gameObject, long delay) {
 		GameObject.destroy(gameObject, delay, () -> handleGameObjectDestruction(gameObject));
+	}
+
+	static void sendMessage(NetworkScript object, String command, String message) {
+		for (TCPWriter writer : tcpOut) {
+			if (writer != null) {
+				writer.sendMessage(MESSAGE, String.valueOf(object.gameObject.networkId), command, message);
+			}
+		}
+	}
+
+	private static void processMessage(int networkId, String command, String message) {
 	}
 
 	private static void handleGameObjectDestruction(GameObject gameObject) {
