@@ -659,6 +659,7 @@ public final class GameObject implements Serializable {
 
 		for (Component component : temp) {
 			component.internalStart();
+			component.start();
 		}
 	}
 

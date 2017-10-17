@@ -43,7 +43,6 @@ public class Component {
 				break;
 			}
 		}
-		start();
 	}
 
 	/**
