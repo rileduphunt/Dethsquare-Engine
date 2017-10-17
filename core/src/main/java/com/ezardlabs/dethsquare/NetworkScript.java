@@ -176,19 +176,19 @@ public class NetworkScript extends Script implements Networked {
 		return size;
 	}
 
-	public int getNetworkId() {
+	public final int getNetworkId() {
 		return networkId;
 	}
 
-	public void setNetworkId(int networkId) {
+	public final void setNetworkId(int networkId) {
 		this.networkId = networkId;
 	}
 
-	public int getPlayerId() {
+	public final int getPlayerId() {
 		return playerId;
 	}
 
-	public void setPlayerId(int playerId) {
+	public final void setPlayerId(int playerId) {
 		this.playerId = playerId;
 	}
 
@@ -196,7 +196,7 @@ public class NetworkScript extends Script implements Networked {
 		Network.sendMessage(this, command, message);
 	}
 
-	protected void receiveMessage(String command, String message) {
+	protected final void receiveMessage(String command, String message) {
 		// only used in subclasses
 	}
 
