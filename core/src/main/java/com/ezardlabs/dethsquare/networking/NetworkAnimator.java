@@ -14,7 +14,7 @@ public class NetworkAnimator extends Component implements Networked {
 	@Override
 	public void start() {
 		super.start();
-		gameObject.animator.enabled = gameObject.networkId == Network.getPlayerId();
+		gameObject.animator.enabled = gameObject.playerId == Network.getPlayerId();
 	}
 
 	@Override
