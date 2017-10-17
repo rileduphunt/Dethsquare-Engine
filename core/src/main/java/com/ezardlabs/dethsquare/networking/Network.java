@@ -40,6 +40,7 @@ public class Network implements NetworkConstants {
 	private static final HashMap<Integer, InstantiationData> NETWORK_OBJECTS = new HashMap<>();
 	private static final HashMap<Integer, NetworkScript> LOCAL_NETWORK_SCRIPTS = new HashMap<>();
 	private static final HashMap<Integer, NetworkScript> REMOTE_NETWORK_SCRIPTS = new HashMap<>();
+	private static int dataSize = 0;
 
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
@@ -127,8 +128,7 @@ public class Network implements NetworkConstants {
 	private static void update() {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
-			ByteBuffer data = ByteBuffer.allocate(
-					NetworkBehaviour.totalSize + (LOCAL_NETWORK_SCRIPTS.size() * 8));
+			ByteBuffer data = ByteBuffer.allocate(dataSize + (LOCAL_NETWORK_SCRIPTS.size() * 8));
 			for (NetworkScript ns : REMOTE_NETWORK_SCRIPTS.values()) {
 				data.putInt(ns.getNetworkId());
 				data.putShort(ns.getSize());
@@ -468,6 +468,7 @@ public class Network implements NetworkConstants {
 	public static void registerNetworkScript(NetworkScript networkScript) {
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
+			dataSize += networkScript.getSize();
 		} else {
 			REMOTE_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
 		}
@@ -476,6 +477,7 @@ public class Network implements NetworkConstants {
 	public static void deregisterNetworkScript(NetworkScript networkScript) {
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
+			dataSize -= networkScript.getSize();
 		} else {
 			REMOTE_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
 		}
