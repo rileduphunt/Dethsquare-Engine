@@ -211,6 +211,12 @@ public class NetworkScript extends Script implements Networked {
 		Network.registerNetworkScript(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * <em>Derived classes must call through to the super class's implementation of this method. If they do not, an
+	 * exception will be thrown.</em>
+	 */
 	@Override
 	protected void destroy() {
 		Network.deregisterNetworkScript(this);
