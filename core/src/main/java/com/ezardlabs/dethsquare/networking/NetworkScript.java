@@ -1,7 +1,7 @@
-package com.ezardlabs.dethsquare;
+package com.ezardlabs.dethsquare.networking;
 
-import com.ezardlabs.dethsquare.NetworkScript.NetVarField.Type;
-import com.ezardlabs.dethsquare.networking.Network;
+import com.ezardlabs.dethsquare.Script;
+import com.ezardlabs.dethsquare.networking.NetworkScript.NetVarField.Type;
 import com.ezardlabs.dethsquare.networking.markers.NetVar;
 import com.ezardlabs.dethsquare.networking.markers.Networked;
 
@@ -176,19 +176,19 @@ public class NetworkScript extends Script implements Networked {
 		return size;
 	}
 
-	public final int getNetworkId() {
+	final int getNetworkId() {
 		return networkId;
 	}
 
-	public final void setNetworkId(int networkId) {
+	final void setNetworkId(int networkId) {
 		this.networkId = networkId;
 	}
 
-	public final int getPlayerId() {
+	final int getPlayerId() {
 		return playerId;
 	}
 
-	public final void setPlayerId(int playerId) {
+	final void setPlayerId(int playerId) {
 		this.playerId = playerId;
 	}
 
@@ -200,14 +200,19 @@ public class NetworkScript extends Script implements Networked {
 		// only used in subclasses
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * <em>Derived classes must call through to the super class's implementation of this method. If they do not, an
+	 * exception will be thrown.</em>
+	 */
 	@Override
-	void internalStart() {
-		super.internalStart();
+	public void start() {
 		Network.registerNetworkScript(this);
 	}
 
 	@Override
-	void internalDestroy() {
+	protected void destroy() {
 		Network.deregisterNetworkScript(this);
 	}
 }

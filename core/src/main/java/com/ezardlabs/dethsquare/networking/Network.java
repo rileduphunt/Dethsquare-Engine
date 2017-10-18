@@ -1,7 +1,6 @@
 package com.ezardlabs.dethsquare.networking;
 
 import com.ezardlabs.dethsquare.GameObject;
-import com.ezardlabs.dethsquare.NetworkScript;
 import com.ezardlabs.dethsquare.Vector2;
 import com.ezardlabs.dethsquare.prefabs.PrefabManager;
 import com.ezardlabs.dethsquare.util.GameListeners;
@@ -490,6 +489,7 @@ public class Network implements NetworkConstants {
 	}
 
 	public static void registerNetworkScript(NetworkScript networkScript) {
+		System.out.println("Registering network script");
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
 			dataSize += networkScript.getSize();
