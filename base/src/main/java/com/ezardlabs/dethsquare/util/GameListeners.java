@@ -3,6 +3,7 @@ package com.ezardlabs.dethsquare.util;
 import java.util.ArrayList;
 
 public interface GameListeners {
+	ArrayList<PreUpdateListener> preUpdateListeners = new ArrayList<>();
 	ArrayList<UpdateListener> updateListeners = new ArrayList<>();
 	ArrayList<PostUpdateListener> postUpdateListeners = new ArrayList<>();
 	ArrayList<RenderListener> renderListeners = new ArrayList<>();
@@ -21,6 +22,14 @@ public interface GameListeners {
 		public String toString() {
 			return width + ", " + height;
 		}
+	}
+
+	static void addPreUpdateListener(PreUpdateListener preUpdateListener) {
+		preUpdateListeners.add(preUpdateListener);
+	}
+
+	static void removePreUpdateListener(PreUpdateListener preUpdateListener) {
+		preUpdateListeners.remove(preUpdateListener);
 	}
 
 	static void addUpdateListener(UpdateListener updateListener) {
@@ -77,6 +86,10 @@ public interface GameListeners {
 
 	static void removeGamepadListener(GamepadListener gamepadListener) {
 		gamepadListeners.remove(gamepadListener);
+	}
+
+	interface PreUpdateListener {
+		void onPreUpdate();
 	}
 
 	interface UpdateListener {
