@@ -144,7 +144,7 @@ public class Network implements NetworkConstants {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
 			ByteBuffer data = ByteBuffer.allocate(dataSize + (LOCAL_NETWORK_SCRIPTS.size() * 8));
-			for (NetworkScript ns : REMOTE_NETWORK_SCRIPTS.values()) {
+			for (NetworkScript ns : LOCAL_NETWORK_SCRIPTS.values()) {
 				data.putInt(ns.getNetworkId());
 				data.putShort(ns.getSize());
 				data.put(ns.onSend());
