@@ -42,6 +42,8 @@ public class Network implements NetworkConstants {
 	private static final HashMap<Integer, NetworkScript> REMOTE_NETWORK_SCRIPTS = new HashMap<>();
 	private static int dataSize = 0;
 
+	private static final ArrayList<String> NEW_NETWORK_OBJECTS = new ArrayList<>();
+
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
 
@@ -125,6 +127,19 @@ public class Network implements NetworkConstants {
 		return host;
 	}
 
+	private static void preUpdate() {
+		synchronized (NEW_NETWORK_OBJECTS) {
+			for (String s : NEW_NETWORK_OBJECTS) {
+				try {
+					processInstantiation(s);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			NEW_NETWORK_OBJECTS.clear();
+		}
+	}
+
 	private static void update() {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
@@ -158,7 +173,7 @@ public class Network implements NetworkConstants {
 
 	static void createGame() {
 		host = true;
-		GameListeners.addUpdateListener(Network::update);
+		initGame();
 	}
 
 	static void joinGame(MatchmakingGame game, int playerId) {
@@ -170,6 +185,11 @@ public class Network implements NetworkConstants {
 				addPlayer(player);
 			}
 		}
+		initGame();
+	}
+
+	private static void initGame() {
+		GameListeners.addPreUpdateListener(Network::preUpdate);
 		GameListeners.addUpdateListener(Network::update);
 	}
 
@@ -305,7 +325,9 @@ public class Network implements NetworkConstants {
 					if (command != null) {
 						switch (command) {
 							case INSTANTIATE:
-								processInstantiation(in.readLine());
+								synchronized (NEW_NETWORK_OBJECTS) {
+									NEW_NETWORK_OBJECTS.add(in.readLine());
+								}
 								break;
 							case DESTROY:
 								processDestruction(in.readLine());
