@@ -529,7 +529,7 @@ public class Network implements NetworkConstants {
 	public static void sendMessage(NetworkScript object, String message) {
 		for (TCPWriter writer : tcpOut) {
 			if (writer != null) {
-				writer.sendMessage(MESSAGE, String.valueOf(object.gameObject.networkId), message);
+				writer.sendMessage(MESSAGE, String.valueOf(object.getNetworkId()), message);
 			}
 		}
 	}
