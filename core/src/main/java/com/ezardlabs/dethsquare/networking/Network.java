@@ -524,10 +524,10 @@ public class Network implements NetworkConstants {
 		GameObject.destroy(gameObject, delay, () -> handleGameObjectDestruction(gameObject));
 	}
 
-	public static void sendMessage(NetworkScript object, String command, String message) {
+	public static void sendMessage(NetworkScript object, String message) {
 		for (TCPWriter writer : tcpOut) {
 			if (writer != null) {
-				writer.sendMessage(MESSAGE, String.valueOf(object.gameObject.networkId), command, message);
+				writer.sendMessage(MESSAGE, String.valueOf(object.gameObject.networkId), message);
 			}
 		}
 	}

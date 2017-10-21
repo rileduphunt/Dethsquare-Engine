@@ -192,11 +192,11 @@ public class NetworkScript extends Script implements Networked {
 		this.playerId = playerId;
 	}
 
-	protected final void sendMessage(String command, String message) {
-		Network.sendMessage(this, command, message);
+	protected final void sendMessage(String message) {
+		Network.sendMessage(this, message);
 	}
 
-	protected final void receiveMessage(String command, String message) {
+	protected final void receiveMessage(String message) {
 		// only used in subclasses
 	}
 
