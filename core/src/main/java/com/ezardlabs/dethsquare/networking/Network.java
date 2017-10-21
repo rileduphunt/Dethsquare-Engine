@@ -21,6 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Network implements NetworkConstants {
 	private static UDPWriter udpOut;
@@ -40,6 +41,7 @@ public class Network implements NetworkConstants {
 	private static final HashMap<Integer, NetworkScript> LOCAL_NETWORK_SCRIPTS = new HashMap<>();
 	private static final HashMap<Integer, NetworkScript> REMOTE_NETWORK_SCRIPTS = new HashMap<>();
 	private static int dataSize = 0;
+	private static int numNetworkScripts = 0;
 
 	private static final ArrayList<String> NEW_NETWORK_OBJECTS = new ArrayList<>();
 
@@ -142,7 +144,7 @@ public class Network implements NetworkConstants {
 	private static void update() {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
-			ByteBuffer data = ByteBuffer.allocate(dataSize + (LOCAL_NETWORK_SCRIPTS.size() * 8));
+			ByteBuffer data = ByteBuffer.allocate(dataSize + (numNetworkScripts * 8));
 			for (NetworkScript ns : LOCAL_NETWORK_SCRIPTS.values()) {
 				if (ns.getSize() > 0) {
 					data.putInt(ns.getNetworkId());
@@ -503,6 +505,9 @@ public class Network implements NetworkConstants {
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
 			dataSize += networkScript.getSize();
+			if (networkScript.getSize() > 0) {
+				numNetworkScripts++;
+			}
 		} else {
 			REMOTE_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
 		}
@@ -512,6 +517,9 @@ public class Network implements NetworkConstants {
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
 			dataSize -= networkScript.getSize();
+			if (networkScript.getSize() > 0) {
+				numNetworkScripts--;
+			}
 		} else {
 			REMOTE_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
 		}
