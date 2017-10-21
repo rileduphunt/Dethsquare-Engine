@@ -1,14 +1,12 @@
 package com.ezardlabs.dethsquare.networking;
 
-import com.ezardlabs.dethsquare.Component;
-import com.ezardlabs.dethsquare.animation.Animator;
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
-import com.ezardlabs.dethsquare.networking.markers.Networked;
+import com.ezardlabs.dethsquare.animation.Animator;
 
 import java.nio.ByteBuffer;
 
 @RequiredComponents(Animator.class)
-public class NetworkAnimator extends Component implements Networked {
+public class NetworkAnimator extends NetworkScript {
 	private final ByteBuffer data = ByteBuffer.allocate(getSize());
 
 	@Override

@@ -1,14 +1,12 @@
 package com.ezardlabs.dethsquare.networking;
 
-import com.ezardlabs.dethsquare.Component;
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
 import com.ezardlabs.dethsquare.Transform;
-import com.ezardlabs.dethsquare.networking.markers.Networked;
 
 import java.nio.ByteBuffer;
 
 @RequiredComponents(Transform.class)
-public class NetworkTransform extends Component implements Networked {
+public class NetworkTransform extends NetworkScript {
 	private final ByteBuffer data = ByteBuffer.allocate(getSize());
 
 	@Override

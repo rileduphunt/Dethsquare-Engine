@@ -90,7 +90,7 @@ public class NetworkScript extends Script implements Networked {
 	}
 
 	@Override
-	public final ByteBuffer onSend() {
+	public ByteBuffer onSend() {
 		data.position(0);
 		int pos = 0;
 		for (NetVarField field : fields) {
@@ -132,7 +132,7 @@ public class NetworkScript extends Script implements Networked {
 	}
 
 	@Override
-	public final void onReceive(ByteBuffer data, int index) {
+	public void onReceive(ByteBuffer data, int index) {
 		int pos = 0;
 		for (NetVarField field : fields) {
 			try {
@@ -172,7 +172,7 @@ public class NetworkScript extends Script implements Networked {
 	}
 
 	@Override
-	public final short getSize() {
+	public short getSize() {
 		return size;
 	}
 
