@@ -335,7 +335,7 @@ public class Network implements NetworkConstants {
 								sendState(in.readLine());
 								break;
 							case MESSAGE:
-								processMessage(Integer.parseInt(in.readLine()), in.readLine(), in.readLine());
+								processMessage(Integer.parseInt(in.readLine()), in.readLine());
 								break;
 							default:
 								System.out.println("Unknown command:" + command);
@@ -532,7 +532,7 @@ public class Network implements NetworkConstants {
 		}
 	}
 
-	private static void processMessage(int networkId, String command, String message) {
+	private static void processMessage(int networkId, String message) {
 	}
 
 	private static void handleGameObjectDestruction(GameObject gameObject) {
