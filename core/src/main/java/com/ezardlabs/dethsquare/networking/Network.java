@@ -432,6 +432,7 @@ public class Network implements NetworkConstants {
 		GameObject gameObject = PrefabManager.loadPrefab(prefabName);
 		gameObject.networkId = getNewNetworkId();
 		gameObject.playerId = playerId;
+		setNetworkScriptIds(gameObject);
 		InstantiationData data = new InstantiationData(prefabName, position, playerId, gameObject);
 		String message = getInstantiationMessage(data);
 		for (TCPWriter writer : tcpWriters) {
@@ -442,6 +443,14 @@ public class Network implements NetworkConstants {
 		GameObject go = GameObject.instantiate(gameObject, position);
 		NETWORK_OBJECTS.put(go.networkId, data);
 		return go;
+	}
+
+	private static void setNetworkScriptIds(GameObject gameObject) {
+		List<NetworkScript> networkScripts = gameObject.getComponentsOfType(NetworkScript.class);
+		for (NetworkScript ns : networkScripts) {
+			ns.setPlayerId(getPlayerId());
+			ns.setNetworkId(getNewNetworkId());
+		}
 	}
 
 	private static String getInstantiationMessage(InstantiationData data) {
