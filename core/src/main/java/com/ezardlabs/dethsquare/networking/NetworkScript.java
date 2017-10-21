@@ -196,7 +196,7 @@ public class NetworkScript extends Script implements Networked {
 		Network.sendMessage(this, message);
 	}
 
-	protected final void receiveMessage(String message) {
+	protected void receiveMessage(String message) {
 		// only used in subclasses
 	}
 
