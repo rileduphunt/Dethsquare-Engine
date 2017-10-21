@@ -373,10 +373,10 @@ public class Network implements NetworkConstants {
 						}
 						while (!messages.isEmpty()) {
 							String[] s = messages.remove(0);
-							out.write(s[0]);
-							out.newLine();
-							out.write(s[1]);
-							out.newLine();
+							for (int i = 0; i < s.length; i++) {
+								out.write(s[i]);
+								out.newLine();
+							}
 							out.flush();
 						}
 					}
