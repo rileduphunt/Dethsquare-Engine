@@ -535,6 +535,10 @@ public class Network implements NetworkConstants {
 	}
 
 	private static void processMessage(int networkId, String message) {
+		NetworkScript ns = REMOTE_NETWORK_SCRIPTS.get(networkId);
+		if (ns != null) {
+			ns.receiveMessage(message);
+		}
 	}
 
 	private static void handleGameObjectDestruction(GameObject gameObject) {
