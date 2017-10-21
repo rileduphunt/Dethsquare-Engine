@@ -144,9 +144,11 @@ public class Network implements NetworkConstants {
 			lastUpdate = System.currentTimeMillis();
 			ByteBuffer data = ByteBuffer.allocate(dataSize + (LOCAL_NETWORK_SCRIPTS.size() * 8));
 			for (NetworkScript ns : LOCAL_NETWORK_SCRIPTS.values()) {
-				data.putInt(ns.getNetworkId());
-				data.putShort(ns.getSize());
-				data.put(ns.onSend());
+				if (ns.getSize() > 0) {
+					data.putInt(ns.getNetworkId());
+					data.putShort(ns.getSize());
+					data.put(ns.onSend());
+				}
 			}
 			udpOut.sendMessage(data.array());
 		}
