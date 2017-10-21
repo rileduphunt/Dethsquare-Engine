@@ -489,7 +489,6 @@ public class Network implements NetworkConstants {
 	}
 
 	public static void registerNetworkScript(NetworkScript networkScript) {
-		System.out.println("Registering network script");
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
 			dataSize += networkScript.getSize();
@@ -550,7 +549,6 @@ public class Network implements NetworkConstants {
 		int id = Integer.parseInt(in);
 		for (InstantiationData data : NETWORK_OBJECTS.values()) {
 			if (data.playerId != id) {
-				System.out.println(playerId + ": Instantiation send: " + getInstantiationMessage(data));
 				tcpOut[id].sendMessage(INSTANTIATE, getInstantiationMessage(data));
 			}
 		}
