@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a field for networking. Note that the field must be public and must not be static, and that the enclosing
- * class must implement {@link Networked}
+ * class must inherit from {@link com.ezardlabs.dethsquare.networking.NetworkScript NetworkScript}
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
