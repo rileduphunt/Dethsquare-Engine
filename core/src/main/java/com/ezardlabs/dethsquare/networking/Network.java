@@ -116,7 +116,7 @@ public class Network implements NetworkConstants {
 		return tcpPort;
 	}
 
-	static int getPlayerId() {
+	public static int getPlayerId() {
 		return playerId;
 	}
 
