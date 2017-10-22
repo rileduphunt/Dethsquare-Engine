@@ -502,7 +502,7 @@ public class Network implements NetworkConstants {
 	}
 
 	static void registerNetworkScript(NetworkScript networkScript) {
-		if (networkScript.getPlayerId() == getPlayerId()) {
+		if (networkScript.isLocal()) {
 			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
 			dataSize += networkScript.getSize();
 			if (networkScript.getSize() > 0) {
@@ -514,7 +514,7 @@ public class Network implements NetworkConstants {
 	}
 
 	static void deregisterNetworkScript(NetworkScript networkScript) {
-		if (networkScript.getPlayerId() == getPlayerId()) {
+		if (networkScript.isLocal()) {
 			LOCAL_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
 			dataSize -= networkScript.getSize();
 			if (networkScript.getSize() > 0) {
