@@ -196,6 +196,10 @@ public class NetworkScript extends Script {
 		// only used in subclasses
 	}
 
+	public boolean isLocal() {
+		return playerId == Network.getPlayerId();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * <p>
