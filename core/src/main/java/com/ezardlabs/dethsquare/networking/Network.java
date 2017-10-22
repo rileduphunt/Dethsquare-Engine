@@ -116,7 +116,7 @@ public class Network implements NetworkConstants {
 		return tcpPort;
 	}
 
-	public static int getPlayerId() {
+	static int getPlayerId() {
 		return playerId;
 	}
 
@@ -501,7 +501,7 @@ public class Network implements NetworkConstants {
 		NETWORK_OBJECTS.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
 	}
 
-	public static void registerNetworkScript(NetworkScript networkScript) {
+	static void registerNetworkScript(NetworkScript networkScript) {
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
 			dataSize += networkScript.getSize();
@@ -513,7 +513,7 @@ public class Network implements NetworkConstants {
 		}
 	}
 
-	public static void deregisterNetworkScript(NetworkScript networkScript) {
+	static void deregisterNetworkScript(NetworkScript networkScript) {
 		if (networkScript.getPlayerId() == getPlayerId()) {
 			LOCAL_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
 			dataSize -= networkScript.getSize();
@@ -534,7 +534,7 @@ public class Network implements NetworkConstants {
 		GameObject.destroy(gameObject, delay, () -> handleGameObjectDestruction(gameObject));
 	}
 
-	public static void sendMessage(NetworkScript object, String message) {
+	static void sendMessage(NetworkScript object, String message) {
 		for (TCPWriter writer : tcpOut) {
 			if (writer != null) {
 				writer.sendMessage(MESSAGE, String.valueOf(object.getNetworkId()), message);
