@@ -46,8 +46,8 @@ public final class Animator extends Script implements Iterable<Animation> {
 	}
 
 	public void update() {
-		int startFrame = frame;
 		if (index == -1 || frame == -1) return;
+		int startFrame = frame;
 		int tempFrame;
 		if (System.currentTimeMillis() >= nextFrameTime) {
 			nextFrameTime += animations[index].frameData[frame].getDuration();
