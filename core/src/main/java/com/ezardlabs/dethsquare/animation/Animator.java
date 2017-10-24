@@ -45,6 +45,7 @@ public final class Animator extends Script implements Iterable<Animation> {
 		gameObject.renderer.setOffsets(animation.frameData[frame].getOffset(transform.scale.x));
 	}
 
+	@Override
 	public void update() {
 		if (index == -1 || frame == -1) return;
 		int startFrame = frame;
