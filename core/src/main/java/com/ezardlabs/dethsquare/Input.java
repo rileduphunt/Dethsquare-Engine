@@ -8,6 +8,7 @@ import com.ezardlabs.dethsquare.util.GameListeners.KeyListener;
 import com.ezardlabs.dethsquare.util.GameListeners.MouseListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public final class Input {
@@ -84,6 +85,7 @@ public final class Input {
 			}
 		});
 		GameListeners.addUpdateListener(Input::update);
+
 	}
 
 	public static final Vector2 mousePosition = new Vector2();
@@ -95,6 +97,9 @@ public final class Input {
 	 */
 	private static HashMap<KeyCode, Integer> keys = new HashMap<>();
 	private static HashMap<KeyCode, Integer> keyChanges = new HashMap<>();
+
+	private static HashMap<ControlCode, ArrayList> keyControls = new HashMap<>();
+	private static boolean controlsInitialized = false;
 
 	private static boolean controllerConnected = false;
 	private static HashMap<Button, Integer> buttons = new HashMap<>();
@@ -172,6 +177,10 @@ public final class Input {
 		ESCAPE,
 		BACKSPACE,
 		DELETE,
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN,
 		F1,
 		F2,
 		F3,
@@ -188,6 +197,25 @@ public final class Input {
 		MOUSE_RIGHT,
 		MOUSE_MIDDLE
 	}
+
+	public enum ControlCode
+	{
+		ABILITY_1,
+		ABILITY_2,
+		ABILITY_3,
+		ABILITY_4,
+
+		MELEE,
+		SHOOT,
+
+		JUMP,
+		CROUCH,
+		LEFT,
+		RIGHT
+	}
+
+
+
 
 	private static class Holder {
 		int id;
@@ -308,7 +336,12 @@ public final class Input {
 		changesToMake.clear();
 		touches = new Touch[0];
 		touchesToRemove.clear();
+		if (!controlsInitialized){
+			defaultControls();
+		}
 	}
+
+
 
 	private static void setKeyDown(KeyCode keyCode) {
 		if (!keys.containsKey(keyCode)) keyChanges.put(keyCode, 0);
@@ -328,6 +361,53 @@ public final class Input {
 
 	public static boolean getKeyUp(KeyCode keyCode) {
 		return keys.containsKey(keyCode) && keys.get(keyCode) == 2;
+	}
+
+	private static int getControlValue(ControlCode control)
+	{
+		int smallest = 2;
+		for (Object object: keyControls.get(control)) {
+			if (object instanceof KeyCode) {
+				if (keys.get((KeyCode)object) != null) {
+					int temp = getKey((KeyCode)object) ? (getKeyDown((KeyCode)object) ? 0 : 1 ) : 2;
+					smallest = (smallest > temp) ? temp : smallest;
+				}
+			} else if (object instanceof Button) {
+				// not sure what to do with these for now.
+			} else if (object instanceof Axis){
+				// DEFINITELY not sure how to handle axes
+			} else {
+				throw new IllegalArgumentException("Control must be an Axis, Button, or KeyCode.");
+			}
+		}
+		return smallest;
+	}
+
+	public static boolean getControlDown(ControlCode control){
+		return getControlValue(control) == 0;
+	}
+
+	public static boolean getControl(ControlCode control){
+		return getControlValue(control) < 2;
+	}
+
+	public static boolean getControlUp(ControlCode control){
+		return getControlValue(control) == 2;
+	}
+
+	public static void defaultControls(){
+		keyControls.put(ControlCode.SHOOT, new ArrayList<>(Arrays.asList(KeyCode.MOUSE_RIGHT,KeyCode.Z)));
+		keyControls.put(ControlCode.MELEE, new ArrayList<>(Arrays.asList(KeyCode.MOUSE_LEFT,KeyCode.X)));
+
+		keyControls.put(ControlCode.JUMP, new ArrayList<>(Arrays.asList(KeyCode.SPACE,KeyCode.W,KeyCode.UP)));
+		keyControls.put(ControlCode.CROUCH, new ArrayList<>(Arrays.asList(KeyCode.S,KeyCode.DOWN)));
+		keyControls.put(ControlCode.LEFT, new ArrayList<>(Arrays.asList(KeyCode.A,KeyCode.LEFT)));
+		keyControls.put(ControlCode.RIGHT, new ArrayList<>(Arrays.asList(KeyCode.D,KeyCode.RIGHT)));
+
+		keyControls.put(ControlCode.ABILITY_1, new ArrayList<>(Arrays.asList(KeyCode.ALPHA_1)));
+		keyControls.put(ControlCode.ABILITY_2, new ArrayList<>(Arrays.asList(KeyCode.ALPHA_2)));
+		keyControls.put(ControlCode.ABILITY_3, new ArrayList<>(Arrays.asList(KeyCode.ALPHA_3)));
+		keyControls.put(ControlCode.ABILITY_4, new ArrayList<>(Arrays.asList(KeyCode.ALPHA_4)));
 	}
 
 	public static void addTouch(int id, float x, float y) {
