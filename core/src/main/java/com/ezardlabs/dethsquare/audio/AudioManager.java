@@ -1,4 +1,4 @@
-package com.ezardlabs.dethsquare;
+package com.ezardlabs.dethsquare.audio;
 
 import java.util.ArrayList;
 
@@ -68,7 +68,7 @@ public class AudioManager {
 		}
 	}
 
-	static void clearAll() {
+	public static void clearAll() {
 		audioSources.clear();
 	}
 }

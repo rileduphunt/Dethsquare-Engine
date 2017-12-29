@@ -1,6 +1,7 @@
-package com.ezardlabs.dethsquare;
+package com.ezardlabs.dethsquare.audio;
 
-import com.ezardlabs.dethsquare.AudioManager.AudioGroup;
+import com.ezardlabs.dethsquare.Script;
+import com.ezardlabs.dethsquare.audio.AudioManager.AudioGroup;
 import com.ezardlabs.dethsquare.util.Dethsquare;
 
 import static com.ezardlabs.dethsquare.util.Dethsquare.AUDIO;
