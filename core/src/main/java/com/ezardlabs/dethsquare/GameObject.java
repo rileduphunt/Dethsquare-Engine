@@ -2,6 +2,7 @@ package com.ezardlabs.dethsquare;
 
 import com.ezardlabs.dethsquare.Collider.Collision;
 import com.ezardlabs.dethsquare.animation.Animator;
+import com.ezardlabs.dethsquare.audio.AudioManager;
 import com.ezardlabs.dethsquare.graphics.GraphicsEngine;
 import com.ezardlabs.dethsquare.graphics.Renderer;
 import com.ezardlabs.dethsquare.util.GameListeners;
@@ -107,6 +108,11 @@ public final class GameObject implements Serializable {
 	 * the network
 	 */
 	public int networkId = -1;
+	/**
+	 * The identifier for the player that this {@link GameObject} belongs to; only used when instantiated across the
+	 * network
+	 */
+	public int playerId = -1;
 	/**
 	 * Whether or not this {@link GameObject} has been instantiated yet
 	 */
@@ -568,6 +574,7 @@ public final class GameObject implements Serializable {
 							GameObject gameObject = entry.getValue();
 							if (gameObject != null) {
 								for (Component c : gameObject.components) {
+									c.internalDestroy();
 									c.destroy();
 								}
 								gameObject.transform.parent.children.remove(gameObject.transform);
@@ -651,6 +658,7 @@ public final class GameObject implements Serializable {
 
 		for (Component component : temp) {
 			component.internalStart();
+			component.start();
 		}
 	}
 
@@ -664,6 +672,7 @@ public final class GameObject implements Serializable {
 		setTag(null);
 		gameObject.setTag(tag);
 		gameObject.networkId = networkId;
+		gameObject.playerId = playerId;
 		return gameObject;
 	}
 

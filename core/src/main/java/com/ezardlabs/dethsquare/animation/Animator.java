@@ -1,8 +1,8 @@
 package com.ezardlabs.dethsquare.animation;
 
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
-import com.ezardlabs.dethsquare.graphics.Renderer;
 import com.ezardlabs.dethsquare.Script;
+import com.ezardlabs.dethsquare.graphics.Renderer;
 
 import java.util.Iterator;
 
@@ -35,8 +35,6 @@ public final class Animator extends Script implements Iterable<Animation> {
 			if (frame != -1) {
 				this.nextFrameTime = System.currentTimeMillis() + animations[index].frameData[frame].getDuration();
 				setRendererData(animations[index], frame);
-//				gameObject.renderer.setSprite(animations[index].frames[frame]);
-//				gameObject.renderer.setData(animations[index].frameData[frame]);
 			}
 		}
 	}
@@ -47,9 +45,10 @@ public final class Animator extends Script implements Iterable<Animation> {
 		gameObject.renderer.setOffsets(animation.frameData[frame].getOffset(transform.scale.x));
 	}
 
+	@Override
 	public void update() {
-		int startFrame = frame;
 		if (index == -1 || frame == -1) return;
+		int startFrame = frame;
 		int tempFrame;
 		if (System.currentTimeMillis() >= nextFrameTime) {
 			nextFrameTime += animations[index].frameData[frame].getDuration();

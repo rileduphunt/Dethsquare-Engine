@@ -21,6 +21,11 @@ public abstract class Launcher implements GameListeners {
 	public abstract void launch(BaseGame game);
 
 	protected final void update() {
+		if (!preUpdateListeners.isEmpty()) {
+			for (Object o : preUpdateListeners.toArray()) {
+				((PreUpdateListener) o).onPreUpdate();
+			}
+		}
 		if (!updateListeners.isEmpty()) {
 			for (Object o : updateListeners.toArray()) {
 				((UpdateListener) o).onUpdate();
@@ -38,10 +43,12 @@ public abstract class Launcher implements GameListeners {
 	}
 
 	protected final void onResize(int width, int height) {
-		screenSize.width = width;
-		screenSize.height = height;
-		for (ResizeListener resizeListener : resizeListeners) {
-			resizeListener.onResize(width, height);
+		if (width > 0 && height > 0) {
+			screenSize.width = width;
+			screenSize.height = height;
+			for (ResizeListener resizeListener : resizeListeners) {
+				resizeListener.onResize(width, height);
+			}
 		}
 	}
 }

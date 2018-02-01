@@ -38,7 +38,6 @@ public class Component {
 				break;
 			}
 		}
-		start();
 	}
 
 	/**
@@ -46,6 +45,10 @@ public class Component {
 	 */
 	public void start() {
 		// Only used in subclasses
+	}
+
+	void internalDestroy() {
+		// only used in subclasses
 	}
 
 	/**

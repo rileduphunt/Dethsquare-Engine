@@ -1,4 +1,4 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

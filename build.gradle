@@ -7,7 +7,7 @@ platform=<desktop|android>  |   -PplatformText=<desktop|android>
 
 def platform = project.hasProperty('platformText') ? project.platformText : (project.hasProperty('platform') ? project.platform : System.getenv('platform'))
 
-def lwjglVersion = "3.1.2"
+def lwjglVersion = "3.1.5"
 
 apply plugin: 'java'
 

@@ -16,6 +16,9 @@ public final class Time {
 				pauseTime = 0;
 				fpsScaling60 = deltaTime / frameTime60fps;
 				last = now;
+				if (!isPaused()) {
+					Time.time += deltaTime;
+				}
 				frameCount++;
 			}
 		});

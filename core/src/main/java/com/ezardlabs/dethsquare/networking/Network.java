@@ -1,10 +1,9 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
 import com.ezardlabs.dethsquare.GameObject;
 import com.ezardlabs.dethsquare.Vector2;
 import com.ezardlabs.dethsquare.prefabs.PrefabManager;
 import com.ezardlabs.dethsquare.util.GameListeners;
-import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,19 +21,15 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-public class Network {
-	private static UpdateListener updateListener;
-
+public class Network implements NetworkConstants {
 	private static UDPWriter udpOut;
 	private static UDPReader udpIn;
 	private static final InetSocketAddress[] udpAddresses = new InetSocketAddress[4];
 	private static final TCPWriter[] tcpOut = new TCPWriter[4];
 
 	private static final int START_PORT = 2828;
-	private static DatagramSocket datagramSocket;
-	private static ServerSocket serverSocket;
 	private static int udpPort = -1;
 	private static int tcpPort = -1;
 
@@ -42,26 +37,29 @@ public class Network {
 	private static boolean host = true;
 
 	private static int networkIdCounter = 1;
-	private static HashMap<Integer, InstantiationData> networkObjects = new HashMap<>();
+	private static final HashMap<Integer, InstantiationData> NETWORK_OBJECTS = new HashMap<>();
+	private static final HashMap<Integer, NetworkScript> LOCAL_NETWORK_SCRIPTS = new HashMap<>();
+	private static final HashMap<Integer, NetworkScript> REMOTE_NETWORK_SCRIPTS = new HashMap<>();
+	private static int dataSize = 0;
+	private static int numNetworkScripts = 0;
+
+	private static final ArrayList<String> NEW_NETWORK_OBJECTS = new ArrayList<>();
 
 	private static final long UPDATES_PER_SECOND = 60;
 	private static long lastUpdate = 0;
-
-	private static final String DIVIDER = "|";
-	private static final String SPLIT_DIVIDER = Pattern.quote(DIVIDER);
-	private static final String INSTANTIATE = "instantiate";
-	private static final String DESTROY = "destroy";
-	private static final String REQUEST_STATE = "request_state";
 
 	public enum Protocol {
 		UDP,
 		TCP
 	}
 
+	private Network() {
+	}
+
 	static void init() {
-		datagramSocket = getNewDatagramSocket();
+		DatagramSocket datagramSocket = getNewDatagramSocket();
 		udpPort = datagramSocket.getLocalPort();
-		serverSocket = getNewServerSocket(udpPort + 1);
+		ServerSocket serverSocket = getNewServerSocket(udpPort + 1);
 		tcpPort = serverSocket.getLocalPort();
 
 		UPnPManager.discover();
@@ -130,15 +128,29 @@ public class Network {
 		return host;
 	}
 
+	private static void preUpdate() {
+		synchronized (NEW_NETWORK_OBJECTS) {
+			for (String s : NEW_NETWORK_OBJECTS) {
+				try {
+					processInstantiation(s);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			NEW_NETWORK_OBJECTS.clear();
+		}
+	}
+
 	private static void update() {
 		if (System.currentTimeMillis() >= lastUpdate + 1000 / UPDATES_PER_SECOND) {
 			lastUpdate = System.currentTimeMillis();
-			ByteBuffer data = ByteBuffer.allocate(
-					NetworkBehaviour.totalSize + (NetworkBehaviour.myNetworkBehaviours.size() * 8));
-			for (NetworkBehaviour nb : NetworkBehaviour.myNetworkBehaviours.values()) {
-				data.putInt(nb.getNetworkId());
-				data.putShort(nb.getSize());
-				data.put(nb.onSend());
+			ByteBuffer data = ByteBuffer.allocate(dataSize + (numNetworkScripts * 8));
+			for (NetworkScript ns : LOCAL_NETWORK_SCRIPTS.values()) {
+				if (ns.getSize() > 0) {
+					data.putInt(ns.getNetworkId());
+					data.putShort(ns.getSize());
+					data.put(ns.onSend());
+				}
 			}
 			udpOut.sendMessage(data.array());
 		}
@@ -146,15 +158,15 @@ public class Network {
 			while (!udpIn.udpMessages.isEmpty()) {
 				int count = 0;
 				ByteBuffer data = ByteBuffer.wrap(udpIn.udpMessages.remove(0));
-				NetworkBehaviour nb;
+				NetworkScript ns;
 				while (count < data.capacity()) {
 					data.position(count);
 					int networkId = data.getInt(count);
 					if (networkId == 0) break;
 					int size = data.getShort(count + 4);
-					nb = NetworkBehaviour.otherNetworkBehaviours.get(networkId);
-					if (nb != null) {
-						nb.onReceive(data, count + 6);
+					ns = REMOTE_NETWORK_SCRIPTS.get(networkId);
+					if (ns != null) {
+						ns.onReceive(data, count + 6);
 					}
 					count += size + 6;
 				}
@@ -164,7 +176,7 @@ public class Network {
 
 	static void createGame() {
 		host = true;
-		GameListeners.addUpdateListener(Network::update);
+		initGame();
 	}
 
 	static void joinGame(MatchmakingGame game, int playerId) {
@@ -176,6 +188,11 @@ public class Network {
 				addPlayer(player);
 			}
 		}
+		initGame();
+	}
+
+	private static void initGame() {
+		GameListeners.addPreUpdateListener(Network::preUpdate);
 		GameListeners.addUpdateListener(Network::update);
 	}
 
@@ -311,13 +328,18 @@ public class Network {
 					if (command != null) {
 						switch (command) {
 							case INSTANTIATE:
-								processInstantiation(in.readLine());
+								synchronized (NEW_NETWORK_OBJECTS) {
+									NEW_NETWORK_OBJECTS.add(in.readLine());
+								}
 								break;
 							case DESTROY:
 								processDestruction(in.readLine());
 								break;
 							case REQUEST_STATE:
 								sendState(in.readLine());
+								break;
+							case MESSAGE:
+								processMessage(Integer.parseInt(in.readLine()), in.readLine());
 								break;
 							default:
 								System.out.println("Unknown command:" + command);
@@ -353,10 +375,10 @@ public class Network {
 						}
 						while (!messages.isEmpty()) {
 							String[] s = messages.remove(0);
-							out.write(s[0]);
-							out.newLine();
-							out.write(s[1]);
-							out.newLine();
+							for (int i = 0; i < s.length; i++) {
+								out.write(s[i]);
+								out.newLine();
+							}
 							out.flush();
 						}
 					}
@@ -371,7 +393,22 @@ public class Network {
 				throw new IllegalArgumentException("Message cannot contain newline characters");
 			}
 			synchronized (messages) {
-				messages.add(new String[]{command, message});
+				messages.add(new String[]{
+						command,
+						message
+				});
+				messages.notify();
+			}
+		}
+
+		void sendMessage(String... data) {
+			for (String datum : data) {
+				if (datum.contains("\n") || datum.contains("\r")) {
+					throw new IllegalArgumentException("Message data cannot contain newline characters");
+				}
+			}
+			synchronized (messages) {
+				messages.add(data);
 				messages.notify();
 			}
 		}
@@ -398,6 +435,8 @@ public class Network {
 	private static GameObject instantiate(String prefabName, Vector2 position, TCPWriter... tcpWriters) {
 		GameObject gameObject = PrefabManager.loadPrefab(prefabName);
 		gameObject.networkId = getNewNetworkId();
+		gameObject.playerId = playerId;
+		setNetworkScriptIds(gameObject);
 		InstantiationData data = new InstantiationData(prefabName, position, playerId, gameObject);
 		String message = getInstantiationMessage(data);
 		for (TCPWriter writer : tcpWriters) {
@@ -406,15 +445,23 @@ public class Network {
 			}
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
-		networkObjects.put(go.networkId, data);
+		NETWORK_OBJECTS.put(go.networkId, data);
 		return go;
 	}
 
+	private static void setNetworkScriptIds(GameObject gameObject) {
+		List<NetworkScript> networkScripts = gameObject.getComponentsOfType(NetworkScript.class);
+		for (NetworkScript ns : networkScripts) {
+			ns.setPlayerId(getPlayerId());
+			ns.setNetworkId(getNewNetworkId());
+		}
+	}
+
 	private static String getInstantiationMessage(InstantiationData data) {
-		List<NetworkBehaviour> networkBehaviours = data.gameObject.getComponentsOfType(NetworkBehaviour.class);
+		List<NetworkScript> networkScripts = data.gameObject.getComponentsOfType(NetworkScript.class);
 		HashMap<String, Integer> networkIds = new HashMap<>();
-		for (NetworkBehaviour nb : networkBehaviours) {
-			networkIds.put(nb.getClass().getCanonicalName(), nb.getNetworkId());
+		for (NetworkScript ns : networkScripts) {
+			networkIds.put(ns.getClass().getCanonicalName(), ns.getNetworkId());
 		}
 		StringBuilder sb = new StringBuilder();
 		if (PrefabManager.prefabExists(data.prefabName + "_other")) {
@@ -440,17 +487,42 @@ public class Network {
 		gameObject.networkId = Integer.parseInt(split[1]);
 		Vector2 position = new Vector2(Float.parseFloat(split[2]), Float.parseFloat(split[3]));
 		int playerId = Integer.parseInt(split[4]);
-		List<NetworkBehaviour> networkBehaviours = gameObject.getComponentsOfType(NetworkBehaviour.class);
+		gameObject.playerId = playerId;
+		List<NetworkScript> networkScripts = gameObject.getComponentsOfType(NetworkScript.class);
 		HashMap<String, Integer> networkIds = new HashMap<>();
-		for (int i = 0; i < networkBehaviours.size(); i++) {
+		for (int i = 0; i < networkScripts.size(); i++) {
 			networkIds.put(split[5 + (i * 2)], Integer.parseInt(split[6 + (i * 2)]));
 		}
-		for (NetworkBehaviour nb : networkBehaviours) {
-			nb.setPlayerId(playerId);
-			nb.setNetworkId(networkIds.get(nb.getClass().getCanonicalName()));
+		for (NetworkScript ns : networkScripts) {
+			ns.setPlayerId(playerId);
+			ns.setNetworkId(networkIds.get(ns.getClass().getCanonicalName()));
 		}
 		GameObject go = GameObject.instantiate(gameObject, position);
-		networkObjects.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
+		NETWORK_OBJECTS.put(go.networkId, new InstantiationData(split[0], position, playerId, gameObject));
+	}
+
+	static void registerNetworkScript(NetworkScript networkScript) {
+		if (networkScript.isLocal()) {
+			LOCAL_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
+			dataSize += networkScript.getSize();
+			if (networkScript.getSize() > 0) {
+				numNetworkScripts++;
+			}
+		} else {
+			REMOTE_NETWORK_SCRIPTS.put(networkScript.getNetworkId(), networkScript);
+		}
+	}
+
+	static void deregisterNetworkScript(NetworkScript networkScript) {
+		if (networkScript.isLocal()) {
+			LOCAL_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
+			dataSize -= networkScript.getSize();
+			if (networkScript.getSize() > 0) {
+				numNetworkScripts--;
+			}
+		} else {
+			REMOTE_NETWORK_SCRIPTS.remove(networkScript.getNetworkId());
+		}
 	}
 
 	public static void destroy(GameObject gameObject) {
@@ -462,8 +534,23 @@ public class Network {
 		GameObject.destroy(gameObject, delay, () -> handleGameObjectDestruction(gameObject));
 	}
 
+	static void sendMessage(NetworkScript object, String message) {
+		for (TCPWriter writer : tcpOut) {
+			if (writer != null) {
+				writer.sendMessage(MESSAGE, String.valueOf(object.getNetworkId()), message);
+			}
+		}
+	}
+
+	private static void processMessage(int networkId, String message) {
+		NetworkScript ns = REMOTE_NETWORK_SCRIPTS.get(networkId);
+		if (ns != null) {
+			ns.receiveMessage(message);
+		}
+	}
+
 	private static void handleGameObjectDestruction(GameObject gameObject) {
-		networkObjects.remove(gameObject.networkId);
+		NETWORK_OBJECTS.remove(gameObject.networkId);
 		for (TCPWriter writer : tcpOut) {
 			if (writer != null) {
 				writer.sendMessage(DESTROY, String.valueOf(gameObject.networkId));
@@ -474,7 +561,7 @@ public class Network {
 	private static void processDestruction(String message) throws IOException {
 		int networkId = Integer.parseInt(message);
 		GameObject.destroy(networkId);
-		networkObjects.remove(networkId);
+		NETWORK_OBJECTS.remove(networkId);
 	}
 
 	static void requestState() {
@@ -483,9 +570,8 @@ public class Network {
 
 	private static void sendState(String in) {
 		int id = Integer.parseInt(in);
-		for (InstantiationData data : networkObjects.values()) {
+		for (InstantiationData data : NETWORK_OBJECTS.values()) {
 			if (data.playerId != id) {
-				System.out.println(playerId + ": Instantiation send: " + getInstantiationMessage(data));
 				tcpOut[id].sendMessage(INSTANTIATE, getInstantiationMessage(data));
 			}
 		}

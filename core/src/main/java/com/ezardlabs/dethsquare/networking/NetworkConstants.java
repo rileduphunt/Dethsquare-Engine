@@ -1,6 +1,9 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
-public interface NetworkConstants {
+import java.util.regex.Pattern;
+
+interface NetworkConstants {
+	// matchmaking constants
 	String MATCHMAKING_JOIN = "matchmaking_join";
 	String MATCHMAKING_PING = "matchmaking_ping";
 	String MATCHMAKING_LEAVE = "matchmaking_leave";
@@ -14,4 +17,12 @@ public interface NetworkConstants {
 	String PLAYER_LEAVE = "player_leave";
 
 	int PING_INTERVAL = 1000;
+
+	// messaging constants
+	String DIVIDER = "|";
+	String SPLIT_DIVIDER = Pattern.quote(DIVIDER);
+	String INSTANTIATE = "instantiate";
+	String DESTROY = "destroy";
+	String REQUEST_STATE = "request_state";
+	String MESSAGE = "message";
 }

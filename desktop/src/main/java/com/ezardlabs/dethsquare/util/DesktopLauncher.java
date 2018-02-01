@@ -3,6 +3,7 @@ package com.ezardlabs.dethsquare.util;
 import com.ezardlabs.dethsquare.util.Dethsquare.Platform;
 
 import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import java.awt.image.BufferedImage;
@@ -80,6 +81,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
@@ -120,7 +122,9 @@ public class DesktopLauncher extends Launcher {
 		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 		glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
-		window = glfwCreateWindow(1920, 1080, "Lost Sector", glfwGetPrimaryMonitor(), NULL);
+		GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		window = glfwCreateWindow(vidMode.width(), vidMode.height(), "Lost Sector", NULL, NULL);
 
 		initKeyMap();
 
@@ -138,9 +142,8 @@ public class DesktopLauncher extends Launcher {
 
 		setIcon();
 
-		glfwSetCursorPosCallback(window, (window, xPos, yPos) -> {
-			mouseListeners.forEach(mouseListener -> mouseListener.onMove((int) xPos, (int) yPos));
-		});
+		glfwSetCursorPosCallback(window, (window, xPos, yPos) -> mouseListeners.forEach(
+				mouseListener -> mouseListener.onMove((int) xPos, (int) yPos)));
 
 		glfwSetMouseButtonCallback(window, (window, button, action, mods) -> {
 			int index = getMouseButtonIndex(button);
@@ -154,8 +157,7 @@ public class DesktopLauncher extends Launcher {
 			}
 		});
 
-		glfwSetWindowSizeCallback(window, (window, width, height) -> resizeListeners
-				.forEach(resizeListener -> resizeListener.onResize(width, height)));
+		glfwSetWindowSizeCallback(window, (window, width, height) -> onResize(width, height));
 
 		glfwSetWindowCloseCallback(window, window -> Dethsquare.AUDIO.shutdown());
 

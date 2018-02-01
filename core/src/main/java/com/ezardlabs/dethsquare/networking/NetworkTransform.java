@@ -1,4 +1,4 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
 import com.ezardlabs.dethsquare.Component.RequiredComponents;
 import com.ezardlabs.dethsquare.Transform;
@@ -6,10 +6,11 @@ import com.ezardlabs.dethsquare.Transform;
 import java.nio.ByteBuffer;
 
 @RequiredComponents(Transform.class)
-public class NetworkTransform extends NetworkBehaviour {
+public class NetworkTransform extends NetworkScript {
+	private final ByteBuffer data = ByteBuffer.allocate(getSize());
 
 	@Override
-	protected ByteBuffer onSend() {
+	public ByteBuffer onSend() {
 		data.position(0);
 		data.putFloat(0, transform.position.x); // 0 - 3
 		data.putFloat(4, transform.position.y); // 4 - 7
@@ -19,7 +20,7 @@ public class NetworkTransform extends NetworkBehaviour {
 	}
 
 	@Override
-	protected void onReceive(ByteBuffer data, int index) {
+	public void onReceive(ByteBuffer data, int index) {
 		transform.position.set(data.getFloat(index), data.getFloat(index + 4));
 		if (gameObject.collider != null) {
 			gameObject.collider.recalculateBounds();

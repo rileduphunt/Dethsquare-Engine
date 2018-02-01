@@ -1,7 +1,7 @@
-package com.ezardlabs.dethsquare.multiplayer;
+package com.ezardlabs.dethsquare.networking;
 
-import com.ezardlabs.dethsquare.multiplayer.Network.UDPReader;
-import com.ezardlabs.dethsquare.multiplayer.Network.UDPWriter;
+import com.ezardlabs.dethsquare.networking.Network.UDPReader;
+import com.ezardlabs.dethsquare.networking.Network.UDPWriter;
 import com.ezardlabs.dethsquare.util.GameListeners;
 import com.ezardlabs.dethsquare.util.GameListeners.UpdateListener;
 
