@@ -280,6 +280,10 @@ public class DesktopLauncher extends Launcher {
 		keyMap.put(GLFW_KEY_ESCAPE, "ESCAPE");
 		keyMap.put(GLFW_KEY_BACKSPACE, "BACKSPACE");
 		keyMap.put(GLFW_KEY_DELETE, "DELETE");
+		keyMap.put(GLFW_KEY_UP, "UP");
+		keyMap.put(GLFW_KEY_DOWN, "DOWN");
+		keyMap.put(GLFW_KEY_LEFT, "LEFT");
+		keyMap.put(GLFW_KEY_RIGHT, "RIGHT");
 	}
 
 	private int getMouseButtonIndex(int button) {
